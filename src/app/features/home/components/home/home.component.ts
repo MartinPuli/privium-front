@@ -82,9 +82,24 @@ export class HomeComponent implements OnInit {
   }
 
   async nextNeighborhood() {
-    if (this.neighborhoodHasMore) {
-      await this.loadNeighborhoodProducts(this.neighborhoodPage + 1);
+    if (!this.neighborhoodHasMore) return;
+
+    const nextPage = this.neighborhoodPage + 1;
+    const { products, hasMore } = await this.listingSrv.getNeighborhoodProducts(
+      nextPage,
+      3,
+      10
+    );
+
+    if (!products.length) {
+      // No hay más productos, deshabilitar el botón siguiente
+      this.neighborhoodHasMore = false;
+      return;
     }
+
+    this.neighborhoodProducts = products;
+    this.neighborhoodPage = nextPage;
+    this.neighborhoodHasMore = hasMore;
   }
   async prevNeighborhood() {
     if (this.neighborhoodPage > 1) {
@@ -137,6 +152,12 @@ export class HomeComponent implements OnInit {
       section.mode === "cat"
         ? await this.listingSrv.getProductsByCategory([section.id], page, size)
         : await this.listingSrv.getProductsByType(section.id, page, size);
+
+    if (!products.length) {
+      // Evita avanzar a una página sin productos
+      section.hasMore = false;
+      return;
+    }
 
     section.products = products;
     section.page = page;
