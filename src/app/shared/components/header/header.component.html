@@ -31,10 +31,13 @@
         />
       </mat-form-field>
 
-      <div class="menu-button">
-        <button mat-icon-button aria-label="Abrir menú de categorías">
-          <mat-icon>menu</mat-icon>
+      <div class="category-button" (click)="$event.stopPropagation()">
+        <button mat-button class="category-toggle" (click)="onCategoryButtonClick()">
+          {{ selectedCategoryLabel }}
         </button>
+        <div class="categories-dropdown" *ngIf="showCategories">
+          <app-list-categories (categorySelected)="onCategorySelect($event)"></app-list-categories>
+        </div>
       </div>
     </div>
 

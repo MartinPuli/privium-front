@@ -100,26 +100,24 @@ $container-w: 86%; // igual que el footer
     }
   }
 
-  // botón hamburguesa (reemplaza el select "Todos")
-  .menu-button {
-    flex: 0 0 50px;
+  // botón de categorías
+  .category-button {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
 
-    button {
-      @include pill(0 25px 25px 0); // radios derecha
-      width: 100%;
+    .category-toggle {
+      @include pill(0 25px 25px 0);
       height: 40px;
       border-left: 1px solid #e0e0e0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 0 1rem;
+    }
 
-      mat-icon {
-        font-size: 24px;
-        color: var(--text-primary);
-      }
+    .categories-dropdown {
+      position: absolute;
+      top: 42px;
+      left: 0;
+      z-index: 10;
     }
   }
 }

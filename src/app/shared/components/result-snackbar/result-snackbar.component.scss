@@ -19,11 +19,15 @@
 }
 
 /* ----- colores de fondo según clase del contenedor ----- */
-:host-context(.snack-success) {
+
+:host-context(.snack-success),
+:host-context(.success-snackbar) {
   background-color: #2e7d32; /* verde 800 */
 }
 
-:host-context(.snack-error) {
+:host-context(.snack-error),
+:host-context(.error-snackbar),
+:host-context(.error) {
   background-color: #d32f2f; /* rojo 700 */
 }
 
