@@ -45,6 +45,7 @@ import { PublicationCardComponent } from "./publish-card/publication-card.compon
 export class MyPublishesComponent implements OnInit {
   @Input() user!: User;
 
+  allListings: ListingResponseDto[] = [];
   listings: ListingResponseDto[] = [];
 
   /* filtros */
@@ -71,12 +72,14 @@ export class MyPublishesComponent implements OnInit {
   load(): void {
     this.ls
       .listListings({
+        userId: this.user.id,
         sortOrder: this.sort,
         searchTerm: this.search || undefined,
       })
       .subscribe((r) => {
-        this.listings = r.data ?? [];
-        this.length = this.listings.length;
+        this.allListings = r.data ?? [];
+        this.length = this.allListings.length;
+        this.setPagedData();
       });
   }
 
@@ -94,7 +97,12 @@ export class MyPublishesComponent implements OnInit {
   pageChange(e: PageEvent) {
     this.pageIndex = e.pageIndex;
     this.pageSize = e.pageSize;
-    this.load();
+    this.setPagedData();
+  }
+
+  private setPagedData() {
+    const start = this.pageIndex * this.pageSize;
+    this.listings = this.allListings.slice(start, start + this.pageSize);
   }
 
   /* --- navegar a publicar --- */
@@ -151,6 +159,10 @@ export class MyPublishesComponent implements OnInit {
         if (listing) {
           listing.status = action === "PAUSE" ? 0 : 1;
         }
+        const all = this.allListings.find((l) => l.id === id);
+        if (all) {
+          all.status = action === "PAUSE" ? 0 : 1;
+        }
 
         // Muestro snackbar con tu componente
         this.snackBar.openFromComponent(ResultSnackbarComponent, {
@@ -185,9 +197,11 @@ export class MyPublishesComponent implements OnInit {
     forkJoin(calls).subscribe({
       next: () => {
         // Quito las tarjetas eliminadas
-        this.listings = this.listings.filter(
+        this.allListings = this.allListings.filter(
           (l) => !this.selectedIds.has(l.id)
         );
+        this.length = this.allListings.length;
+        this.setPagedData();
 
         // Muestro snackbar con tu componente
         this.snackBar.openFromComponent(ResultSnackbarComponent, {

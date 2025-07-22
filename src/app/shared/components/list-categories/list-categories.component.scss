@@ -25,11 +25,20 @@ $panel-h: 420px;
    .submenu ya es absolute → left:100% top:0; (como antes) */
 .submenu {
   position: absolute;
-  left: 100%;
   top: 0;
   width: $panel-w;
   height: $panel-h;
   z-index: 20;
+}
+
+.categories-pane.orientation-right .submenu {
+  left: 100%;
+  right: auto;
+}
+
+.categories-pane.orientation-left .submenu {
+  right: 100%;
+  left: auto;
 }
 
 /* 3️⃣  Ítems de la lista --------------------------------*/
