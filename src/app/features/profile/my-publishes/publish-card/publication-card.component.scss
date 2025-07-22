@@ -35,6 +35,9 @@
   .thumbnail {
     width: 210px;
     height: 210px;
+    object-fit: contain;
+    box-sizing: border-box;
+    padding: $spacing-sm;
   }
 
   /* nueva línea para TYPE */
