@@ -131,10 +131,12 @@ export class MyPublishesComponent implements OnInit {
   toggleAll(checked: boolean): void {
     this.selectedIds.clear();
     if (checked) this.listings.forEach((l) => this.selectedIds.add(l.id));
+    this.selectedIds = new Set(this.selectedIds);
   }
 
   onCardSelect(id: number, selected: boolean) {
     selected ? this.selectedIds.add(id) : this.selectedIds.delete(id);
+    this.selectedIds = new Set(this.selectedIds);
   }
 
   changeStatus(action: "PAUSE" | "REACTIVATE"): void {

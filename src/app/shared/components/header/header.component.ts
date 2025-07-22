@@ -56,6 +56,7 @@ export class HeaderComponent implements OnInit {
   searchQuery = "";
   selectedCategoryLabel = "Todas";
   categories: Category[] = [];
+  showCategories = false;
 
   @Input() logged = true;
   @Input() publishing = false;
@@ -131,13 +132,14 @@ export class HeaderComponent implements OnInit {
   }
 
   onCategoryButtonClick(): void {
-    // Opens the categories menu via template reference
+    this.showCategories = !this.showCategories;
   }
 
-  onCategorySelect(cat: Category): void {
-    this.selectedCategoryLabel = cat.name;
+  onCategorySelect(sel: { idPath: string; name: string }): void {
+    this.selectedCategoryLabel = sel.name;
+    this.showCategories = false;
     this.router.navigate(["/search"], {
-      queryParams: { categoryIds: [cat.id] },
+      queryParams: { categoryIds: [sel.idPath] },
     });
   }
 
