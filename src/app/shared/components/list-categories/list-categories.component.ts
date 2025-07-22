@@ -24,6 +24,8 @@ export class ListCategoriesComponent implements OnInit, OnChanges {
   @Input() parentId: string | null = null;
   /** Cadena de IDs seleccionados hasta aquí (ej. "1>3>4") */
   @Input() path = "";
+  /** Dirección en la que se abre el sublistado */
+  @Input() orientation: "left" | "right" = "right";
   /** Emite la selección final (idPath, name) */
   @Output() categorySelected = new EventEmitter<{
     idPath: string;

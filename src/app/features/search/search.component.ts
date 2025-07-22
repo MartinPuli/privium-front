@@ -32,7 +32,7 @@ import { SearchFiltersComponent } from "./search-filters/search-filters.componen
 import { ButtonCategoriesComponent } from "src/app/shared/components/button-categories/button-categories.component";
 import { ListCategoriesComponent } from "src/app/shared/components/list-categories/list-categories.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { filter, finalize, Subscription } from "rxjs";
+import { filter, finalize, Subscription, firstValueFrom } from "rxjs";
 import { AuthService } from "src/app/shared/services/auth.service";
 
 interface CategorySelection {
@@ -94,7 +94,12 @@ export class SearchComponent implements OnInit {
     private authService: AuthService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    if (!this.categorySrv.getCached().length) {
+      await firstValueFrom(this.categorySrv.loadCategories());
+    }
+    this.categoriesList = this.categorySrv.getCached();
+
     // 1) Lectura inicial + carga
     this.readStateAndLoad();
 
