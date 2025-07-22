@@ -1,0 +1,55 @@
+<footer class="footer" role="contentinfo">
+  <div class="footer-container" [ngClass]="{'container-logged': !logged}">
+    <div class="footer-content" *ngIf="logged">
+      <img 
+          src="../../../../assets/images/logocomplete.png" 
+          alt="Privium" 
+          class="footer-logo">
+      <!-- Logo y Support -->
+      <div class="footer-section">
+        <div class="support-info">
+          <h3>SOPORTE</h3>
+          <address>
+            <p><a href="tel:+541111223344">(011) 1122 - 3344</a></p>
+            <p>Almafuerte, 1402</p>
+            <p>Francisco Álvarez, Buenos Aires</p>
+            <p>priviumcontacto gmail.com</p>
+          </address>
+        </div>
+      </div>
+      
+      <!-- Categorías más buscadas -->
+      <div class="footer-section">
+        <h3>CATEGORÍAS MÁS BUSCADAS</h3>
+        <nav aria-label="Categorías populares">
+          <ul class="footer-links">
+            <li><a href="/products?category=vehiculos">Vehículos</a></li>
+            <li><a href="/products?category=hogar">Hogar</a></li>
+            <li><a href="/products?category=muebles">Muebles</a></li>
+            <li><a href="/products?category=indumentaria">Indumentaria</a></li>
+            <li><a href="/products?category=electronica">Electrónica</a></li>
+          </ul>
+        </nav>
+      </div>
+      
+      <!-- Ayuda -->
+      <div class="footer-section">
+        <h3>AYUDA</h3>
+        <nav aria-label="Enlaces de ayuda">
+          <ul class="footer-links">
+            <li><a href="/help/publish">Publicar</a></li>
+            <li><a href="/help/problems">Contacto</a></li>
+            <li><a href="/help/security">Terminos y condiciones</a></li>
+            <li><a>Politica de seguridad</a></li>
+            <li><a>Cerrar cuenta</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <p>Copyright © 2025-{{currentYear}} Privium</p>
+    </div>
+  </div>
+</footer>

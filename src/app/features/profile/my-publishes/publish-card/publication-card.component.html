@@ -1,0 +1,65 @@
+<div class="card-inner">
+  <mat-checkbox
+    class="inner-check"
+    [checked]="selected"
+    (change)="onCheckboxChange($event)"
+  ></mat-checkbox>
+
+  <mat-card class="left-card">
+    <img class="thumbnail" [src]="listing.mainImage" alt="foto" />
+
+    <div class="text">
+      <div>
+        <div class="info-row">
+          <h3 class="status">
+            {{ listing.status === 1 ? "Activa" : "Pausada" }}
+          </h3>
+          <mat-icon class="edit" (click)="openEdit('left')">edit</mat-icon>
+        </div>
+
+        <p class="condition">
+          {{ listing.condition == 2 ? "Nuevo" : "Usado" }}
+        </p>
+        <div class="price">$ {{ listing.price | number }}</div>
+
+        <p class="desc">{{ listing.title }}</p>
+        <!-- título, sin cambios -->
+      </div>
+      <!-- tipo al pie, sin subtítulo -->
+      <p class="type">{{ listing.type }}</p>
+    </div>
+  </mat-card>
+
+  <!-- RIGHT CARD (descripción de 5 líneas) -->
+  <mat-card class="right-card">
+    <div class="info-row">
+      <h3>Información sobre el producto</h3>
+      <mat-icon class="edit" (click)="openEdit('right')">edit</mat-icon>
+    </div>
+
+    <p class="label">Descripción</p>
+    <p class="desc multiline">{{ listing.description }}</p>
+    <!-- ← aquí -->
+
+    <p class="label">Medios de pago</p>
+    <div class="chips">
+      <span class="chip cash" *ngIf="listing.acceptsCash">EFECTIVO</span>
+      <span class="chip card" *ngIf="listing.acceptsCard">TARJETA</span>
+      <span class="chip transfer" *ngIf="listing.acceptsTransfer"
+        >TRANSFERENCIA</span
+      >
+      <span class="chip barter" *ngIf="listing.acceptsBarter">TRUEQUE</span>
+    </div>
+  </mat-card>
+</div>
+
+<app-edit-publication
+  *ngIf="editingSide"
+  [listing]="listing"
+  [fullInfo]="fullData"
+  [side]="editingSide"
+  (saved)="onSave($event)"
+  (closed)="editingSide = null"
+  (reload)="onListingModified()"
+>
+</app-edit-publication>

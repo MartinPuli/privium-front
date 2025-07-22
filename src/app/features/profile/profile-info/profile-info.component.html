@@ -1,0 +1,77 @@
+<div class="prof-page">
+  <!-- HEADER -->
+  <app-header [logged]="true"></app-header>
+
+  <!-- MAIN -->
+  <main class="prof-main">
+    <section class="profile-wrapper">
+      <h2 class="section-title">
+        <mat-icon>account_circle</mat-icon>
+        Mi perfil
+      </h2>
+      <p>
+        Para cambio de datos que no sea posible modificar desde aquí, consulte
+        por el formulario de contacto para mayor seguridad.
+      </p>
+
+      <!-- Primera fila -->
+      <div class="info-container">
+        <!-- Nombre -->
+        <mat-card class="info-card">
+          <div class="label">Nombre de usuario</div>
+          <div class="value">{{ user.name }}</div>
+        </mat-card>
+
+        <!-- Teléfono editable -->
+        <mat-card class="info-card">
+          <div class="label">Número de teléfono</div>
+          <div class="value">{{ user.contactPhone || "—" }}</div>
+          <button mat-stroked-button color="primary" (click)="editPhone()">
+            Modificar
+          </button>
+        </mat-card>
+      </div>
+
+      <!-- Segunda fila -->
+      <div class="info-container">
+        <!-- Email -->
+        <mat-card class="info-card">
+          <div class="label">Correo electrónico</div>
+          <div class="value">{{ user.email }}</div>
+        </mat-card>
+
+        <!-- Barrio -->
+        <mat-card class="info-card">
+          <div class="label">Barrio de residencia</div>
+          <div class="value">{{ countryService.getNameById(user.countryId) }}</div>
+        </mat-card>
+      </div>
+    </section>
+
+    <app-my-publishes [user]="user"></app-my-publishes>
+  </main>
+
+  <!-- FOOTER -->
+  <app-footer [logged]="true"></app-footer>
+
+  <!-- default-modal -->
+  <app-default-modal
+    *ngIf="modalOpen"
+    title="Ingresá tu nuevo número de teléfono"
+    [buttons]="modalButtons"
+    (close)="closeModal()"
+  >
+    <form [formGroup]="editForm">
+      <app-form-field
+        label="Número de teléfono"
+        type="tel"
+        placeholder="+54 11 1234-5678"
+        [hasError]="
+          editForm.get('value')!.invalid && editForm.get('value')!.touched
+        "
+        [errorMessage]="getError()"
+        formControlName="value"
+      ></app-form-field>
+    </form>
+  </app-default-modal>
+</div>

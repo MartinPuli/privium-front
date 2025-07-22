@@ -1,0 +1,22 @@
+@import '../../../../../shared/styles/variables';
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;                  /* separación vertical entre campos  */
+}
+
+/* filas de dos columnas: nombre/apellido, password/confirm, etc.   */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 35px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;  /* una sola columna en tablets     */
+  }
+}
+
+.terms{
+  font-size: 25px;
+}

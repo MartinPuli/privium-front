@@ -1,0 +1,181 @@
+@import "../../../../../shared/styles/variables";
+
+.card-inner {
+  border: 2px solid $primary-navy;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  padding: 32px 48px;
+  background: $background-secondary;
+  position: relative;
+}
+
+.mat-mdc-checkbox label {
+  font-size: 1rem !important;
+  color: $primary-navy !important;
+}
+
+.left-card,
+.right-card {
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  background-color: #1520470f;
+  border-radius: 6px;
+  padding: 30px;
+  position: relative;
+}
+
+.left-card {
+  flex: 1 1 55%;
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+
+  .thumbnail {
+    width: 210px;
+    height: 210px;
+  }
+
+  /* nueva línea para TYPE */
+  .type {
+    margin-top: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: $primary-navy;
+  }
+
+  .text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+  .status {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 20px;
+    color: $primary-navy;
+  }
+  .condition {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: $text-light;
+  }
+  .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .desc {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $text-light;
+  }
+}
+
+.right-card {
+  color: $primary-navy;
+  flex: 1 1 45%;
+  h3 {
+    font-size: 1.3rem;
+    margin: 0 0 0px;
+    font-weight: 700;
+  }
+
+  .label {
+    font-weight: 600;
+    margin: 12px 0 4px;
+    font-size: 1.2rem;
+  }
+
+  .body {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: $text-light;
+  }
+
+  .desc {
+    margin: 0;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: $text-light;
+  }
+
+  /* descripción de 5 líneas máx + “…” */
+  .desc.multiline {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    word-break: break-all !important;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+
+  .chips {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+
+    .chip {
+      position: relative;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      padding: 2px 12px 2px 12px;
+      padding-right: 28px;
+      font-size: 0.7rem;
+      border-radius: 4px;
+      font-weight: 600;
+      color: #fff;
+
+      /* el círculo */
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 6px;
+        width: 10px;
+        height: 10px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        transform: translateY(-50%);
+        background: #fff; /* chip “activo”: círculo relleno */
+      }
+    }
+
+    /* fondos por tipo */
+    .cash {
+      background: #54aa54;
+    } /* verde */
+    .card {
+      background: #894daa;
+    } /* morado */
+    .transfer {
+      background: #326c9f;
+    } /* azul */
+    .barter {
+      background: #b46a3a;
+    }
+  }
+}
+
+.info-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.edit {
+  font-size: 1.5em;
+  cursor: pointer;
+  color: $primary-navy;
+}
+
+:host ::ng-deep mat-checkbox.inner-check .mdc-checkbox__background {
+  transform: scale(1.5);
+}

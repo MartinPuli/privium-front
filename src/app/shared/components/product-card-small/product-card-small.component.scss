@@ -1,0 +1,91 @@
+@import "../../../../shared/styles/variables";
+
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 4px solid $primary-navy;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: white;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 75%;
+
+    img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 8px; right: 8px;
+      background: transparent;
+      border: 0px;
+      mat-icon {
+        color: #c62828;
+      }
+      &:hover {
+        color: #711a1a;
+      }
+    }
+  }
+
+  .card-header{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+  }
+
+  .condition-badge{
+    color: $white;
+    font-size: 0.7rem;
+    font-weight: 400;
+  }
+
+  mat-card-content {
+    display: flex;
+    background-color: $primary-navy;
+    border-radius: 0 30px 0px 0px;
+    flex-direction: column;
+    padding: 12px 30px 12px 12px;
+
+    .price {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 0;
+      color: $white;
+    }
+
+    .title {
+      margin: 4px 0 0px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: $white;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .location {
+      display: flex;
+      color: $white;
+      align-items: center;
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+    }
+  }
+}

@@ -1,0 +1,86 @@
+<div class="publishes-header">
+  <h2 class="section-title">Publicaciones</h2>
+
+  <div class="controls">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        placeholder="Buscar por título"
+        #searchBox
+        (keyup.enter)="doSearch(searchBox.value)"
+      />
+      <button mat-icon-button matSuffix (click)="doSearch(searchBox.value)">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button mat-button (click)="setSort('DESC')">
+      <mat-icon>arrow_downward</mat-icon> Más reciente
+    </button>
+    <button mat-button (click)="setSort('ASC')">
+      <mat-icon>arrow_upward</mat-icon> Más antiguo
+    </button>
+  </div>
+</div>
+
+<div class="board">
+  <div class="board-header">
+    <mat-checkbox
+      class="master-check"
+      [checked]="allSelected"
+      (change)="toggleAll($event.checked)"
+    ></mat-checkbox>
+
+    <div class="board-actions">
+      <!-- Pausar sólo si EXACTAMENTE 1 está seleccionado y su estado es Activa -->
+      <button
+        mat-button
+        [disabled]="!canPauseSelected"
+        (click)="changeStatus('PAUSE')"
+      >
+        Pausar
+      </button>
+
+      <button
+        mat-button
+        [disabled]="!canReactivateSelected"
+        (click)="changeStatus('REACTIVATE')"
+      >
+        Reactivar
+      </button>
+
+      <button
+        mat-button
+        [disabled]="selectedIds.size === 0"
+        (click)="deleteSelected()"
+      >
+        Eliminar
+      </button>
+    </div>
+  </div>
+
+  <div class="cards-zone">
+    <app-publication-card
+      (listingModified)="load()"
+      *ngFor="let item of listings"
+      [listing]="item"
+      [selected]="selectedIds.has(item.id)"
+      (selectionChange)="onCardSelect(item.id, $event)"
+    ></app-publication-card>
+
+    <mat-card class="add-card" (click)="goToPublish()">
+      <mat-icon>add</mat-icon>
+      <span>Añadir publicación</span>
+    </mat-card>
+  </div>
+</div>
+
+<mat-paginator
+  [length]="length"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[6, 12, 24]"
+  (page)="pageChange($event)"
+  class="paginator"
+></mat-paginator>

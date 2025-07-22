@@ -1,0 +1,43 @@
+<div class="auth-page">
+  <app-header [logged]="false"></app-header>
+
+  <div class="auth-main">
+    <app-auth-card
+      title="Iniciar sesión"
+      subtitle="Ingresá tu e-mail o teléfono para iniciar sesión"
+      [buttons]="buttons"
+      maxWidth="70%"
+      [links]="links"
+    >
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <app-form-field
+          label="Correo electrónico o número de teléfono"
+          type="email"
+          placeholder="ejemplo@correo.com"
+          [hasError]="
+            loginForm.get('email')!.invalid && loginForm.get('email')!.touched
+          "
+          [errorMessage]="getError('email')"
+          formControlName="email"
+        >
+        </app-form-field>
+
+        <app-form-field
+          label="Contraseña"
+          type="password"
+          placeholder="Ingresa tu contraseña"
+          [showPasswordToggle]="true"
+          [hasError]="
+            loginForm.get('password')!.invalid &&
+            loginForm.get('password')!.touched
+          "
+          [errorMessage]="getError('password')"
+          formControlName="password"
+        >
+        </app-form-field>
+      </form>
+    </app-auth-card>
+  </div>
+
+  <app-footer [logged]="false"></app-footer>
+</div>

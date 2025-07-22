@@ -1,0 +1,90 @@
+<div class="rv-page">
+  <app-header [logged]="true"></app-header>
+  <div class="rv-main">
+    <!-- 1) Spinner -->
+    <div class="rv-container" *ngIf="isLoading">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <!-- 2) Result-warn (éxito / error) -->
+    <app-result-warn
+      *ngIf="warn as w"
+      [status]="w.status"
+      [title]="w.title"
+      [subtitle]="w.subtitle"
+      [description]="w.description"
+      buttonLabel="Volver a pendientes"
+      (action)="closeWarn()"
+      class="rv-warn"
+    />
+
+    <!-- 3) Lista paginada -->
+    <div class="rv-container" *ngIf="!isLoading && !warn">
+      <h1>Lista de verificaciones pendientes</h1>
+      <p>
+        Aprueba o rechaza las verificaciones residenciales (prioridad a las mas
+        antiguas)
+      </p>
+
+      <h2 *ngIf="pagedProofs.length == 0">
+        No hay pruebas de residencia pendientes
+      </h2>
+      <mat-card class="rv-card" *ngFor="let p of pagedProofs">
+        <!-- Cabecera -->
+        <mat-card-header class="rv-card-header">
+          <h2>{{ p.name }} {{ p.lastName }} – {{ p.countryName }}</h2>
+          <h3>Dni: ({{ p.dni }})</h3>
+        </mat-card-header>
+
+        <!-- Línea divisoria entre header y cuerpo -->
+        <mat-divider></mat-divider>
+
+        <!-- Cuerpo en dos columnas -->
+        <div class="rv-body">
+          <!-- Columna izquierda: mensaje + botón descarga -->
+          <div class="rv-left">
+            <p class="rv-msg" *ngIf="p.proofMessage">{{ p.proofMessage }}</p>
+
+            <!-- Botón de descarga -->
+            <button
+              mat-stroked-button
+              color="primary"
+              *ngIf="p.proofImageB64"
+              (click)="downloadProof(p)"
+            >
+              <mat-icon>download</mat-icon>
+              Descargar archivo
+            </button>
+          </div>
+
+          <!-- Columna derecha: acciones -->
+          <div class="rv-actions">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="handleDecision(p, true)"
+            >
+              Aprobar
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="handleDecision(p, false)"
+            >
+              Rechazar
+            </button>
+          </div>
+        </div>
+      </mat-card>
+
+      <mat-paginator
+        [length]="length"
+        class="paginator"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[10]"
+        (page)="pageChange($event)"
+      ></mat-paginator>
+    </div>
+  </div>
+  <app-footer [logged]="true"></app-footer>
+</div>

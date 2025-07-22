@@ -1,0 +1,28 @@
+<!-- list-categories.component.html -->
+<div class="categories-pane" [ngClass]="{ 'has-parent': parentId }">
+  <!-- ① cuerpo scrolleable -->
+  <div class="scroll-body">
+    <ng-container *ngFor="let cat of categories">
+      <div class="category-item" (click)="select(cat)">
+        <span class="label">{{ cat.name }}</span>
+
+        <button *ngIf="hasChild(cat)"
+                class="expand-btn"
+                (click)="toggleExpand(cat); $event.stopPropagation()">
+          <mat-icon>
+            {{ expandedMap[cat.id] ? 'chevron_left' : 'chevron_right' }}
+          </mat-icon>
+        </button>
+      </div>
+
+      <!-- sub-panel -->
+      <ng-container *ngIf="expandedMap[cat.id]">
+        <app-list-categories class="submenu"
+                             [parentId]="cat.id"
+                             [path]="path ? path + '>' + cat.id : cat.id"
+                             (categorySelected)="categorySelected.emit($event)">
+        </app-list-categories>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

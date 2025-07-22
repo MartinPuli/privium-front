@@ -1,0 +1,142 @@
+<!-- edit-publication.component.html -->
+<app-default-modal
+  [title]="'Información sobre el producto'"
+  [buttons]="modalButtons"
+  (close)="closed.emit()"
+>
+  <!-- BLOQUE IZQUIERDO  (título, fotos, precio, condición) -->
+  <ng-container *ngIf="side === 'left'">
+    <form [formGroup]="leftForm" class="left-form">
+      <!-- TÍTULO -->
+      <app-form-field
+        formControlName="title"
+        [placeholder]="'Ingrese el título'"
+        [label]="'Título'"
+        [hasError]="
+          leftForm.get('title')!.invalid && leftForm.get('title')!.touched
+        "
+        [errorMessage]="'Título requerido (min 3)'"
+      >
+      </app-form-field>
+
+      <!-- FOTOS -->
+      <p class="modal-label">Fotos</p>
+      <div class="photos">
+        <!-- Botón seleccionar (solo si < 5) -->
+        <button
+          class="add-photo"
+          type="button"
+          *ngIf="selectedImages.length < maxImages"
+          (click)="fileInput.click()"
+        >
+          <mat-icon>cloud_upload</mat-icon>
+          <span>Seleccionar</span>
+        </button>
+
+        <!-- input oculto -->
+        <input
+          #fileInput
+          type="file"
+          multiple
+          accept="image/*"
+          hidden
+          (change)="addImages($event)"
+        />
+
+        <!-- miniaturas -->
+        <div
+          class="thumb"
+          *ngFor="let img of selectedImages; let i = index"
+          [class.is-main]="i === 0"
+        >
+          <img [src]="img.preview" />
+          <button mat-icon-button (click)="removeImage(i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+      <small *ngIf="leftForm.get('images')!.invalid">
+        Subí al menos 1 foto
+      </small>
+      <app-form-field
+        prefixIcon="$"
+        [label]="'Precio'"
+        formControlName="price"
+        [placeholder]="'0'"
+        [hasError]="
+          leftForm.get('price')!.invalid && leftForm.get('price')!.touched
+        "
+        [errorMessage]="'Precio > 0'"
+      >
+      </app-form-field>
+    </form>
+  </ng-container>
+
+  <!-- BLOQUE DERECHO (descripción, categorías, medios de pago) -->
+  <ng-container *ngIf="side === 'right'">
+    <form [formGroup]="rightForm" class="right-form">
+      <!-- DESCRIPCIÓN  -->
+      <app-form-field
+        type="textarea"
+        formControlName="description"
+        [rows]="5"
+        [label]="'Descripción'"
+        [placeholder]="'Contá con detalle tu producto'"
+        [hasError]="
+          rightForm.get('description')!.invalid &&
+          rightForm.get('description')!.touched
+        "
+        [errorMessage]="'Descripción requerida'"
+      >
+      </app-form-field>
+
+      <div class="cat-pay-row">
+        <!-- ► Categorías ------------------------------------ -->
+        <div class="cat-col">
+          <p class="modal-label">Categoría/s</p>
+
+          <div class="categories-container">
+            <div class="cat-slot" *ngFor="let c of categories; let i = index">
+              <app-button-categories
+                #catSlot
+                [categoryName]="c.name || null"
+                (toggle)="toggleList(i)"
+                (clear)="clearCat(i)"
+              >
+              </app-button-categories>
+
+              <div
+                *ngIf="showList[i]"
+                class="dropdown-wrapper"
+                (click)="$event.stopPropagation()"
+              >
+                <!-- evita cierre -->
+                <app-list-categories
+                  (categorySelected)="onCategorySelected(i, $event)"
+                >
+                </app-list-categories>
+              </div>
+            </div>
+          </div>
+
+          <small *ngIf="rightForm.get('categories')!.invalid">
+            Elige al menos 1 categoría
+          </small>
+        </div>
+
+        <!-- ► Medios de pago -------------------------------- -->
+        <div class="pay-col">
+          <p class="modal-label">Medios de pago</p>
+          <div class="chips-edit">
+            <mat-checkbox formControlName="paysCash">Efectivo</mat-checkbox>
+            <mat-checkbox formControlName="paysCard">Tarjeta</mat-checkbox>
+            <mat-checkbox formControlName="paysTransf"
+              >Transferencia</mat-checkbox
+            >
+            <mat-checkbox formControlName="paysBarter">Trueque</mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</app-default-modal>

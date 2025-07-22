@@ -1,0 +1,147 @@
+@import "../../../../../shared/styles/variables";
+
+/* ---------- Layout general + fondo ---------- */
+:host {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-family: "Urbanist";
+  align-items: center; /*  <--  ¡aquí estaba el flex-start! */
+  padding: 40px 20px;
+  font-family: "Urbanist", sans-serif;
+}
+
+/* === wrapper exterior: controla ancho y centrado ============= */
+.auth-wrapper {
+  width: 100%;
+  font-family: "Urbanist";
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* espacio entre header y card */
+}
+
+/* === header sin fondo/borde ================================== */
+.auth-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  button[mat-icon-button] {
+    align-self: flex-start;
+    color: $primary-navy;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 44px;
+    font-weight: 600;
+    color: $primary-navy;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+    font-size: 28px;
+    color: $text-light;
+  }
+}
+
+/* === tarjeta crema =========================================== */
+.auth-card {
+  background: #f9f9ed;
+  border-radius: 8px;
+  padding: 80px 60px;
+  box-shadow: 4px 8px 16px rgba(0 0 0 / 0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ---------- Footer (botones) ---------- */
+footer {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+
+  button {
+    /* Evita que se estire a todo el ancho */
+    flex: 0 0 auto;
+    min-width: 350px;
+    padding: 18px 24px;
+    background-color: $primary-navy;
+    height: 50px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    color: $white;
+  }
+
+  button:disabled,
+  button.mdc-button--disabled {
+    // compatibilidad Material
+    background-color: #bdbdbd; // gris o el color que quieras
+    color: $white;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+/* ---------- Links ---------- */
+.links {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+
+  a {
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 20px;
+
+    &.primary {
+      color: $primary-navy;
+    }
+    &.secondary {
+      color: $text-light;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  :host {
+    padding: 40px 20px;
+  }
+  .auth-card {
+    padding: 40px 32px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+  header p {
+    font-size: 1rem;
+  }
+
+  footer {
+    flex-direction: column;
+  }
+  footer button {
+    width: 100%;
+  }
+  .links {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 32px 24px;
+  }
+}

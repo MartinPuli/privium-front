@@ -1,0 +1,22 @@
+<div class="rw-container" [ngClass]="statusClass">
+  <!-- Icono grande -->
+  <div class="rw-icon">
+    <mat-icon>{{ icon }}</mat-icon>
+  </div>
+
+  <!-- Textos -->
+  <div class="rw-texts">
+    <h2 class="rw-title">{{ title }}</h2>
+    <h3 class="rw-subtitle">{{ subtitle }}</h3>
+    <p class="rw-description">{{ description }}</p>
+
+    <button
+      mat-raised-button
+      color="primary"
+      class="rw-btn"
+      (click)="action.emit()"
+    >
+      {{ buttonLabel }}
+    </button>
+  </div>
+</div>

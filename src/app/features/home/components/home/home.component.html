@@ -1,0 +1,93 @@
+<div class="home-page">
+  <app-header></app-header>
+
+  <main class="main-content" role="main">
+    <!-- Hero -->
+    <section class="hero-section" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <h1 id="hero-title" class="sr-only">Privium - Tu marketplace de barrio</h1>
+        <div class="hero-display">
+          <img src="../../../../../assets/images/mainimage.png"
+               alt="Productos destacados en Privium"
+               class="hero-image" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Spinner -->
+    <section *ngIf="isLoading" class="loading-section" aria-label="Cargando productos">
+      <div class="container">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Cargando productos...</p>
+      </div>
+    </section>
+
+    <!-- Publicaciones a menos de 10 km -->
+    <section *ngIf="!isLoading" class="search-based-section" aria-labelledby="nearby-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="nearby-title" class="section-title">Publicaciones a menos de 10 km</h2>
+          <div class="pagination-controls">
+            <button mat-icon-button (click)="prevNeighborhood()"
+                    [disabled]="neighborhoodPage === 1"
+                    aria-label="Prev">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button mat-icon-button (click)="nextNeighborhood()"
+                    [disabled]="!neighborhoodHasMore"
+                    aria-label="Next">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="products-grid" *ngIf="neighborhoodProducts.length">
+          <app-product-card-small
+            *ngFor="let p of neighborhoodProducts; trackBy: trackByProductId"
+            [product]="p">
+          </app-product-card-small>
+        </div>
+
+        <p class="no-products" *ngIf="!neighborhoodProducts.length">
+          <mat-icon>location_on</mat-icon>
+          No hay productos cerca de tu ubicación
+        </p>
+      </div>
+    </section>
+
+    <!-- Secciones por categoría -->
+    <section *ngFor="let s of categorySections; index as i"
+             class="category-section"
+             [attr.aria-labelledby]="'cat-title-' + i">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="{{'cat-title-' + i}}" class="section-title">{{ s.name }}</h2>
+          <div class="pagination-controls">
+            <button mat-icon-button (click)="prevCategory(s)"
+                    [disabled]="s.page <= 1" aria-label="Prev">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button mat-icon-button (click)="nextCategory(s)"
+                    [disabled]="!s.hasMore" aria-label="Next">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="products-grid" *ngIf="s.products.length">
+          <app-product-card-small
+            *ngFor="let p of s.products; trackBy: trackByProductId"
+            [product]="p">
+          </app-product-card-small>
+        </div>
+
+        <p class="no-products" *ngIf="!s.products.length">
+          <mat-icon>inventory_2</mat-icon>
+          No hay productos disponibles en {{ s.name }}
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <app-footer></app-footer>
+</div>

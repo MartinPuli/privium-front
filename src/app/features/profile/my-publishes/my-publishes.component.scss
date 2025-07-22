@@ -1,0 +1,98 @@
+@import "../../../../shared/styles/variables";
+
+.publishes-header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $primary-navy;
+  margin-bottom: 40px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+
+  .search-field {
+    width: 220px;
+  }
+}
+
+.board {
+  border: 2px solid $primary-navy;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: #d9d9d9c0;
+  padding: 32px 60px;
+  position: relative;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+:host ::ng-deep mat-checkbox.master-check .mdc-checkbox__background {
+  transform: scale(1.7);           
+}
+
+.board-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.board-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+
+  button {
+    font-family: "Urbanist";
+    font-size: 1.1rem;
+    color: $primary-navy;
+    padding: 0;
+    min-width: 72px;
+
+    &:disabled {
+      color: $text-light;
+    }
+  }
+}
+
+.cards-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.add-card {
+  border: 2px dashed #c4c4c4;
+  background-color: $background-secondary;
+  height: 300px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: $primary-navy;
+  cursor: pointer;
+
+  mat-icon {
+    font-size: 7rem;
+    height: 7rem;
+    width: 7rem;
+  }
+  span {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+}

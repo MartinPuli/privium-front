@@ -1,0 +1,23 @@
+<div class="auth-page">
+  <!-- Cabecera / pie comunes -->
+  <app-header [logged]="false"></app-header>
+  <div class="auth-main">
+    <!-- Loader simple mientras status === null -->
+    <div class="ve-loader" *ngIf="status === null">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- Resultado -->
+    <app-result-warn
+      *ngIf="status !== null"
+      [status]="status!"
+      [title]="title"
+      [subtitle]="subtitle"
+      [description]="description"
+      buttonLabel="Ir al inicio de sesión"
+      (action)="onAction()"
+    ></app-result-warn>
+  </div>
+
+  <app-footer [logged]="false"></app-footer>
+</div>

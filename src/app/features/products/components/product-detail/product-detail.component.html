@@ -1,0 +1,177 @@
+<div class="product-detail-page">
+  <app-header></app-header>
+  
+  <main class="main-content" *ngIf="!isLoading && product">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-container">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a routerLink="/home" class="breadcrumb-link">🏠 Inicio</a>
+          <span class="breadcrumb-separator">></span>
+          <a routerLink="/products" class="breadcrumb-link">{{getCategoryNames()}}</a>
+          <span class="breadcrumb-separator">></span>
+          <span class="breadcrumb-current">{{product.condition === 'new' ? 'Nuevo' : 'Usado'}}</span>
+          <span class="breadcrumb-separator">></span>
+          <span class="breadcrumb-current">{{getProductType()}}</span>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Product Content -->
+    <div class="product-container">
+      <div class="container">
+        <div class="product-card">
+          <div class="product-layout">
+            <!-- Product Images -->
+            <div class="product-images">
+              <!-- Thumbnails -->
+              <div class="image-thumbnails">
+                <button 
+                  *ngFor="let image of getAllImages(); let i = index"
+                  class="thumbnail-btn"
+                  [class.active]="i === currentImageIndex"
+                  (click)="currentImageIndex = i">
+                  <img [src]="image" [alt]="'Imagen ' + (i + 1)" class="thumbnail-image">
+                </button>
+              </div>
+
+              <!-- Main Image -->
+              <div class="main-image-container">
+                <img 
+                  [src]="getAllImages()[currentImageIndex]" 
+                  [alt]="product.title"
+                  class="main-image">
+                
+                <button 
+                  mat-icon-button 
+                  class="favorite-btn"
+                  [class.favorited]="isFavorite"
+                  (click)="onToggleFavorite()">
+                  <mat-icon>{{isFavorite ? 'favorite' : 'favorite_border'}}</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Product Information -->
+            <div class="product-info">
+              <div class="condition-badge">{{product.condition === 'new' ? 'Nuevo' : 'Usado'}}</div>
+              
+              <div class="product-price">{{formatPrice(product.price)}}</div>
+              
+              <h1 class="product-title">{{product.title}}</h1>
+              
+              <div class="product-location">
+                <mat-icon class="location-icon">location_on</mat-icon>
+                <span>{{product.location}}</span>
+              </div>
+
+              <!-- Métodos de pago -->
+              <div class="payment-methods" *ngIf="getPaymentMethods().length > 0">
+                <div class="payment-chips">
+                  <span 
+                    *ngFor="let method of getPaymentMethods()" 
+                    class="payment-chip"
+                    [class]="getPaymentMethodClass(method)">
+                    {{method}}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="product-actions">
+                <button mat-raised-button class="contact-btn" (click)="onContactSeller()">
+                  Contactar vendedor
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información sobre el vendedor -->
+        <div class="seller-section">
+          <h2 class="section-title">Información sobre el vendedor</h2>
+          <div class="seller-info-card">
+            <div class="seller-item">
+              <mat-icon class="seller-icon">person</mat-icon>
+              <div class="seller-details">
+                <span class="seller-label">Vendedor</span>
+                <span class="seller-value">{{product.sellerName}}</span>
+              </div>
+            </div>
+            
+            <div class="seller-item">
+              <mat-icon class="seller-icon">phone</mat-icon>
+              <div class="seller-details">
+                <span class="seller-label">Número de Teléfono</span>
+                <span class="seller-value">(011) 1234 - 5678</span>
+              </div>
+            </div>
+            
+            <div class="seller-item">
+              <mat-icon class="seller-icon">email</mat-icon>
+              <div class="seller-details">
+                <span class="seller-label">E-Mail</span>
+                <span class="seller-value">mariagonzalezgmail.com</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información sobre el producto -->
+        <div class="product-section">
+          <h2 class="section-title">Información sobre el producto</h2>
+          <div class="product-description-card">
+            <p>{{product.description}}</p>
+            <p class="measurements">{{additionalInfo.dimensions}}</p>
+          </div>
+        </div>
+
+        <!-- Productos relacionados -->
+        <div class="related-products-section">
+          <h2 class="section-title">Productos relacionados</h2>
+          <div class="related-products-container">
+            <button class="nav-button prev" (click)="scrollRelatedProducts('left')">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            
+            <div class="related-products-scroll" #relatedProductsScroll>
+              <div class="related-products-grid">
+                <div class="related-product" *ngFor="let i of [1,2,3,4,5,6]">
+                  <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png" alt="Producto relacionado">
+                  <div class="related-product-info">
+                    <div class="related-price">${{65000 + (i * 5000)}}</div>
+                    <div class="related-title">{{getRelatedProductTitle(i)}}</div>
+                    <div class="related-condition">{{i % 2 === 0 ? 'Nuevo' : 'Usado'}}</div>
+                  </div>
+                  <button mat-icon-button class="related-favorite">
+                    <mat-icon>favorite_border</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <button class="nav-button next" (click)="scrollRelatedProducts('right')">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="container">
+      <div class="loading-skeleton">
+        <div class="skeleton-image"></div>
+        <div class="skeleton-info">
+          <div class="skeleton-line skeleton-price"></div>
+          <div class="skeleton-line skeleton-title"></div>
+          <div class="skeleton-line skeleton-location"></div>
+          <div class="skeleton-line skeleton-description"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>

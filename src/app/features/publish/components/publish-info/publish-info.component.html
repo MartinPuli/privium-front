@@ -1,0 +1,30 @@
+<section class="publish-info">
+  <header class="header">
+    <h3 class="title">{{ title }}</h3>
+    <p class="description" *ngIf="description">{{ description }}</p>
+  </header>
+
+  <div class="body">
+    <ng-content></ng-content>
+  </div>
+
+  <footer class="footer" *ngIf="showFooter">
+    <button
+      mat-stroked-button
+      color="accent"
+      [disabled]="disabled"
+      (click)="onCancel.emit()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="continueDisabled || disabled"
+      (click)="onContinue.emit()"
+    >
+      Confirmar
+    </button>
+  </footer>
+</section>

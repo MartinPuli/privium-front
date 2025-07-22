@@ -1,0 +1,77 @@
+@import "../../../../../shared/styles/variables";
+
+:host {
+  display: block;
+  font-family: "Urbanist", sans-serif;
+}
+
+/* -------- Card wrapper -------- */
+.publish-info {
+  background: $background-secondary;          /* tono hueso */
+  border-radius: 4px;
+  box-shadow: 4px 8px 16px rgba(0 0 0 / 0.04);
+  display: flex;
+  flex-direction: column;                     /* permite header / body / footer */
+  margin-bottom: 2rem;
+}
+
+/* -------- Header -------- */
+.header {
+  padding: 1rem 1.5rem 0.5rem;
+  border-bottom: 1px solid $primary-navy;     /* línea divisoria como en mock */
+}
+.title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $primary-navy;
+}
+.description {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  color: $text-light;
+}
+
+/* -------- Body -------- */
+.body {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-bottom: 1px solid $primary-navy;     /* línea divisoria superior al footer */
+}
+
+/* -------- Footer -------- */
+.footer {
+  display: flex;
+  justify-content: flex-end;                  /* btns alineados a la derecha */
+  gap: 1rem;
+  padding: 0.75rem 1.5rem 1rem;
+
+  button {
+    min-width: 110px;
+    font-size: 1rem;
+    line-height: 2.25rem;
+  }
+
+  /* estilo primario (Confirmar) */
+  .mat-raised-button {
+    background: $primary-navy !important;
+    color: $white !important;
+    font-weight: 600;
+  }
+
+  /* estilo secundario (Cancelar) */
+  .mat-stroked-button {
+    color: $primary-navy !important;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+    button { width: 100%; }
+  }
+}

@@ -1,0 +1,163 @@
+@import "../../../../../shared/styles/variables";
+
+/* mini layout helpers */
+.modal-label {
+  font-size: 23px;
+  font-weight: 600;
+  color: $primary-navy;
+  margin-bottom: 10px;
+  margin-top: 30px;
+}
+
+.left-form,
+.right-form {
+  padding: 10px 20px !important;
+  min-width: 55vw;
+  min-height: 55vh;
+}
+
+.photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* un poco más de aire */
+  margin-bottom: 35px;
+
+  /* botón gris, con trazo discontinuo */
+  .add-photo {
+    width: 150px;
+    height: 150px;
+    background: #d9d9d9; /* gris claro como en el mock-up */
+    border: 3px dashed $primary-navy;
+    border-radius: 6px;
+    color: $primary-navy;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #cfd0d0;
+    }
+  }
+
+  /* miniaturas */
+  .thumb {
+    position: relative;
+    width: 150px;
+    height: 150px; /* mismo ancho que el “Seleccionar” */
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+    }
+
+    &.is-main img {
+      border: 3px solid #54aa54; /* verde */
+      box-sizing: border-box; /* incluye el borde en los 150 px */
+    }
+
+    /* X para eliminar */
+    button {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #fff;
+      border: 1px solid #999;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+    }
+
+    /* cintillo “PORTADA” en la primera imagen */
+    &.is-main::after {
+      content: "PORTADA";
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      background: $primary-navy;
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  }
+}
+
+.cat-pay-row {
+  margin-top: 35px;
+  min-height: 200px;
+  display: flex;
+  gap: 48px; /* separación horizontal */
+
+  /* 1ª columna (categorías) ocupa lo necesario */
+  .cat-col {
+    flex: 1 1 50%;
+  }
+
+  /* 2ª columna (medios) con borde separador */
+  .pay-col {
+    flex: 1 1 40%;
+    padding-left: 48px;
+    border-left: 2px solid rgba($primary-navy, 0.25);
+  }
+}
+
+
+/* radios “Nuevo / Usado” – márgenes más amplios */
+app-form-field[type="radio"] {
+  display: block;
+  margin-top: 4px;
+
+  mat-radio-button {
+    margin: 8px 0;
+    cursor: pointer;
+  }
+}
+
+.categories-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cat-slot {
+  position: relative;
+}
+.dropdown {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 4px);
+  z-index: 1002;
+}
+.chips-edit {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 6px;
+}
+
+.cat-slot {
+  position: relative;
+  overflow: visible; // que no recorte hijos
+}
+
+.dropdown-wrapper {
+  position: absolute; /* sale del flujo y no empuja */
+  top: calc(100% - 150px); /* justo debajo del botón */
+  left: 0;
+  z-index: 2000; /* bastante por encima */
+  background: $background-secondary;
+  border: 1px solid $primary-navy;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  /* quita cualquier max-height / overflow preexistente */
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+:host ::ng-deep .modal-body {
+  overflow: visible !important;
+}

@@ -1,0 +1,17 @@
+<section class="publish-section">
+  <div class="step-header">
+    <span class="step-indicator">Paso 1 de 3</span>
+    <h1 class="step-title">¿Qué querés publicar?</h1>
+  </div>
+
+  <div class="type-selection-grid">
+    <button
+      class="type-card"
+      *ngFor="let t of typeCards"
+      (click)="selectType(t.id)"
+    >
+      <mat-icon class="type-icon material-symbols-outlined">{{ t.icon }}</mat-icon>
+      <span class="type-name">{{ t.name }}</span>
+    </button>
+  </div>
+</section>

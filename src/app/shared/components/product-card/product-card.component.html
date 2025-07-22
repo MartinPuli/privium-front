@@ -1,0 +1,35 @@
+<mat-card class="product-card" [routerLink]="['/products', product.id]" role="article">
+  <div class="product-image-container">
+    <img 
+      [src]="getMainImage()" 
+      [alt]="product.title"
+      class="product-image"
+      loading="lazy"
+      width="280"
+      height="200">
+    
+    <div class="condition-badge" [class]="product.condition">
+      {{getConditionText()}}
+    </div>
+  </div>
+  
+  <mat-card-content class="product-info">
+    <div class="product-price">{{formatPrice(product.price)}}</div>
+    <h3 class="product-title">{{product.title}}</h3>
+    
+    <div class="product-location" *ngIf="showLocation">
+      <span>{{product.location}}</span>
+    </div>
+
+    <!-- Métodos de pago -->
+    <div class="payment-methods" *ngIf="showPaymentMethods && getPaymentMethods().length > 0">
+      <mat-chip-set>
+        <mat-chip 
+          *ngFor="let method of getPaymentMethods()" 
+          [class]="getPaymentMethodClass(method)">
+          {{method}}
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+  </mat-card-content>
+</mat-card>

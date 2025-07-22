@@ -1,0 +1,40 @@
+<mat-card class="product-card">
+  <div class="image-wrapper">
+    <img mat-card-image [src]="product.mainImage" [alt]="product.title" />
+
+    <!-- Ícono de eliminar solo para admin -->
+    <button
+      *ngIf="isAdmin"
+      mat-icon-button
+      class="delete-btn"
+      aria-label="Eliminar producto"
+      (click)="onDelete()"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+
+  <mat-card-content>
+    <div class="card-header">
+      <h2 class="price">
+        {{ product.price | currency : "ARS" : "symbol" : "1.0-0" }}
+      </h2>
+      <!-- Badge de condición -->
+      <span
+        class="condition-badge"
+        [ngClass]="{
+          nuevo: product.condition === 2,
+          usado: product.condition === 1
+        }"
+      >
+        {{ product.condition === 2 ? "NUEVO" : "USADO" }}
+      </span>
+    </div>
+
+    <h3 class="title">{{ product.title }}</h3>
+
+    <div class="location">
+      {{ findCountryName(product.countryId) }}
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,181 @@
+<div class="form-group">
+  <label
+    *ngIf="label && type !== 'checkbox'"
+    class="form-label"
+    [for]="fieldId"
+  >
+    {{ label }}<span *ngIf="required" class="required">*</span>
+  </label>
+
+  <small *ngIf="subLabel" class="form-sub-label">
+    {{ subLabel }}
+  </small>
+
+  <!-- File Input -->
+  <div
+    *ngIf="type === 'file'"
+    class="file-wrapper"
+    [class.has-error]="hasError"
+    [class.has-file]="!!value"
+  >
+    <input
+      type="file"
+      [id]="fieldId"
+      [disabled]="value"
+      (change)="onInput($event)"
+      (blur)="onTouched()"
+      class="file-input"
+    />
+
+    <ng-container *ngIf="!value">
+      <label [for]="fieldId" class="file-label">
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Seleccionar o arrastrar los archivos aquí</span>
+      </label>
+      <small>Subí una imagen en JPG, PNG o WEBP (≤10 MB)</small>
+    </ng-container>
+
+    <!-- estado “llenado” -->
+    <ng-container *ngIf="value">
+      <button
+        *ngIf="value && type === 'file'"
+        class="remove-file-btn"
+        type="button"
+        class="remove-file-btn"
+        (click)="clearFile()"
+        matTooltip="Quitar archivo"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+      <label class="file-label file-label--selected">
+        <mat-icon class="tick-icon">check_circle</mat-icon>
+        <span>Archivo seleccionado</span>
+      </label>
+      <small class="file-name">{{ value?.name }}</small>
+    </ng-container>
+  </div>
+
+  <!-- Text, Email, Password, Tel -->
+  <div
+    *ngIf="
+      type === 'text' ||
+      type === 'email' ||
+      type === 'password' ||
+      type === 'tel' ||
+      type === 'date' ||
+      type === 'money'
+    "
+    class="input-wrapper"
+    [class.has-error]="hasError"
+  >
+    <mat-icon *ngIf="prefixIcon" class="prefix-icon">{{ prefixIcon }}</mat-icon>
+    <input
+      [attr.id]="fieldId"
+      [type]="getInputType()"
+      [placeholder]="placeholder"
+      [value]="value"
+      [disabled]="disabled"
+      [class.has-prefix]="prefixIcon"
+      [class.has-suffix]="
+        suffixIcon || (type === 'password' && showPasswordToggle)
+      "
+      class="form-input"
+      (input)="onInput($event)"
+      (blur)="onTouched()"
+    />
+    <button
+      *ngIf="type === 'password' && showPasswordToggle"
+      type="button"
+      class="password-toggle"
+      (click)="togglePassword()"
+    >
+      <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
+    </button>
+    <mat-icon
+      *ngIf="suffixIcon && !(type === 'password' && showPasswordToggle)"
+      class="suffix-icon"
+      >{{ suffixIcon }}</mat-icon
+    >
+  </div>
+
+  <!-- Textarea -->
+  <textarea
+    *ngIf="type === 'textarea'"
+    [id]="fieldId"
+    [placeholder]="placeholder"
+    [value]="value"
+    [disabled]="disabled"
+    [rows]="rows"
+    [class.has-error]="hasError"
+    class="form-textarea"
+    (input)="onInput($event)"
+    (blur)="onTouched()"
+  ></textarea>
+
+  <!-- Select -->
+  <div
+    *ngIf="type === 'select'"
+    class="select-wrapper"
+    [class.has-error]="hasError"
+  >
+    <!-- Select -->
+    <div
+      *ngIf="type === 'select'"
+      class="select-wrapper"
+      [class.has-error]="hasError"
+    >
+      <select
+        [attr.id]="fieldId"
+        [ngModel]="value"
+        [disabled]="disabled"
+        class="form-select"
+        (ngModelChange)="onSelect($event)"
+        (blur)="onTouched()"
+      >
+        <!-- placeholder como null para que no choque tipos -->
+        <option value="" disabled>{{ placeholder }}</option>
+        <option *ngFor="let o of options" [ngValue]="o.value">
+          {{ o.label }}
+        </option>
+      </select>
+    </div>
+    <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
+  </div>
+
+  <!-- Checkbox -->
+  <div *ngIf="type === 'checkbox'" class="ff-checkbox-wrapper">
+    <input
+      type="checkbox"
+      [id]="fieldId"
+      [checked]="value"
+      [disabled]="disabled"
+      (change)="onCheckboxChange($event)"
+      (blur)="onTouched()"
+    />
+    <label [for]="fieldId" class="ff-checkbox-label">
+      <ng-content></ng-content>
+    </label>
+  </div>
+
+  <div *ngIf="hasError && errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Radio buttons -->
+  <div *ngIf="type === 'radio'" class="radio-wrapper">
+    <ng-container *ngFor="let o of options">
+      <label class="radio-option">
+        <input
+          type="radio"
+          [name]="fieldId"
+          [value]="o.value"
+          [checked]="value === o.value"
+          [disabled]="disabled"
+          (change)="onInput($event)"
+          (blur)="onTouched()"
+        />
+        <span>{{ o.label }}</span>
+      </label>
+    </ng-container>
+  </div>
+</div>

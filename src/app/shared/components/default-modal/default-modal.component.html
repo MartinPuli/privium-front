@@ -1,0 +1,29 @@
+<div class="modal-backdrop" (click)="onClose()"></div>
+<div class="modal-container">
+  <header class="modal-header">
+    <h2>{{ title }}</h2>
+    <button
+      mat-icon-button
+      class="close-btn"
+      (click)="onClose()"
+      aria-label="Cerrar"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <div class="modal-body">
+    <ng-content></ng-content>
+  </div>
+
+  <footer class="modal-footer" *ngIf="buttons?.length">
+    <button
+      *ngFor="let btn of buttons"
+      [ngClass]="btn.type === 'primary' ? 'btn-primary' : 'btn-secondary'"
+      (click)="btn.action()"
+      [disabled]="btn.disabled"
+    >
+      {{ btn.label }}
+    </button>
+  </footer>
+</div>

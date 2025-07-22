@@ -1,0 +1,135 @@
+// Global reset and base styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: $font-family-primary;
+  font-size: $font-size-base;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background-color: var(--background-primary);
+}
+
+// Typography
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: $spacing-md;
+}
+
+h1 {
+  font-size: $font-size-xxl;
+}
+h2 {
+  font-size: $font-size-xl;
+}
+h3 {
+  font-size: $font-size-lg;
+}
+
+p {
+  margin-bottom: $spacing-md;
+  line-height: 1.6;
+}
+
+// Links
+a {
+  color: $primary-navy;
+  text-decoration: none;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: lighten($primary-navy, 10%);
+  }
+}
+
+// Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+
+  &.btn-primary {
+    background-color: $primary-green;
+    color: $white;
+
+    &:hover {
+      background-color: darken($primary-green, 10%);
+    }
+  }
+
+  &.btn-secondary {
+    background-color: transparent;
+    color: $primary-navy;
+    border: 1px solid $primary-navy;
+
+    &:hover {
+      background-color: $primary-navy;
+      color: $white;
+    }
+  }
+}
+
+img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important; /* ← encaja la imagen completa */
+  object-position: center !important; /* ← centrada */
+  display: block !important;
+}
+
+/*/ Utility classes
+.container {
+  max-width: $breakpoint-xl;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+}
+  */
+
+.text-center {
+  text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: right;
+}
+
+.mb-sm {
+  margin-bottom: $spacing-sm;
+}
+.mb-md {
+  margin-bottom: $spacing-md;
+}
+.mb-lg {
+  margin-bottom: $spacing-lg;
+}
+
+.mt-sm {
+  margin-top: $spacing-sm;
+}
+.mt-md {
+  margin-top: $spacing-md;
+}
+.mt-lg {
+  margin-top: $spacing-lg;
+}

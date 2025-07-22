@@ -1,0 +1,22 @@
+<ng-container>
+  <!-- Botón vacío “+” -->
+  <button
+    *ngIf="!categoryName"
+    class="cat-btn cat-btn--empty"
+    type="button"
+    [disabled]="disabled"            
+    (click)="toggle.emit()">
+    <mat-icon>add</mat-icon>
+  </button>
+
+  <!-- Botón con texto + X -->
+  <button
+    *ngIf="categoryName"
+    class="cat-btn cat-btn--filled"
+    type="button"
+    [disabled]="disabled"            
+    (click)="clear.emit()">
+    <span class="cat-label">{{ categoryName }}</span>
+    <mat-icon class="cat-close">close</mat-icon>
+  </button>
+</ng-container>

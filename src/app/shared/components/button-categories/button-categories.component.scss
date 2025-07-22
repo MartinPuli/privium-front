@@ -1,0 +1,69 @@
+@import "../../../../shared/styles/variables";
+
+$btn-h: 38px;
+$btn-w: 165px;
+
+.cat-btn {
+  padding: 0 15px;
+  width: $btn-w;
+  height: $btn-h;
+  border-radius: 6px; /* “más cuadrados”   */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s;
+
+  mat-icon {
+    font-size: 20px;
+  }
+}
+
+/* ── botón lleno ──────────────────────────────────────────────── */
+.cat-btn--filled {
+  background: #103f71a1;
+  color: $white;
+
+  .cat-clear {
+    margin-left: auto;
+  } /* empuja la X a la derecha */
+  &:hover {
+    background: darken(#0b2745, 8%);
+  }
+}
+
+/* ── botón vacío “+” ──────────────────────────────────────────── */
+.cat-btn--empty {
+  background: #103f71a1;
+  color: $white;
+
+  mat-icon {
+    font-size: 24px;
+  }
+  &:hover {
+    background: darken(#0b2745, 8%);
+  }
+}
+
+/* texto con corte elíptico si es largo */
+.cat-label {
+  flex: 1 1 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cat-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none; /* opcional, refuerza "no clickeable" */
+}
+
+/* si quieres un hover distinto solo cuando NO esté disabled */
+.cat-btn:not(:disabled):hover {
+  /* tu color de hover anterior */
+  background: rgba($primary-navy, 0.8);
+}

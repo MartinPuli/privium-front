@@ -1,0 +1,201 @@
+<div class="auth-page">
+  <app-header [logged]="false"></app-header>
+
+  <!-- bloque que crece y centra -->
+  <div class="auth-main">
+    <app-auth-card
+      title="Crear una cuenta"
+      subtitle="Completá los datos para crear tu cuenta."
+      maxWidth="70%"
+      [buttons]="buttons"
+      [links]="links"
+    >
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="onSubmit()"
+        class="auth-form"
+        autocomplete="off"
+      >
+        <!-- nombre + apellido en dos columnas -->
+        <div class="form-row">
+          <app-form-field
+            label="Nombre"
+            formControlName="name"
+            [hasError]="hasError('name')"
+            [errorMessage]="getError('name')"
+          />
+          <app-form-field
+            label="Apellido"
+            formControlName="lastname"
+            [hasError]="hasError('lastname')"
+            [errorMessage]="getError('lastname')"
+          />
+        </div>
+
+        <div class="form-row">
+          <app-form-field
+            label="Correo electrónico"
+            type="email"
+            formControlName="email"
+            placeholder="ejemplo@correo.com"
+            [hasError]="hasError('email')"
+            [errorMessage]="getError('email')"
+          />
+
+          <app-form-field
+            label="Barrio de residencia"
+            type="select"
+            formControlName="countryId"
+            [options]="countryOptions"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Seleccionar barrio"
+            [hasError]="hasError('countryId')"
+            [errorMessage]="getError('countryId')"
+          />
+        </div>
+
+        <app-form-field
+          label="DNI"
+          formControlName="dni"
+          type="text"
+          placeholder="Sin puntos ni guiones"
+          [hasError]="hasError('dni')"
+          [errorMessage]="getError('dni')"
+        />
+
+        <app-form-field
+          label="Número de teléfono (opcional)"
+          type="tel"
+          formControlName="phone"
+          placeholder="+54 11 1234-5678"
+          [hasError]="hasError('phone')!"
+          [errorMessage]="getError('phone')"
+        />
+
+        <!-- selector de barrio -->
+
+        <!-- contraseña + confirmar -->
+        <div class="form-row">
+          <app-form-field
+            label="Contraseña"
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            [showPasswordToggle]="true"
+            (passwordToggle)="hidePassword = !hidePassword"
+            [hasError]="hasError('password')"
+            [errorMessage]="getError('password')"
+          />
+          <app-form-field
+            label="Confirmar contraseña"
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="confirmPassword"
+            [showPasswordToggle]="true"
+            (passwordToggle)="hidePassword = !hidePassword"
+            [hasError]="hasError('confirmPassword')"
+            [errorMessage]="
+              registerForm.hasError('mismatch') &&
+              registerForm.get('confirmPassword')?.touched
+                ? 'Las contraseñas no coinciden'
+                : ''
+            "
+          />
+        </div>
+
+        <!-- términos -->
+        <app-form-field
+          type="checkbox"
+          formControlName="acceptTerms"
+          [hasError]="hasError('acceptTerms')"
+        >
+          Acepto los
+          <a
+            href="#"
+            (click)="openTerms(); $event.preventDefault()"
+            class="link-primary"
+          >
+            Términos y condiciones
+          </a>
+          y el
+          <a routerLink="/privacy" class="link-primary">Aviso de Privacidad</a>.
+        </app-form-field>
+      </form>
+    </app-auth-card>
+  </div>
+
+  <app-footer [logged]="false"></app-footer>
+</div>
+
+<app-default-modal
+  *ngIf="showTermsModal"
+  title="Términos y Condiciones"
+  [buttons]="termsButtons"
+  (close)="showTermsModal = false"
+>
+  <!-- Aquí inyecta el contenido de tus términos: -->
+  <p class="terms">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nec eros
+    elementum, scelerisque mauris sit amet, venenatis purus. Integer ut lectus
+    nec arcu fermentum aliquet quis non arcu. Phasellus nec libero vel lorem
+    pulvinar fermentum sit amet nec purus. Curabitur ut turpis vitae dui
+    efficitur euismod. Quisque quis consequat mi. Proin dictum justo vitae
+    elementum convallis. Vivamus suscipit, libero vitae commodo blandit, nunc
+    sapien aliquet mauris, non finibus est dolor nec risus. Nullam aliquet magna
+    ut tortor efficitur, quis pharetra sem ultricies. Mauris sodales mollis
+    sapien, a cursus lorem elementum sed. Vestibulum ante ipsum primis in
+    faucibus orci luctus et ultrices posuere cubilia curae; Pellentesque
+    habitant morbi tristique senectus et netus et malesuada fames ac turpis
+    egestas. Aenean at volutpat turpis. Donec sodales enim a dolor elementum, ac
+    aliquet nisl blandit. Suspendisse potenti. Vivamus ullamcorper, ante sed
+    suscipit ultricies, purus dui hendrerit quam, vitae aliquet dui odio non
+    nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada
+    fames ac turpis egestas. Nam in sapien nec ipsum cursus fringilla id quis
+    velit. Aliquam commodo pretium mi, nec feugiat turpis cursus id. Duis
+    ultricies felis ut purus viverra, vitae scelerisque mi aliquet. Etiam dictum
+    lectus nec mauris placerat, nec condimentum nunc egestas. Vivamus tempor
+    purus eget sapien luctus, at hendrerit metus vestibulum. Integer feugiat
+    nulla id erat fermentum, nec facilisis risus cursus. Cras ac odio non justo
+    faucibus hendrerit. In vitae eros sit amet elit faucibus pellentesque. Nulla
+    facilisi. Nulla convallis, leo eu sagittis volutpat, dui eros hendrerit
+    augue, vel fringilla sapien velit vitae lorem. Phasellus porta urna eu mi
+    volutpat, vitae interdum justo consequat. Sed luctus leo vitae mattis
+    vehicula. Nulla in lobortis risus. Sed sit amet venenatis sapien, nec
+    feugiat tellus. Suspendisse luctus, quam at tristique venenatis, urna nunc
+    faucibus ex, eu dignissim lorem neque nec arcu. Vestibulum vulputate commodo
+    augue, in mollis urna vehicula ac. Duis sed eros eu nibh tristique viverra.
+    Mauris venenatis semper purus, a auctor metus sodales quis. Praesent et
+    tellus bibendum, consectetur erat sed, tincidunt nisl. Cras ultricies tellus
+    a lacus porta, non varius lectus commodo. Aliquam erat volutpat. Vestibulum
+    dolor risus, venenatis sed rutrum vitae, consectetur eget arcu. Integer
+    efficitur orci a purus pulvinar, vel vulputate turpis mattis. Nulla sit amet
+    viverra lorem. Nulla facilisi. Morbi vitae euismod orci. Etiam euismod dolor
+    in orci fermentum, vitae hendrerit nisl vulputate. Nunc sit amet suscipit
+    tortor, nec malesuada nunc. Duis sit amet faucibus mauris. Ut sit amet felis
+    nec nisl malesuada euismod. Vestibulum ante ipsum primis in faucibus orci
+    luctus et ultrices posuere cubilia curae; Vestibulum in est vitae turpis
+    aliquet tincidunt. Pellentesque vitae sodales ipsum. Duis non lectus vitae
+    ex fermentum convallis. Nam id nunc in ante fringilla pellentesque. Ut quis
+    odio elit. Vestibulum feugiat placerat neque nec vehicula. Sed ac libero nec
+    risus tempor euismod. Donec pulvinar magna ac odio scelerisque, a
+    consectetur libero lobortis. Morbi at tellus porttitor, scelerisque augue
+    nec, placerat nibh. Fusce sagittis dignissim mi, a aliquet tellus tincidunt
+    nec. Pellentesque habitant morbi tristique senectus et netus et malesuada
+    fames ac turpis egestas. Aenean tristique, justo ac lacinia vulputate, odio
+    nunc eleifend lectus, sit amet feugiat purus arcu nec purus. Donec commodo
+    aliquet sem, eget malesuada orci. Integer ac mi at mauris pretium lacinia in
+    sit amet orci. Suspendisse potenti. Nam consectetur dolor vitae est euismod
+    euismod. Proin blandit massa nec nunc bibendum, nec gravida nibh venenatis.
+    Vestibulum tincidunt sem sed massa elementum, in semper tellus pharetra.
+    Phasellus ac mauris nec lorem consequat vestibulum. Sed euismod, justo a
+    tristique convallis, lectus elit aliquet tortor, vitae hendrerit risus elit
+    id mi. Quisque vulputate purus sit amet sodales gravida. Curabitur euismod
+    nibh et mi fermentum, sit amet lacinia orci auctor. Fusce vel enim
+    vulputate, cursus elit quis, dignissim elit. Aenean laoreet, ipsum nec
+    ullamcorper elementum, libero nunc elementum nisl, sit amet tincidunt mi
+    eros sit amet risus. Vestibulum ante ipsum primis in faucibus orci luctus et
+    ultrices posuere cubilia curae; Maecenas suscipit ipsum ac augue tristique,
+    vitae feugiat risus vestibulum. Pellentesque habitant morbi tristique
+    senectus et netus et malesuada fames ac turpis egestas. Donec sit amet dolor
+    sit amet mauris dapibus aliquet nec sed turpis.
+  </p>
+</app-default-modal>

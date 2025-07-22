@@ -1,0 +1,139 @@
+<form class="filters-form" [formGroup]="form" (keydown.enter)="emitFilters()">
+  <!-- Buscar -->
+  <app-form-field
+    type="text"
+    label="Buscar artículos"
+    placeholder="¿Qué buscas?"
+    formControlName="searchTerm"
+  ></app-form-field>
+  <hr class="section-divider" />
+
+  <!-- Condición -->
+  <app-form-field
+    type="radio"
+    label="Condición"
+    placeholder="Elige uno"
+    [options]="conditionOptions"
+    formControlName="conditionFilter"
+  ></app-form-field>
+
+  <hr class="section-divider" />
+
+  <!-- Precio -->
+  <div class="price-range">
+    <app-form-field
+      type="money"
+      label="Precio mínimo"
+      placeholder="0"
+      formControlName="minPrice"
+      [hasError]="
+        form.get('minPrice')!.invalid && form.get('minPrice')!.touched
+      "
+      [errorMessage]="'Mín ≥ 0'"
+    ></app-form-field>
+    <app-form-field
+      type="money"
+      label="Precio máximo"
+      placeholder="0"
+      formControlName="maxPrice"
+      [hasError]="
+        form.get('maxPrice')!.invalid && form.get('maxPrice')!.touched
+      "
+      [errorMessage]="'Máx ≥ 0'"
+    ></app-form-field>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Distancia -->
+  <app-form-field
+    type="radio"
+    label="Distancia"
+    placeholder="Elige uno"
+    [options]="distanceOptions"
+    formControlName="maxDistanceKm"
+  ></app-form-field>
+
+  <hr class="section-divider" />
+
+  <!-- Tipo -->
+  <app-form-field
+    type="select"
+    label="Tipo"
+    placeholder="Selecciona tipo"
+    [options]="typesOptions"
+    formControlName="type"
+  ></app-form-field>
+
+  <hr class="section-divider" />
+
+  <!-- Barrio -->
+  <app-form-field
+    type="select"
+    label="Barrio"
+    placeholder="Selecciona barrio"
+    [options]="countryOptions"
+    formControlName="countryId"
+  ></app-form-field>
+
+  <hr class="section-divider" />
+
+  <!-- Marca -->
+  <app-form-field
+    type="text"
+    label="Marca"
+    placeholder="p.ej. Nike"
+    formControlName="brandFilter"
+  ></app-form-field>
+
+  <hr class="section-divider" />
+
+  <!-- Fecha de publicación -->
+  <div class="date-range">
+    <app-form-field
+      type="date"
+      label="Desde"
+      placeholder="dd/mm/aaaa"
+      formControlName="createdFrom"
+    ></app-form-field>
+    <app-form-field
+      type="date"
+      label="Hasta"
+      placeholder="dd/mm/aaaa"
+      formControlName="createdTo"
+    ></app-form-field>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Medios de pago -->
+  <div class="payment-methods">
+    <app-form-field type="checkbox" formControlName="acceptsCash">
+      Efectivo
+    </app-form-field>
+    <app-form-field type="checkbox" formControlName="acceptsCard">
+      Tarjeta
+    </app-form-field>
+    <app-form-field type="checkbox" formControlName="acceptsTransfer">
+      Transferencia
+    </app-form-field>
+    <app-form-field type="checkbox" formControlName="acceptsBarter">
+      Trueque
+    </app-form-field>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- Acciones -->
+  <div class="actions">
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="emitFilters()"
+    >
+      Filtrar
+    </button>
+    <button mat-button type="button" (click)="reset()">Limpiar</button>
+  </div>
+</form>

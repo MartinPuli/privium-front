@@ -1,0 +1,74 @@
+@import "../../../../../shared/styles/variables";
+
+:host {
+  display: block;
+  font-family: "Urbanist", sans-serif;
+}
+
+/* --------- Header --------- */
+.step-header {
+  margin-bottom: 3rem;
+
+  .step-indicator {
+    display: block;
+    font-size: 1.9rem;
+    color: $text-light;
+    margin-bottom: 1.2rem;
+  }
+  .step-title {
+    font-size: 2.3rem;
+    font-weight: 750;
+    color: $primary-navy;
+    margin: 0;
+  }
+}
+
+/* Grid */
+.type-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+  margin-top: 4rem;
+  margin-bottom: 3rem;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card */
+.type-card {
+  background: $background-secondary;
+  border-radius: 4px;
+  padding: 4.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  border: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0 0 0 / 0.08);
+
+  &:hover {
+    background-color: #ababa2;
+  }
+
+  .type-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    color: $primary-navy;
+  }
+  .type-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: $primary-navy;
+  }
+}

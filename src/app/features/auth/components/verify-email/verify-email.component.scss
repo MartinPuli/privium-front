@@ -1,0 +1,21 @@
+.ve-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.spinner {
+  width: 54px;
+  height: 54px;
+  border: 6px solid #e0e0e0;
+  border-top-color: #121e4b; // $primary-navy
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

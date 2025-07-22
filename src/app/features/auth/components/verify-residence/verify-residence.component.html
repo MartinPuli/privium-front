@@ -1,0 +1,60 @@
+<div class="auth-page">
+  <app-header [logged]="false"></app-header>
+
+  <div class="auth-main">
+    <app-auth-card
+      title="Verificación de residencia"
+      subtitle="Subí un documento que confirme que vivís en un barrio privado."
+      [buttons]="buttons"
+      [links]="links"
+      maxWidth="70%"
+    >
+      <form
+        *ngIf="verificationForm"
+        [formGroup]="verificationForm"
+        (ngSubmit)="onSubmit()"
+        class="verification-form"
+      >
+
+        <!-- Archivo comprobatorio -->
+        <app-form-field
+          label="Documento comprobatorio"
+          subLabel="Ej: screenshot de OpenKey, foto de tu DNI con dirección, recibo de expensas…"
+          type="file"
+          formControlName="fileProof"
+          (selected)="onFileSelected($event)"
+          [hasError]="
+            verificationForm.get('fileProof')!.invalid &&
+            verificationForm.get('fileProof')!.touched
+          "
+          [errorMessage]="getError('fileProof')"
+        ></app-form-field>
+
+        <!-- Comentarios -->
+        <app-form-field
+          label="Comentario"
+          subLabel="Escribí aquí cualquier detalle adicional que confirme tu residencia"
+          type="textarea"
+          placeholder="Tu comentario…"
+          formControlName="textProof"
+          [hasError]="
+            verificationForm.get('textProof')!.invalid &&
+            verificationForm.get('textProof')!.touched
+          "
+          [errorMessage]="getError('textProof')"
+        ></app-form-field>
+
+        <!-- Error general -->
+        <div class="general-error" *ngIf="showGeneralError">
+          <mat-icon>error</mat-icon>
+          <span
+            >Debes completar al menos uno de los dos campos: subir un documento
+            o escribir comentarios.</span
+          >
+        </div>
+      </form>
+    </app-auth-card>
+  </div>
+
+  <app-footer [logged]="false"></app-footer>
+</div>

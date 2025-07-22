@@ -1,0 +1,323 @@
+<div class="header-toolbar">
+  <div
+    class="header-container"
+    [ngClass]="{ 'header-one-row': !logged || publishing }"
+  >
+    <!-- Logo y ubicación -->
+    <div class="header-left">
+      <a
+        routerLink="/home"
+        class="logo-link"
+        aria-label="Ir al inicio de Privium"
+      >
+        <img
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-3B1hX241DyVj0FoA34Z6lZidG4Ubv7.png"
+          alt="Privium - Marketplace de barrios cerrados"
+          class="logo-image"
+        />
+      </a>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="search-container" *ngIf="logged && !publishing">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+        <input
+          matInput
+          placeholder="Buscar artículos"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="onSearch()"
+          aria-label="Buscar productos en Privium"
+        />
+      </mat-form-field>
+
+      <div class="menu-button">
+        <button mat-icon-button aria-label="Abrir menú de categorías">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Acciones del usuario -->
+    <div class="header-actions" *ngIf="logged">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="userMenu"
+        class="action-button"
+        aria-label="Menú de usuario"
+      >
+        <mat-icon>account_circle</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu">
+        <div class="user-info" *ngIf="currentUser">
+          <span class="user-name"
+            >{{ currentUser.name }} {{ currentUser.lastname }}</span
+          >
+          <span class="user-email">{{ currentUser.email }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <button
+          mat-menu-item
+          [routerLink]="['/perfil', authService.getCurrentUserId()]"
+        >
+          <mat-icon>person</mat-icon>
+          <span>Ver Perfil</span>
+        </button>
+        <!-- Botón VERIFICACIONES solo Admin -->
+        <mat-divider *ngIf="currentUser?.role === 'ADMIN'"></mat-divider>
+        <button
+          mat-menu-item
+          *ngIf="currentUser?.role === 'ADMIN'"
+          [routerLink]="'/admin/residence-verifications'"
+        >
+          <mat-icon>verified_user</mat-icon>
+          <span>Verificación residencia</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesión</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</div>
+
+<!-- Navegación de categorías -->
+<div
+  class="category-nav"
+  aria-label="Navegación de categorías"
+  *ngIf="logged && !publishing"
+>
+  <div class="nav-container">
+    <!-- Ubicación del usuario -->
+    <div class="location-info">
+      <mat-icon aria-hidden="true">location_on</mat-icon>
+      <span class="location-text">
+        <p>Estás en</p>
+        <h2>{{ this.currentUserCountryName }}</h2>
+      </span>
+    </div>
+
+    <!-- Filtros rápidos -->
+    <div class="filter-links">
+      <button
+        mat-button
+        (menuOpened)="onFilterMenuOpen()"
+        [matMenuTriggerFor]="condMenu"
+      >
+        Condición
+      </button>
+      <button
+        mat-button
+        (menuOpened)="onFilterMenuOpen()"
+        [matMenuTriggerFor]="priceMenu"
+      >
+        Precio
+      </button>
+      <button
+        mat-button
+        (menuOpened)="onFilterMenuOpen()"
+        [matMenuTriggerFor]="distMenu"
+      >
+        Distancia
+      </button>
+      <button
+        mat-button
+        (menuOpened)="onFilterMenuOpen()"
+        [matMenuTriggerFor]="hoodMenu"
+      >
+        Barrio
+      </button>
+      <button
+        mat-button
+        (menuOpened)="onFilterMenuOpen()"
+        [matMenuTriggerFor]="payMenu"
+      >
+        Medio de pago
+      </button>
+      <button
+        mat-button
+        (menuOpened)="onFilterMenuOpen()"
+        [matMenuTriggerFor]="dateMenu"
+      >
+        Fecha de publicación
+      </button>
+    </div>
+
+    <!-- Botón Publicar -->
+    <button
+      mat-raised-button
+      color="accent"
+      class="publish-button"
+      (click)="goToPublish()"
+      aria-label="Publicar un nuevo producto"
+    >
+      PUBLICAR
+    </button>
+  </div>
+</div>
+
+<!-- ════════ 1. Condición ════════ -->
+<mat-menu #condMenu="matMenu" class="filter-menu">
+  <div class="menu-body" (click)="$event.stopPropagation()">
+    <mat-radio-group [(ngModel)]="filters.condition" class="d-block">
+      <mat-radio-button value="">Todas</mat-radio-button><br />
+      <mat-radio-button value="nuevo">Nuevo</mat-radio-button><br />
+      <mat-radio-button value="usado">Usado</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="w-100"
+    mat-menu-close
+    (click)="applyFilters()"
+  >
+    Aplicar
+  </button>
+</mat-menu>
+
+<!-- ════════ 2. Precio ════════ -->
+<mat-menu #priceMenu="matMenu" class="filter-menu">
+  <div class="menu-body" (click)="$event.stopPropagation()">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Precio mínimo</mat-label>
+      <input
+        matInput
+        type="number"
+        in="1"
+        max="99999999"
+        [(ngModel)]="filters.min"
+      />
+      <mat-hint align="end">Entre 1 y 99 999 999</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Precio máximo</mat-label>
+      <input
+        matInput
+        type="number"
+        in="1"
+        max="99999999"
+        [(ngModel)]="filters.max"
+      />
+      <mat-hint align="end">Entre 1 y 99 999 999</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="w-100"
+    mat-menu-close
+    (click)="applyFilters()"
+  >
+    Aplicar
+  </button>
+</mat-menu>
+
+<!-- ════════ 3. Distancia ════════ -->
+<mat-menu #distMenu="matMenu" class="filter-menu">
+  <div class="menu-body" (click)="$event.stopPropagation()">
+    <mat-radio-group [(ngModel)]="filters.distance" class="d-block">
+      <mat-radio-button [value]="10">Menos de 10 km</mat-radio-button><br />
+      <mat-radio-button [value]="15">Menos de 15 km</mat-radio-button><br />
+      <mat-radio-button [value]="30">Menos de 30 km</mat-radio-button><br />
+      <mat-radio-button [value]="60">Menos de 60 km</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="w-100"
+    mat-menu-close
+    (click)="applyFilters()"
+  >
+    Aplicar
+  </button>
+</mat-menu>
+
+<!-- ════════ 4. Barrio privado ════════ -->
+<mat-menu #hoodMenu="matMenu" class="filter-menu">
+  <form #f="ngForm" class="menu-body" (click)="$event.stopPropagation()">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Barrio privado</mat-label>
+      <mat-select [(ngModel)]="filters.countryId" name="countryId">
+        <mat-option *ngFor="let opt of countryOptions" [value]="opt.value">
+          {{ opt.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+  <button
+    mat-stroked-button
+    color="primary"
+    class="apply-btn small"
+    mat-menu-close
+    (click)="applyFilters()"
+  >
+    Aplicar
+  </button>
+</mat-menu>
+
+<!-- ════════ 5. Medio de pago ════════ -->
+<mat-menu #payMenu="matMenu" class="filter-menu">
+  <div class="menu-body" (click)="$event.stopPropagation()">
+    <mat-checkbox
+      *ngFor="let mp of mediosPago"
+      [(ngModel)]="filters.pay[mp.value]"
+      class="d-block"
+    >
+      {{ mp.label }}
+    </mat-checkbox>
+  </div>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="w-100"
+    mat-menu-close
+    (click)="applyFilters()"
+  >
+    Aplicar
+  </button>
+</mat-menu>
+
+<!-- ════════ 6. Fecha de publicación ════════ -->
+<mat-menu #dateMenu="matMenu" class="filter-menu">
+  <div class="menu-body" (click)="$event.stopPropagation()">
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Desde</mat-label>
+      <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="filters.from" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="pickerFrom"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #pickerFrom></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Hasta</mat-label>
+      <input matInput [matDatepicker]="pickerTo" [(ngModel)]="filters.to" />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="pickerTo"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #pickerTo></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="w-100"
+    mat-menu-close
+    (click)="applyFilters()"
+  >
+    Aplicar
+  </button>
+</mat-menu>

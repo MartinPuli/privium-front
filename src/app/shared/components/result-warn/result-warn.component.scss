@@ -1,0 +1,104 @@
+@import '../../../../shared/styles/variables'; 
+
+/* Contenedor principal */
+.rw-container {
+  display: flex;
+  align-items: center;
+  gap: 90px;
+  font-family: "Urbanist" !important;
+  padding: 60px;
+  border-radius: 12px;
+  background: $background-secondary; // mismo off-white que la maqueta
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Icono (dentro de un círculo) */
+.rw-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 20px solid currentColor;
+
+  mat-icon {
+    font-size: 120px;
+    font-weight: 600;
+    line-height: 120px;
+    width: 120px;
+    height: 120px;
+    color: currentColor;
+  }
+}
+
+/* Columna de textos + botón */
+.rw-texts {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 70%;
+  color: $primary-navy;
+  font-family: 'Urbanist', sans-serif !important;
+
+  .rw-title {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+
+  .rw-subtitle {
+    margin: 0;
+    font-size: 1.7rem;
+    font-weight: 600;
+  }
+
+  .rw-description {
+    margin: 0 0 24px 0;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    max-width: 520px;
+  }
+
+  .rw-btn {
+    background-color: $primary-navy;
+    align-self: flex-start;
+    min-width: 260px;
+    font-size: 1.2rem;
+    padding: 22px;
+    align-self: flex-end;
+  }
+}
+
+/* Colores para éxito y error */
+.success {
+  color: $primary-navy; // círculo y borde
+}
+
+.error {
+  color: #d32f2f; // rojo Material
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .rw-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 24px;
+  }
+
+  .rw-icon {
+    width: 120px;
+    height: 120px;
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  .rw-btn {
+    align-self: center;
+  }
+}

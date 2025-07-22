@@ -1,0 +1,87 @@
+@import '../../../../shared/styles/variables';
+
+.filters-form {
+  width: 360px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border: 1px solid $primary-navy;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba($primary-navy, 0.1);
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+
+  .section-divider {
+    border: none;
+    border-bottom: 1px solid $primary-navy;
+    margin: 0;
+  }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+
+  /* Compacta los form-field solo aquí */
+  ::ng-deep app-form-field {
+    margin-bottom: 0 !important;
+
+    /* inputs e selects internos más compactos */
+    ::ng-deep .form-input,
+    ::ng-deep .form-select,
+    ::ng-deep .mat-select-trigger {
+      font-size: 0.9rem !important;     /* más pequeño */
+      padding: 0.45rem 0.6rem !important;
+    }
+
+    /* labels un poco más grandes para visibilidad */
+    ::ng-deep .form-label {
+      font-size: 1.05rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  /* Grid 2x2 para métodos de pago */
+  .payment-methods {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+
+    /* Override de texto de checkbox */
+    ::ng-deep mat-checkbox .mat-checkbox-label {
+      font-size: 0.8rem;
+    }
+  }
+
+  /* Radios más pequeños */
+  ::ng-deep .radio-option span {
+    font-size: 0.95rem;
+    color: black;
+    font-weight: 350;
+  }
+
+  /* Opciones de select más pequeñas */
+  ::ng-deep .mat-mdc-select-value {
+    font-size: 0.85rem;
+  }
+
+  .price-range,
+  .date-range {
+    display: flex;
+    gap: 0.75rem;
+    @media (max-width: 600px) {
+      flex-direction: column;
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+}

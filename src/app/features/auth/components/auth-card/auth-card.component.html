@@ -1,0 +1,48 @@
+<!-- wrapper exterior (no tiene fondo ni borde) -->
+<div class="auth-wrapper" [style.max-width]="maxWidth">
+  <!-- HEADER –- queda “suelto” arriba -->
+  <header class="auth-header">
+    <button
+      *ngIf="showBackButton"
+      mat-icon-button
+      (click)="backClick.emit()"
+      aria-label="Volver"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <h1>{{ title }}</h1>
+    <p *ngIf="subtitle">{{ subtitle }}</p>
+  </header>
+
+  <!-- CARD –- rectangular con fondo, borde-radio y sombra -->
+  <div class="auth-card">
+    <section class="content">
+      <ng-content></ng-content>
+    </section>
+
+    <footer *ngIf="buttons?.length">
+      <button
+        *ngFor="let btn of buttons"
+        mat-raised-button
+        [color]="btn.color || 'primary'"
+        [type]="btn.type || 'button'"
+        [disabled]="btn.disabled || btn.loading"
+        (click)="onBtnClick(btn)"
+      >
+        <mat-spinner *ngIf="btn.loading" diameter="20"></mat-spinner>
+        <span *ngIf="!btn.loading">{{ btn.label }}</span>
+      </button>
+    </footer>
+
+    <nav class="links" *ngIf="links?.length">
+      <a
+        *ngFor="let link of links"
+        [ngClass]="link.type || 'primary'"
+        (click)="onLinkClick(link)"
+      >
+        {{ link.label }}
+      </a>
+    </nav>
+  </div>
+</div>

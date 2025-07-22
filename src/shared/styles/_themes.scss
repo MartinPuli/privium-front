@@ -1,0 +1,26 @@
+// Light Theme
+.light-theme {
+  --background-primary: #{$white};
+  --background-secondary: #{$secondary-gray};
+  --text-primary: #{$text-dark};
+  --text-secondary: #{$text-light};
+  --border-color: #{$border-light};
+}
+
+// Dark Theme
+.dark-theme {
+  --background-primary: #1a1a1a;
+  --background-secondary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --border-color: #404040;
+}
+
+// Theme variables
+:root {
+  --primary-navy: #{$primary-navy};
+  --primary-green: #{$primary-green};
+  --shadow-sm: #{$shadow-sm};
+  --shadow-md: #{$shadow-md};
+  --shadow-lg: #{$shadow-lg};
+}

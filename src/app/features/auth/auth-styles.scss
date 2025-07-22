@@ -1,0 +1,18 @@
+@import '../../../shared/styles/variables';
+
+.auth-page {
+  min-height: 100vh;          /* ocupar todo el viewport     */
+  display: flex;
+  flex-direction: column;
+  background: transparent;    /* color gris viene del host   */
+}
+
+/* Zona que crece entre header y footer y centra el card */
+.auth-main {
+  padding: 10vh 0vh;
+  flex: 1;
+  background: $background;
+  display: flex;
+  justify-content: center;
+  align-items: center;        /* ← centra verticalmente       */
+}
