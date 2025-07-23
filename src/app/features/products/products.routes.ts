@@ -5,7 +5,7 @@ export const productRoutes: Routes = [
   {
     path: ":id",
     component: ProductDetailComponent,
-    title: "Producto - Privium",
+    title: "Detalle del producto - Privium",
     data: {
       description: "Detalles del producto en Privium marketplace",
       keywords: "producto, detalle, comprar, privium, marketplace",
