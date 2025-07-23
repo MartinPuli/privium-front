@@ -106,13 +106,21 @@ $container-w: 86%; // igual que el footer
     position: relative;
     display: flex;
     align-items: center;
+    height: 40px;
     border-left: 1px solid #e0e0e0;
 
     .category-toggle {
       @include pill(0 25px 25px 0);
-      height: 40px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
       border-left: none;
       padding: 0 1rem;
+
+      .down-arrow {
+        font-size: 1.2rem;
+      }
     }
 
     .categories-dropdown {
