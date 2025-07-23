@@ -4,11 +4,12 @@ import { RouterModule } from "@angular/router"
 import { MatCardModule } from "@angular/material/card"
 import { MatChipsModule } from "@angular/material/chips"
 import { ListingResponseDto } from "../../models/listing.model"
+import { DefaultImageDirective } from '../../directives/default-image.directive'
 
 @Component({
   selector: "app-product-card",
   standalone: true,
-  imports: [CommonModule, RouterModule, MatCardModule, MatChipsModule],
+  imports: [CommonModule, RouterModule, MatCardModule, MatChipsModule, DefaultImageDirective],
   templateUrl: "./product-card.component.html",
   styleUrls: ["./product-card.component.scss"],
 })

@@ -31,16 +31,17 @@
                   class="thumbnail-btn"
                   [class.active]="i === currentImageIndex"
                   (click)="currentImageIndex = i">
-                  <img [src]="image" [alt]="'Imagen ' + (i + 1)" class="thumbnail-image">
+                  <img [src]="image" [alt]="'Imagen ' + (i + 1)" class="thumbnail-image" appDefaultImage>
                 </button>
               </div>
 
               <!-- Main Image -->
               <div class="main-image-container">
-                <img 
-                  [src]="getAllImages()[currentImageIndex]" 
+                <img
+                  [src]="getAllImages()[currentImageIndex]"
                   [alt]="product.title"
-                  class="main-image">
+                  class="main-image"
+                  appDefaultImage>
                 
                 <button 
                   mat-icon-button 
@@ -136,7 +137,7 @@
             <div class="related-products-scroll" #relatedProductsScroll>
               <div class="related-products-grid">
                 <div class="related-product" *ngFor="let i of [1,2,3,4,5,6]">
-                  <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png" alt="Producto relacionado">
+                  <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png" alt="Producto relacionado" appDefaultImage>
                   <div class="related-product-info">
                     <div class="related-price">${{65000 + (i * 5000)}}</div>
                     <div class="related-title">{{getRelatedProductTitle(i)}}</div>
