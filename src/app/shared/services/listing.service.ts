@@ -5,6 +5,7 @@ import {
   ListListingsRequestDto,
   ListingResponseDto,
   ListingInfoResponseDto,
+  ProductDetail,
 } from "../models/listing.model";
 import { ResponseDto, ResponseDataDto } from "../models/responses.model";
 import { AuthService } from "./auth.service";
@@ -39,6 +40,21 @@ export class ListingService {
     return this.http.get<ResponseDataDto<ListingInfoResponseDto>>(
       `${this.base}info/${listingId}`
     );
+  }
+
+  /** Combina datos básicos e info adicional de una publicación */
+  async getProductDetail(id: number): Promise<ProductDetail> {
+    const [listingResp, infoResp] = await Promise.all([
+      lastValueFrom(this.listListings({ listingId: id })),
+      lastValueFrom(this.getListingInfo(id)),
+    ]);
+
+    const listing = listingResp.data?.[0];
+    if (!listing) {
+      throw new Error('Listing not found');
+    }
+
+    return { ...listing, ...infoResp.data! };
   }
 
   /* ───────────── Alta de publicación ───────────── */
