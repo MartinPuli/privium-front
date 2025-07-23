@@ -39,6 +39,7 @@
       >
         <button mat-button class="category-toggle" (click)="onCategoryButtonClick()">
           {{ selectedCategoryLabel }}
+          <mat-icon class="down-arrow" aria-hidden="true">expand_more</mat-icon>
         </button>
         <div class="categories-dropdown" *ngIf="showCategories">
           <app-list-categories (categorySelected)="onCategorySelect($event)" [orientation]="'left'"></app-list-categories>

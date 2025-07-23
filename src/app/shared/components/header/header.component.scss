@@ -71,6 +71,8 @@ $container-w: 86%; // igual que el footer
 .search-container {
   @include flex(row, center);
   flex: 1 1 auto;
+  
+  padding: 0px 2rem;
   width: 100%;
   gap: 0; // un solo pill
 
@@ -79,6 +81,15 @@ $container-w: 86%; // igual que el footer
     margin-top: 1rem;
   }
 
+  ::ng-deep{
+    .mat-mdc-form-field-bottom-align{
+      height: 0px;;
+    }
+
+    .mdc-notched-outline__leading{
+      border: 0;
+    }
+  }
   // campo texto
   .search-field {
     flex: 1 1 auto;
@@ -106,13 +117,21 @@ $container-w: 86%; // igual que el footer
     position: relative;
     display: flex;
     align-items: center;
+    height: 40px;
     border-left: 1px solid #e0e0e0;
 
     .category-toggle {
       @include pill(0 25px 25px 0);
-      height: 40px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
       border-left: none;
       padding: 0 1rem;
+
+      .down-arrow {
+        font-size: 1.2rem;
+      }
     }
 
     .categories-dropdown {
