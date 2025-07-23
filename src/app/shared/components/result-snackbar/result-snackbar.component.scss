@@ -31,6 +31,11 @@
   background-color: #d32f2f; /* rojo 700 */
 }
 
+:host-context(.snack-info),
+:host-context(.info-snackbar) {
+  background-color: #1976d2; /* azul 700 */
+}
+
 /* tip extra: redondeamos el contenedor */
 :host {
   border-radius: 8px;

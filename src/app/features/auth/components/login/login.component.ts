@@ -94,7 +94,7 @@ export class LoginComponent {
             status: "success",
           },
           duration: 5000,
-          panelClass: "error-snackbar",
+          panelClass: "success-snackbar",
           horizontalPosition: "center",
           verticalPosition: "bottom",
         });
