@@ -30,6 +30,7 @@ import { ListingRequestDto } from "src/app/shared/models/listing.model";
 import { ListingService } from "src/app/shared/services/listing.service";
 import { ResultSnackbarComponent } from "src/app/shared/components/result-snackbar/result.snackbar.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { DefaultImageDirective } from "../../../../shared/directives/default-image.directive";
 
 interface SelectedImage {
   file: File;
@@ -61,6 +62,7 @@ interface CategorySelection {
     ListCategoriesComponent,
     ButtonCategoriesComponent,
     MatProgressSpinnerModule,
+    DefaultImageDirective,
   ],
   templateUrl: "./publish.component.html",
   styleUrls: ["./publish.component.scss"],

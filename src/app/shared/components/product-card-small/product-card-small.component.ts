@@ -20,6 +20,7 @@ import { CountryService } from '../../services/country.service';
 import { Country } from '../../models/country.model';
 import { ListingService } from '../../services/listing.service';
 import { ResultSnackbarComponent } from '../result-snackbar/result.snackbar.component';
+import { DefaultImageDirective } from '../../directives/default-image.directive';
 
 @Component({
   selector: 'app-product-card-small',
@@ -31,6 +32,7 @@ import { ResultSnackbarComponent } from '../result-snackbar/result.snackbar.comp
     ReactiveFormsModule,
     DefaultModalComponent,
     FormFieldComponent,
+    DefaultImageDirective,
   ],
   templateUrl: './product-card-small.component.html',
   styleUrls: ['./product-card-small.component.scss'],
