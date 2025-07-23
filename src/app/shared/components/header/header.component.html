@@ -36,7 +36,7 @@
           {{ selectedCategoryLabel }}
         </button>
         <div class="categories-dropdown" *ngIf="showCategories">
-          <app-list-categories (categorySelected)="onCategorySelect($event)"></app-list-categories>
+          <app-list-categories (categorySelected)="onCategorySelect($event)" [orientation]="'left'"></app-list-categories>
         </div>
       </div>
     </div>

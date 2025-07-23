@@ -22,7 +22,7 @@ export class FooterComponent {
   ]
 
   helpLinks = [
-    { name: "Publicar", link: "/help/publish" },
+    { name: "Publicar", link: "/publish" },
     { name: "Solución de problemas", link: "/help/problems" },
     { name: "Centro de seguridad", link: "/help/security" },
   ]

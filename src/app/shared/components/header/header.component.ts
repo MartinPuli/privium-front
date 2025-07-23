@@ -138,9 +138,8 @@ export class HeaderComponent implements OnInit {
   onCategorySelect(sel: { idPath: string; name: string }): void {
     this.selectedCategoryLabel = sel.name;
     this.showCategories = false;
-    this.router.navigate(["/search"], {
-      queryParams: { categoryIds: [sel.idPath] },
-    });
+    const request = { categoryIds: [sel.idPath]}
+    this.router.navigate(["/search"], { state: { request } });
   }
 
   applyFilters(): void {
