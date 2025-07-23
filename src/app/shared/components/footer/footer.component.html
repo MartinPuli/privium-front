@@ -23,11 +23,9 @@
         <h3>CATEGORÍAS MÁS BUSCADAS</h3>
         <nav aria-label="Categorías populares">
           <ul class="footer-links">
-            <li><a href="/products?category=vehiculos">Vehículos</a></li>
-            <li><a href="/products?category=hogar">Hogar</a></li>
-            <li><a href="/products?category=muebles">Muebles</a></li>
-            <li><a href="/products?category=indumentaria">Indumentaria</a></li>
-            <li><a href="/products?category=electronica">Electrónica</a></li>
+            <li *ngFor="let c of categories">
+              <a role="button" (click)="onCategory(c)">{{ c }}</a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -37,11 +35,11 @@
         <h3>AYUDA</h3>
         <nav aria-label="Enlaces de ayuda">
           <ul class="footer-links">
-            <li><a href="/help/publish">Publicar</a></li>
-            <li><a href="/help/problems">Contacto</a></li>
-            <li><a href="/help/security">Terminos y condiciones</a></li>
+            <li><a role="button" (click)="goToPublish()">Publicar</a></li>
+            <li><a role="button" (click)="openContact()">Contacto</a></li>
+            <li><a role="button" (click)="openTerms()">Terminos y condiciones</a></li>
             <li><a>Politica de seguridad</a></li>
-            <li><a>Cerrar cuenta</a></li>
+            <li><a role="button" (click)="openDelete()">Cerrar cuenta</a></li>
           </ul>
         </nav>
       </div>
@@ -53,3 +51,49 @@
     </div>
   </div>
 </footer>
+
+<!-- Contact Modal -->
+<app-default-modal
+  *ngIf="contactOpen"
+  title="Contacto"
+  [buttons]="contactButtons"
+  (close)="contactOpen = false"
+>
+  <form [formGroup]="contactForm">
+    <app-form-field
+      label="Encabezado"
+      formControlName="subject"
+    ></app-form-field>
+    <app-form-field
+      label="Mensaje"
+      type="textarea"
+      formControlName="body"
+      [rows]="4"
+    ></app-form-field>
+  </form>
+</app-default-modal>
+
+<!-- Delete Account Modal -->
+<app-default-modal
+  *ngIf="deleteOpen"
+  title="¿Cerrar cuenta?"
+  [buttons]="deleteButtons"
+  (close)="deleteOpen = false"
+>
+  <p>
+    ¿Estás seguro de que deseas cerrar tu cuenta? Esta acción no se puede
+    deshacer.
+  </p>
+</app-default-modal>
+
+<!-- Terms Modal -->
+<app-default-modal
+  *ngIf="termsOpen"
+  title="Términos y Condiciones"
+  [buttons]="termsButtons"
+  (close)="termsOpen = false"
+>
+  <p>
+    Aquí irán los términos y condiciones del servicio.
+  </p>
+</app-default-modal>
