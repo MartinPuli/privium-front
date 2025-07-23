@@ -95,8 +95,14 @@ export class SearchFiltersComponent implements OnInit {
       countryId: [this.initialFilters.countryId ?? null],
       brandFilter: [this.initialFilters.brandFilter ?? ""],
       conditionFilter: [this.initialFilters.conditionFilter ?? null],
-      minPrice: [this.initialFilters.minPrice ?? null, [Validators.min(0)]],
-      maxPrice: [this.initialFilters.maxPrice ?? null, [Validators.min(0)]],
+      minPrice: [
+        this.initialFilters.minPrice ?? null,
+        [Validators.min(1), Validators.max(99999999)],
+      ],
+      maxPrice: [
+        this.initialFilters.maxPrice ?? null,
+        [Validators.min(1), Validators.max(99999999)],
+      ],
       maxDistanceKm: [this.initialFilters.maxDistanceKm ?? null],
       createdFrom: [this.initialFilters.createdFrom ?? null],
       createdTo: [this.initialFilters.createdTo ?? null],
