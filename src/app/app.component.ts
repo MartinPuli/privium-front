@@ -1,15 +1,23 @@
-import { ChangeDetectorRef, Component, type OnInit } from "@angular/core";
+import { Component, type OnInit } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { Title, Meta } from "@angular/platform-browser";
 import { AuthService } from "./shared/services/auth.service";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { CommonModule } from "@angular/common";
+import { LoaderService } from "./shared/services/loader.service";
+import { LoaderComponent } from "./shared/components/loader/loader.component";
 
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [RouterOutlet, MatProgressSpinnerModule, CommonModule],
+  imports: [
+    RouterOutlet,
+    MatProgressSpinnerModule,
+    CommonModule,
+    LoaderComponent,
+  ],
   template: `
+    <app-default-loader *ngIf="loader.loading$ | async"></app-default-loader>
     <ng-container *ngIf="initialized; else loading">
       <router-outlet></router-outlet>
     </ng-container>
@@ -27,7 +35,8 @@ export class AppComponent implements OnInit {
   constructor(
     private titleService: Title,
     private metaService: Meta,
-    private authService: AuthService
+    private authService: AuthService,
+    public loader: LoaderService
   ) {
   }
 

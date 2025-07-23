@@ -8,6 +8,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { routes } from "./app.routes";
 import { authInterceptor } from "./core/interceptors/auth.interceptor";
 import { errorInterceptor } from "./core/interceptors/error.interceptor";
+import { loaderInterceptor } from "./core/interceptors/loader.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,7 +16,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withRouterConfig({ onSameUrlNavigation: "reload" })),
 
     // 2) Standalone HTTP + tus interceptors
-    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    provideHttpClient(
+      withInterceptors([authInterceptor, errorInterceptor, loaderInterceptor])
+    ),
 
     // 3) Animaciones y módulos clásicos
     provideAnimationsAsync(),
