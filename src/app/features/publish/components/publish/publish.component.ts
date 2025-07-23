@@ -342,7 +342,7 @@ export class PublishComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.sb.openFromComponent(ResultSnackbarComponent, {
-          data: { message: "¡Publicación creada!", status: "sucess" },
+          data: { message: "¡Publicación creada!", status: "success" },
           duration: 4000,
           panelClass: "success-snackbar",
           horizontalPosition: "center",

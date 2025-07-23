@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 /** Datos que recibe el snackbar */
 export interface SnackData {
   message: string;
-  status: 'success' | 'error';
+  status: 'success' | 'error' | 'info';
 }
 
 @Component({
@@ -20,6 +20,14 @@ export class ResultSnackbarComponent {
   constructor(@Inject(MAT_SNACK_BAR_DATA) public data: SnackData) {}
 
   get icon(): string {
-    return this.data.status === 'success' ? 'check_circle' : 'error_outline';
+    switch (this.data.status) {
+      case 'success':
+        return 'check_circle';
+      case 'error':
+        return 'error_outline';
+      case 'info':
+      default:
+        return 'info';
+    }
   }
 }

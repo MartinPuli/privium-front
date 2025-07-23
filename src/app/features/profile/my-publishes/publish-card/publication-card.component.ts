@@ -60,7 +60,7 @@ export class PublicationCardComponent {
       next: () => {
         /* snackbar de éxito */
         this.sb.openFromComponent(ResultSnackbarComponent, {
-          data: { message: "¡Publicación modificada!", status: "sucess" },
+          data: { message: "¡Publicación modificada!", status: "success" },
           duration: 4000,
           panelClass: "success-snackbar",
           horizontalPosition: "center",
