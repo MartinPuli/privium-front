@@ -33,6 +33,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { CommonModule } from "@angular/common";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { DefaultImageDirective } from "src/app/shared/directives/default-image.directive";
 
 @Component({
   selector: "app-edit-publication",
@@ -47,6 +48,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     ListCategoriesComponent,
     FormFieldComponent,
     MatCheckboxModule,
+    DefaultImageDirective,
   ],
   templateUrl: "./edit-publication.component.html",
   styleUrls: ["./edit-publication.component.scss"],

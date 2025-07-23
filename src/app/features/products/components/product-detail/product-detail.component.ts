@@ -24,6 +24,7 @@ import { ProfileService } from "src/app/shared/services/profile.service"
 import { CountryService } from "src/app/shared/services/country.service"
 import { User } from "src/app/shared/models/user.model"
 import { ProductCardSmallComponent } from "src/app/shared/components/product-card-small/product-card-small.component"
+import { DefaultImageDirective } from "src/app/shared/directives/default-image.directive"
 
 @Component({
   selector: "app-product-detail",
@@ -39,6 +40,7 @@ import { ProductCardSmallComponent } from "src/app/shared/components/product-car
     HeaderComponent,
     FooterComponent,
     ProductCardSmallComponent,
+    DefaultImageDirective,
   ],
   templateUrl: "./product-detail.component.html",
   styleUrls: ["./product-detail.component.scss"],

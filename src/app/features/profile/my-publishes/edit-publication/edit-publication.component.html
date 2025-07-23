@@ -49,7 +49,7 @@
           *ngFor="let img of selectedImages; let i = index"
           [class.is-main]="i === 0"
         >
-          <img [src]="img.preview" />
+          <img [src]="img.preview" appDefaultImage />
           <button mat-icon-button (click)="removeImage(i)">
             <mat-icon>close</mat-icon>
           </button>
