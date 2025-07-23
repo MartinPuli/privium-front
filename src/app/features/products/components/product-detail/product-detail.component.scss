@@ -330,37 +330,6 @@ $product-card-radius: 16px;
   gap: 16px;
 }
 
-.nav-button {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: $background-secondary;
-  border: 2px solid #e0e0e0;
-  color: $primary-navy;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: $primary-navy;
-    border-color: $primary-navy;
-    color: #fff;
-  }
-
-  mat-icon { width: 24px; height: 24px; font-size: 24px; }
-}
-
-.related-products-scroll {
-  flex: 1;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-
-  &::-webkit-scrollbar { display: none; }
-}
-
 .related-products-grid {
   display: flex;
   gap: 20px;

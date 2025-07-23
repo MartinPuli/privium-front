@@ -156,31 +156,15 @@
         </div>
 
         <!-- Productos relacionados -->
+        <!-- Productos relacionados -->
         <div class="related-products-section">
           <h2 class="section-title">Productos relacionados</h2>
-          <div class="related-products-container">
-            <button
-              class="nav-button prev"
-              (click)="scrollRelatedProducts('left')"
-            >
-              <mat-icon>chevron_left</mat-icon>
-            </button>
 
-            <div class="related-products-scroll" #relatedProductsScroll>
-              <div class="related-products-grid">
-                <app-product-card-small
-                  *ngFor="let p of relatedProducts"
-                  [product]="p"
-                ></app-product-card-small>
-              </div>
-            </div>
-
-            <button
-              class="nav-button next"
-              (click)="scrollRelatedProducts('right')"
-            >
-              <mat-icon>chevron_right</mat-icon>
-            </button>
+          <div class="related-products-grid no-scroll">
+            <app-product-card-small
+              *ngFor="let p of relatedProducts"
+              [product]="p">
+            </app-product-card-small>
           </div>
         </div>
       </div>
