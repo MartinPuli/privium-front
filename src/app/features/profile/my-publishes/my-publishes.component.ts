@@ -45,7 +45,11 @@ import { PublicationCardComponent } from "./publish-card/publication-card.compon
 export class MyPublishesComponent implements OnInit {
   @Input() user!: User;
 
+  /** Lista completa obtenida del backend */
   allListings: ListingResponseDto[] = [];
+  /** Lista filtrada y ordenada */
+  filteredListings: ListingResponseDto[] = [];
+  /** Datos a mostrar en la página actual */
   listings: ListingResponseDto[] = [];
 
   /* filtros */
@@ -68,29 +72,26 @@ export class MyPublishesComponent implements OnInit {
     this.load();
   }
 
-  /* --- carga del backend --- */
+  /* --- carga inicial del backend --- */
   load(): void {
     this.ls
-      .listListings({
-        userId: this.user.id,
-        sortOrder: this.sort,
-        searchTerm: this.search || undefined,
-      })
+      .listListings({ userId: this.user.id, pageSize: 9999 })
       .subscribe((r) => {
         this.allListings = r.data ?? [];
-        this.length = this.allListings.length;
-        this.setPagedData();
+        this.applyFilters();
       });
   }
 
   /* --- cambia orden --- */
   setSort(ord: "DESC" | "ASC") {
     this.sort = ord;
-    this.load();
+    this.pageIndex = 0;
+    this.applyFilters();
   }
   doSearch(term: string) {
     this.search = term.trim();
-    this.load();
+    this.pageIndex = 0;
+    this.applyFilters();
   }
 
   /* --- manejador del paginador --- */
@@ -102,7 +103,27 @@ export class MyPublishesComponent implements OnInit {
 
   private setPagedData() {
     const start = this.pageIndex * this.pageSize;
-    this.listings = this.allListings.slice(start, start + this.pageSize);
+    this.listings = this.filteredListings.slice(start, start + this.pageSize);
+  }
+
+  /** Aplica filtros de búsqueda y orden */
+  private applyFilters() {
+    let data = [...this.allListings];
+
+    if (this.search) {
+      const term = this.search.toLowerCase();
+      data = data.filter((l) => l.title.toLowerCase().includes(term));
+    }
+
+    data.sort((a, b) => {
+      const da = new Date(a.createdAt).getTime();
+      const db = new Date(b.createdAt).getTime();
+      return this.sort === "DESC" ? db - da : da - db;
+    });
+
+    this.filteredListings = data;
+    this.length = this.filteredListings.length;
+    this.setPagedData();
   }
 
   /* --- navegar a publicar --- */
@@ -200,8 +221,7 @@ export class MyPublishesComponent implements OnInit {
         this.allListings = this.allListings.filter(
           (l) => !this.selectedIds.has(l.id)
         );
-        this.length = this.allListings.length;
-        this.setPagedData();
+        this.applyFilters();
 
         // Muestro snackbar con tu componente
         this.snackBar.openFromComponent(ResultSnackbarComponent, {
