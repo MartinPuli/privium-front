@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-} from "@angular/core"
+import { Component, OnInit } from "@angular/core"
 import { ActivatedRoute, Router, RouterModule } from "@angular/router"
 import { CommonModule } from "@angular/common"
 import { MatButtonModule } from "@angular/material/button"
@@ -47,7 +42,6 @@ import { DefaultImageDirective } from "src/app/shared/directives/default-image.d
   styleUrls: ["./product-detail.component.scss"],
 })
 export class ProductDetailComponent implements OnInit {
-  @ViewChild("relatedProductsScroll") relatedProductsScroll!: ElementRef<HTMLDivElement>
 
   product: ProductDetail | null = null
   seller: User | null = null
@@ -61,14 +55,6 @@ export class ProductDetailComponent implements OnInit {
     dimensions: "Medidas: 110 cm de ancho x 51 cm de profundidad x 89 cm de alto.",
   }
 
-  relatedProductTitles = [
-    "MESA DE LUZ",
-    "BURÓ DE ROBLE",
-    "CÓMODA",
-    "APARADOR",
-    "VAJILLERO DE PINO",
-    "MESA AUXILIAR",
-  ]
 
   relatedProducts: ListingResponseDto[] = []
 
@@ -107,7 +93,19 @@ export class ProductDetailComponent implements OnInit {
         this.product = { ...listing, ...infoResp.data } as ProductDetail
         this.isFavorite = false
         this.locationName = this.countryService.getNameById(listing.countryId)
-        this.relatedProducts = this.generateRelatedProducts()
+
+        try {
+          const relatedResp = await firstValueFrom(
+            this.listingService.listListings({
+              categoryIds: infoResp.data.categories?.map((c) => c.categoryId) ?? [],
+              page: 1,
+              pageSize: 4,
+            })
+          )
+          this.relatedProducts = relatedResp.data ?? []
+        } catch {
+          this.relatedProducts = []
+        }
         try {
           const userResp = await this.profileService.getUser(listing.userId)
           this.seller = userResp.data ?? null
@@ -177,41 +175,6 @@ export class ProductDetailComponent implements OnInit {
     return this.product.categories.map((cat) => cat.description).join(", ")
   }
 
-  getRelatedProductTitle(index: number): string {
-    return this.relatedProductTitles[index - 1] || "PRODUCTO"
-  }
-
-  private generateRelatedProducts(): ListingResponseDto[] {
-    return Array.from({ length: 6 }, (_, i) => ({
-      id: i + 1,
-      title: this.getRelatedProductTitle(i + 1),
-      description: "",
-      price: 65000 + (i + 1) * 5000,
-      acceptsBarter: false,
-      acceptsCash: true,
-      acceptsTransfer: false,
-      acceptsCard: false,
-      type: "PRODUCTO",
-      userId: 0,
-      mainImage:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png",
-      status: 1,
-      condition: (i + 1) % 2 === 0 ? 2 : 1,
-      createdAt: "",
-      countryId: this.product?.countryId ?? 1,
-    }))
-  }
-
-  scrollRelatedProducts(direction: "left" | "right"): void {
-    const scrollContainer = this.relatedProductsScroll.nativeElement
-    const scrollAmount = 220
-
-    if (direction === "left") {
-      scrollContainer.scrollLeft -= scrollAmount
-    } else {
-      scrollContainer.scrollLeft += scrollAmount
-    }
-  }
 
   goBack(): void {
     this.router.navigate(["/home"])
