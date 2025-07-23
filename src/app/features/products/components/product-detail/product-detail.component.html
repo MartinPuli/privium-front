@@ -63,7 +63,7 @@
               
               <div class="product-location">
                 <mat-icon class="location-icon">location_on</mat-icon>
-                <span>{{product.location}}</span>
+                <span>{{locationName}}</span>
               </div>
 
               <!-- Métodos de pago -->
@@ -95,7 +95,7 @@
               <mat-icon class="seller-icon">person</mat-icon>
               <div class="seller-details">
                 <span class="seller-label">Vendedor</span>
-                <span class="seller-value">{{product.sellerName}}</span>
+                <span class="seller-value">{{seller?.name}} {{seller?.lastname}}</span>
               </div>
             </div>
             
@@ -103,7 +103,7 @@
               <mat-icon class="seller-icon">phone</mat-icon>
               <div class="seller-details">
                 <span class="seller-label">Número de Teléfono</span>
-                <span class="seller-value">(011) 1234 - 5678</span>
+                <span class="seller-value">{{seller?.contactPhone || '—'}}</span>
               </div>
             </div>
             
@@ -111,7 +111,7 @@
               <mat-icon class="seller-icon">email</mat-icon>
               <div class="seller-details">
                 <span class="seller-label">E-Mail</span>
-                <span class="seller-value">mariagonzalezgmail.com</span>
+                <span class="seller-value">{{seller?.email}}</span>
               </div>
             </div>
           </div>

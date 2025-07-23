@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { DefaultModalComponent, ModalButton } from '../default-modal/default-modal.component';
 import { FormFieldComponent } from '../form-field/form-field.component';
@@ -51,7 +52,8 @@ export class ProductCardSmallComponent implements OnInit {
     private countrySrv: CountryService,
     private fb: FormBuilder,
     private listingSrv: ListingService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {
     this.deleteForm = this.fb.group({
       message: ['', Validators.required],
@@ -110,5 +112,11 @@ export class ProductCardSmallComponent implements OnInit {
         disabled: this.deleteForm.invalid,
       },
     ];
+  }
+
+  onSelect(): void {
+    this.router.navigate(['/products', this.product.id], {
+      state: { request: { listingId: this.product.id, pageSize: 1 } },
+    });
   }
 }
