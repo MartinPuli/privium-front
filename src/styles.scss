@@ -72,6 +72,10 @@ body {
   background-color: var(--background-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  &.modal-open {
+    overflow: hidden;
+  }
 }
 
 // Typography

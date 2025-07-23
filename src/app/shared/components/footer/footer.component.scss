@@ -49,6 +49,14 @@
   padding: 0;
 }
 
+.form-contact {
+  width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .footer-content {
   display: flex;
   flex-direction: row;
