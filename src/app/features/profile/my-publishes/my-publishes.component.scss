@@ -23,7 +23,25 @@
   align-items: center;
 
   .search-field {
-    width: 220px;
+    width: 280px;
+
+    /* Estilo similar al buscador del header */
+    ::ng-deep {
+      .mat-mdc-form-field-flex,
+      .mat-mdc-text-field-wrapper {
+        background: $white;
+        border-radius: 25px;
+      }
+
+      .mat-mdc-form-field-infix {
+        padding: 0.5rem 1rem;
+        min-height: auto;
+      }
+
+      .mat-icon {
+        color: $primary-navy;
+      }
+    }
   }
 }
 
