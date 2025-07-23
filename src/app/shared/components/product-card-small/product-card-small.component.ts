@@ -108,6 +108,7 @@ export class ProductCardSmallComponent implements OnInit {
       {
         label: 'Enviar',
         type: 'primary',
+        form: 'deleteForm',
         action: () => this.sendDeleteMessage(),
         disabled: this.deleteForm.invalid,
       },

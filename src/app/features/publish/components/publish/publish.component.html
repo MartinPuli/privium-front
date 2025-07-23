@@ -16,9 +16,10 @@
       <h1 class="step-title">Completá los datos del producto</h1>
     </div>
     <section *ngIf="progress.currentStep === 2">
-      <form [formGroup]="detailsForm" class="details-form">
+      <form id="detailsForm" [formGroup]="detailsForm" class="details-form">
         <!-- Título -->
         <app-publish-info
+          [formId]="'detailsForm'"
           *ngIf="step2Stage >= 0"
           [disabled]="cardDisabled(0)"
           title="Título"
@@ -39,6 +40,7 @@
         </app-publish-info>
 
         <app-publish-info
+          [formId]="'detailsForm'"
           *ngIf="step2Stage >= 1"
           [disabled]="cardDisabled(1)"
           title="Categorías"
@@ -77,6 +79,7 @@
 
         <!-- Descripción -->
         <app-publish-info
+          [formId]="'detailsForm'"
           *ngIf="step2Stage >= 2"
           title="Descripción"
           [disabled]="cardDisabled(2)"
@@ -100,6 +103,7 @@
 
         <!-- Marca -->
         <app-publish-info
+          [formId]="'detailsForm'"
           *ngIf="step2Stage >= 3"
           title="Marca"
           [disabled]="cardDisabled(3)"
@@ -114,6 +118,7 @@
 
         <!-- Condición -->
         <app-publish-info
+          [formId]="'detailsForm'"
           *ngIf="step2Stage >= 4"
           [disabled]="cardDisabled(4)"
           title="Condición"
@@ -139,6 +144,7 @@
 
         <!-- Fotos -->
         <app-publish-info
+          [formId]="'detailsForm'"
           *ngIf="step2Stage >= 5"
           title="Fotos"
           [disabled]="cardDisabled(5)"
@@ -221,8 +227,9 @@
       </h1>
     </div>
     <section *ngIf="progress.currentStep === 3">
-      <form [formGroup]="commercialForm" class="commercial-form">
+      <form id="commercialForm" [formGroup]="commercialForm" class="commercial-form">
         <app-publish-info
+          [formId]="'commercialForm'"
           title="Precio"
           description="Indicá el valor al que querés vender tu producto"
         >
@@ -237,6 +244,7 @@
         </app-publish-info>
 
         <app-publish-info
+          [formId]="'commercialForm'"
           title="Medios de pago"
           description="Elegí las formas de pago que vas a aceptar"
         >

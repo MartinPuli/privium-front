@@ -104,6 +104,7 @@ export class VerifyResidenceComponent implements OnInit {
         label: "Registrar",
         type: "submit",
         color: "primary",
+        form: "verificationForm",
         disabled:
           // disabled si está cargando
           this.isLoading ||

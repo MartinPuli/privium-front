@@ -120,6 +120,7 @@ export class FooterComponent {
       {
         label: 'Enviar',
         type: 'primary',
+        form: 'contactForm',
         action: () => this.sendContact(),
         disabled: this.contactForm.invalid,
       },

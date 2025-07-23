@@ -27,6 +27,7 @@
         mat-raised-button
         [color]="btn.color || 'primary'"
         [type]="btn.type || 'button'"
+        [attr.form]="btn.form || null"
         [disabled]="btn.disabled || btn.loading"
         (click)="onBtnClick(btn)"
       >
