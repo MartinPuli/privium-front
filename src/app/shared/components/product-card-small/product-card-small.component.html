@@ -1,4 +1,4 @@
-<mat-card class="product-card">
+<mat-card class="product-card" (click)="onSelect()">
   <div class="image-wrapper">
   <img mat-card-image [src]="product.mainImage" [alt]="product.title" appDefaultImage />
 
@@ -8,7 +8,7 @@
       mat-icon-button
       class="delete-btn"
       aria-label="Eliminar producto"
-      (click)="openDeleteModal()"
+      (click)="openDeleteModal(); $event.stopPropagation()"
     >
       <mat-icon>delete</mat-icon>
     </button>

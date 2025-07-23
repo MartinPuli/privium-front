@@ -2,6 +2,9 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 
+import { ResponseDataDto } from "../models/responses.model";
+import { User } from "../models/user.model";
+
 import { RegisterRequest } from "../models/user.model";
 import { ResponseDto } from "../models/responses.model";
 
@@ -30,7 +33,13 @@ export class ProfileService {
 
   deleteAccount(): Promise<ResponseDto> {
     return firstValueFrom(
-      this.http.post<ResponseDto>(`${this.baseBackendUrl}/delete`, null) 
+      this.http.post<ResponseDto>(`${this.baseBackendUrl}/delete`, null)
+    );
+  }
+
+  getUser(id: number): Promise<ResponseDataDto<User>> {
+    return firstValueFrom(
+      this.http.get<ResponseDataDto<User>>(`${this.baseBackendUrl}/${id}`)
     );
   }
 }

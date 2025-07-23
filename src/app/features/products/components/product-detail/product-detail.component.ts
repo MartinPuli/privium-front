@@ -14,9 +14,15 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner"
 import { firstValueFrom } from "rxjs"
 
 import { ListingService } from "../../../../shared/services/listing.service"
-import { ProductDetail } from "../../../../shared/models/listing.model"
+import {
+  ProductDetail,
+  ListListingsRequestDto,
+} from "../../../../shared/models/listing.model"
 import { HeaderComponent } from "src/app/shared/components/header/header.component"
 import { FooterComponent } from "src/app/shared/components/footer/footer.component"
+import { ProfileService } from "src/app/shared/services/profile.service"
+import { CountryService } from "src/app/shared/services/country.service"
+import { User } from "src/app/shared/models/user.model"
 
 @Component({
   selector: "app-product-detail",
@@ -39,6 +45,8 @@ export class ProductDetailComponent implements OnInit {
   @ViewChild("relatedProductsScroll") relatedProductsScroll!: ElementRef<HTMLDivElement>
 
   product: ProductDetail | null = null
+  seller: User | null = null
+  locationName: string | null = null
   currentImageIndex = 0
   isLoading = true
   isFavorite = false
@@ -61,21 +69,29 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private listingService: ListingService,
+    private profileService: ProfileService,
+    private countryService: CountryService,
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       const productId = Number.parseInt(params["id"], 10)
       if (productId) {
-        this.loadProduct(productId)
+        const nav = this.router.getCurrentNavigation()
+        const req = (nav?.extras.state as any)?.request as Partial<ListListingsRequestDto> | undefined
+        this.loadProduct(productId, req)
       }
     })
   }
 
-  private async loadProduct(id: number): Promise<void> {
+  private async loadProduct(id: number, req?: Partial<ListListingsRequestDto>): Promise<void> {
     try {
       const [listResp, infoResp] = await Promise.all([
-        firstValueFrom(this.listingService.listListings({ listingId: id, pageSize: 1 })),
+        firstValueFrom(
+          this.listingService.listListings(
+            req ?? { listingId: id, pageSize: 1 }
+          )
+        ),
         firstValueFrom(this.listingService.getListingInfo(id)),
       ])
 
@@ -83,6 +99,11 @@ export class ProductDetailComponent implements OnInit {
       if (listing) {
         this.product = { ...listing, ...infoResp.data } as ProductDetail
         this.isFavorite = false
+        this.locationName = this.countryService.getNameById(listing.countryId)
+        try {
+          const userResp = await this.profileService.getUser(listing.userId)
+          this.seller = userResp.data ?? null
+        } catch {}
       }
     } finally {
       this.isLoading = false
