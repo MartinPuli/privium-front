@@ -32,12 +32,16 @@ export class FooterComponent {
   @Input() logged = true;
   currentYear = new Date().getFullYear();
 
+  /**
+   * Botones rápidos de búsqueda. Cada opción redirige a la pantalla de
+   * resultados con un filtro predefinido en el navigation state.
+   */
   categories = [
-    'Vehículos',
-    'Hogar',
+    'Servicios',
+    'Inmuebles',
     'Muebles',
+    'Vehículos',
     'Indumentaria',
-    'Electrónica',
   ];
 
   // ----- modals -----
@@ -61,26 +65,30 @@ export class FooterComponent {
 
   // ----- navegación por categoría -----
   onCategory(name: string): void {
-    const cat = this.categorySrv
-      .getCached()
-      .find((c) => c.name.toLowerCase() === name.toLowerCase());
-
     const req: Partial<ListListingsRequestDto> = { page: 1, sortOrder: 'DESC' };
 
-    if (cat) {
-      req.categoryIds = [cat.id];
-    } else {
-      switch (name.toLowerCase()) {
-        case 'vehículos':
-        case 'vehiculos':
-          req.type = 'VEHICULO';
-          break;
-        case 'muebles':
-          req.type = 'MUEBLE';
-          break;
-        case 'hogar':
-          req.type = 'INMUEBLE';
-          break;
+    switch (name.toLowerCase()) {
+      case 'servicios':
+        req.type = 'SERVICIO';
+        break;
+      case 'inmuebles':
+        req.type = 'INMUEBLE';
+        break;
+      case 'muebles':
+        req.type = 'MUEBLE';
+        break;
+      case 'vehículos':
+      case 'vehiculos':
+        req.type = 'VEHICULO';
+        break;
+      case 'indumentaria':
+        req.categoryIds = ['5'];
+        break;
+      default: {
+        const cat = this.categorySrv
+          .getCached()
+          .find((c) => c.name.toLowerCase() === name.toLowerCase());
+        if (cat) req.categoryIds = [cat.id];
       }
     }
 
