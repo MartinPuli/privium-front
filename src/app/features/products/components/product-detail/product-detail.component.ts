@@ -1,4 +1,4 @@
-/*import { Component, OnInit, ViewChild, ElementRef } from "@angular/core"
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
 import { CommonModule } from "@angular/common"
 import { MatButtonModule } from "@angular/material/button"
@@ -60,14 +60,15 @@ export class ProductDetailComponent implements OnInit {
   }
 
   private async loadProduct(id: number): Promise<void> {
-    /*try {
+    this.isLoading = true
+    try {
       this.product = await this.listingService.getProductDetail(id)
       this.isFavorite = this.product.isFavorite || false
-      this.isLoading = false
     } catch (error) {
       console.error("Error loading product:", error)
-      this.isLoading = false
       this.loadMockProduct()
+    } finally {
+      this.isLoading = false
     }
   }
 
@@ -79,8 +80,7 @@ export class ProductDetailComponent implements OnInit {
         "Antigua cómoda de roble macizo, lavada y lustrada con cera natural. Paneles laterales replanados, frente y patas con delicadas tallas, propias del estilo. Cuenta con tres amplios cajones de deslizamiento suave, ideales para guardar ropa blanca, mantelería o accesorios. Interior limpio y en excelente estado, conservando su estructura original.",
       price: 90000,
       condition: "used",
-      category: "muebles",
-      images: ["https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png"],
+      mainImage: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png",
       location: "Nordelta / Barrio El Virazón",
       neighborhood: "Campos de Alvarez",
       sellerId: 1,
@@ -114,7 +114,7 @@ export class ProductDetailComponent implements OnInit {
   getAllImages(): string[] {
     if (!this.product) return []
 
-    const allImages = [...this.product.images]
+    const allImages = [this.product.mainImage]
 
     this.product.auxiliaryImages?.forEach((auxImg) => {
       allImages.push(auxImg.imgUrl)
@@ -190,4 +190,4 @@ export class ProductDetailComponent implements OnInit {
   goBack(): void {
     this.router.navigate(["/home"])
   }
-}*/
+}
