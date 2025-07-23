@@ -216,22 +216,21 @@ $container-w: 86%; // igual que el footer
   padding: 0px 4.5rem;
 
   @include mq($bp-md) {
-    gap: 0.5rem;
+    gap: 1rem;
     flex-wrap: wrap;
   }
 
-  .filter-btn {
-    background: $white;
-    color: $primary-navy;
-    border-radius: 18px;
-    padding: 0.25rem 1rem;
+  button {
+    color: $white;
+    padding: 0.75rem 0;
     font-weight: 500;
-    font-size: 0.9rem;
-    border: 1px solid rgba($primary-navy, 0.2);
-    box-shadow: $shadow-sm;
+    font-size: 1.1rem;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s;
 
-    &:hover {
-      background: $background-secondary;
+    &:hover,
+    &.active {
+      color: $white;
     }
   }
 }
