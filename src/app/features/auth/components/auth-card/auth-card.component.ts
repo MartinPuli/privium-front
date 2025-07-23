@@ -49,8 +49,13 @@ export class AuthCardComponent {
 
   /* Helpers */
   onBtnClick(btn: AuthButton) {
-    if (btn.action) 
-    btn.action();
+    // Remove focus from any active element to avoid double taps on mobile
+    const active = document.activeElement as HTMLElement | null;
+    if (active) {
+      active.blur();
+    }
+
+    if (btn.action) btn.action();
   }
   onLinkClick(link: AuthLink) {
     link.action();
