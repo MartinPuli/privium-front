@@ -20,6 +20,8 @@ export interface ModalButton {
 export class DefaultModalComponent {
   @Input() title = "";
   @Input() buttons: ModalButton[] = [];
+  /** Width of the modal container. Accepts any CSS width value. */
+  @Input() width = '70vw';
   @Output() close = new EventEmitter<void>();
 
   onClose(): void {
