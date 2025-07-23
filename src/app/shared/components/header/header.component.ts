@@ -55,6 +55,7 @@ import { number } from "zod";
 export class HeaderComponent implements OnInit {
   searchQuery = "";
   selectedCategoryLabel = "Todas";
+  selectedCategoryId: string | null = null;
   categories: Category[] = [];
   showCategories = false;
 
@@ -121,8 +122,10 @@ export class HeaderComponent implements OnInit {
     if (this.searchQuery.trim()) {
       params.searchTerm = this.searchQuery.trim();
     }
-    if (this.selectedCategoryLabel !== "Todas") {
-      // find selected category id
+    if (this.selectedCategoryId) {
+      params.categoryIds = [this.selectedCategoryId];
+    } else if (this.selectedCategoryLabel !== "Todas") {
+      // fallback if only the label is set
       const cat = this.categories.find(
         (c) => c.name === this.selectedCategoryLabel
       );
@@ -137,10 +140,8 @@ export class HeaderComponent implements OnInit {
 
   onCategorySelect(sel: { idPath: string; name: string }): void {
     this.selectedCategoryLabel = sel.name;
+    this.selectedCategoryId = sel.idPath;
     this.showCategories = false;
-    this.router.navigate(["/search"], {
-      queryParams: { categoryIds: [sel.idPath] },
-    });
   }
 
   applyFilters(): void {
@@ -149,6 +150,10 @@ export class HeaderComponent implements OnInit {
       page: 1,
       sortOrder: this.sortOrder,
     };
+
+    if (this.selectedCategoryId) {
+      request.categoryIds = [this.selectedCategoryId];
+    }
 
     // 2) Condición
     if (this.filters.condition === "nuevo") request.conditionFilter = 2;
