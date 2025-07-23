@@ -18,13 +18,13 @@
   height: 22px;
 }
 
+/* tip extra: redondeamos el contenedor y color por defecto */
 :host {
   border-radius: 8px;
   background-color: var(--snack-bg-color, #1976d2);
 }
 
-/* ----- colores de fondo según clase del contenedor ----- */
-
+/* Colores de fondo por estado (se usan como valores por defecto) */
 :host-context(.snack-success),
 :host-context(.success-snackbar) {
   --snack-bg-color: #2e7d32; /* verde 800 */
@@ -39,8 +39,4 @@
 :host-context(.snack-info),
 :host-context(.info-snackbar) {
   --snack-bg-color: #1976d2; /* azul 700 */
-}
-/* tip extra: redondeamos el contenedor */
-:host {
-  border-radius: 8px;
 }

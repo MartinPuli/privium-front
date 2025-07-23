@@ -32,7 +32,11 @@
         />
       </mat-form-field>
 
-      <div class="category-button" (click)="$event.stopPropagation()">
+      <div
+        class="category-button"
+        #catButton
+        (click)="$event.stopPropagation()"
+      >
         <button mat-button class="category-toggle" (click)="onCategoryButtonClick()">
           {{ selectedCategoryLabel }}
         </button>
