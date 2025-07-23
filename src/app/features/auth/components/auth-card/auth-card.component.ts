@@ -11,6 +11,7 @@ export interface AuthButton {
   disabled?: boolean;
   loading?: boolean;
   action?: () => void;          // se usa sólo si type!=='submit'
+  form?: string;                // opcional: id del form a enviar
 }
 
 export interface AuthLink {

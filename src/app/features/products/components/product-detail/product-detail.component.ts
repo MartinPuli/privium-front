@@ -17,6 +17,7 @@ import { ListingService } from "../../../../shared/services/listing.service"
 import {
   ProductDetail,
   ListListingsRequestDto,
+  ListingResponseDto,
 } from "../../../../shared/models/listing.model"
 import { HeaderComponent } from "src/app/shared/components/header/header.component"
 import { FooterComponent } from "src/app/shared/components/footer/footer.component"

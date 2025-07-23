@@ -21,6 +21,8 @@
       *ngFor="let btn of buttons"
       [ngClass]="btn.type === 'primary' ? 'btn-primary' : 'btn-secondary'"
       (click)="btn.action()"
+      [attr.type]="btn.form ? 'submit' : 'button'"
+      [attr.form]="btn.form || null"
       [disabled]="btn.disabled"
     >
       {{ btn.label }}

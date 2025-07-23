@@ -46,6 +46,8 @@ export class LoginComponent {
       {
         label: "Iniciar sesión",
         color: "primary",
+        type: "submit",
+        form: "loginForm",
         disabled: this.loginForm.invalid || this.isLoading,
         loading: this.isLoading,
         action: () => this.onSubmit(),

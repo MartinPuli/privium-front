@@ -1,18 +1,24 @@
 <div class="product-detail-page">
   <app-header></app-header>
-  
+
   <main class="main-content" *ngIf="!isLoading && product">
     <!-- Breadcrumb -->
     <div class="breadcrumb-container">
       <div class="container">
         <nav class="breadcrumb">
-          <a routerLink="/home" class="breadcrumb-link">🏠 Inicio</a>
+          <a routerLink="/home" class="breadcrumb-link">Inicio</a>
           <span class="breadcrumb-separator">></span>
-          <a routerLink="/products" class="breadcrumb-link">{{getCategoryNames()}}</a>
+
+          <!-- Condición -->
+          <span class="breadcrumb-current">
+            {{ product?.condition === 2 ? "Nuevo" : "Usado" }}
+          </span>
           <span class="breadcrumb-separator">></span>
-          <span class="breadcrumb-current">{{product.condition 2' ? 'Nuevo' : 'Usado'}}</span>
-          <span class="breadcrumb-separator">></span>
-          <span class="breadcrumb-current">{{getProductType()}}</span>
+
+          <!-- Tipo -->
+          <span class="breadcrumb-current">
+            {{ getProductType() }}
+          </span>
         </nav>
       </div>
     </div>
@@ -26,12 +32,18 @@
             <div class="product-images">
               <!-- Thumbnails -->
               <div class="image-thumbnails">
-                <button 
+                <button
                   *ngFor="let image of getAllImages(); let i = index"
                   class="thumbnail-btn"
                   [class.active]="i === currentImageIndex"
-                  (click)="currentImageIndex = i">
-                  <img [src]="image" [alt]="'Imagen ' + (i + 1)" class="thumbnail-image" appDefaultImage>
+                  (click)="currentImageIndex = i"
+                >
+                  <img
+                    [src]="image"
+                    [alt]="'Imagen ' + (i + 1)"
+                    class="thumbnail-image"
+                    appDefaultImage
+                  />
                 </button>
               </div>
 
@@ -41,45 +53,59 @@
                   [src]="getAllImages()[currentImageIndex]"
                   [alt]="product.title"
                   class="main-image"
-                  appDefaultImage>
-                
-                <button 
-                  mat-icon-button 
+                  appDefaultImage
+                />
+
+                <button
+                  mat-icon-button
                   class="favorite-btn"
                   [class.favorited]="isFavorite"
-                  (click)="onToggleFavorite()">
-                  <mat-icon>{{isFavorite ? 'favorite' : 'favorite_border'}}</mat-icon>
+                  (click)="onToggleFavorite()"
+                >
+                  <mat-icon>{{
+                    isFavorite ? "favorite" : "favorite_border"
+                  }}</mat-icon>
                 </button>
               </div>
             </div>
 
             <!-- Product Information -->
             <div class="product-info">
-              <div class="condition-badge">{{product.condition === 2 ? 'Nuevo' : 'Usado'}}</div>
-              
-              <div class="product-price">{{formatPrice(product.price)}}</div>
-              
-              <h1 class="product-title">{{product.title}}</h1>
-              
+              <div class="condition-badge">
+                {{ product.condition === 2 ? "Nuevo" : "Usado" }}
+              </div>
+
+              <div class="product-price">{{ formatPrice(product.price) }}</div>
+
+              <h1 class="product-title">{{ product.title }}</h1>
+
               <div class="product-location">
                 <mat-icon class="location-icon">location_on</mat-icon>
-                <span>{{locationName}}</span>
+                <span>{{ locationName }}</span>
               </div>
 
               <!-- Métodos de pago -->
-              <div class="payment-methods" *ngIf="getPaymentMethods().length > 0">
+              <div
+                class="payment-methods"
+                *ngIf="getPaymentMethods().length > 0"
+              >
                 <div class="payment-chips">
-                  <span 
-                    *ngFor="let method of getPaymentMethods()" 
+                  <span
+                    *ngFor="let method of getPaymentMethods()"
                     class="payment-chip"
-                    [class]="getPaymentMethodClass(method)">
-                    {{method}}
+                    [class]="getPaymentMethodClass(method)"
+                  >
+                    {{ method }}
                   </span>
                 </div>
               </div>
-              
+
               <div class="product-actions">
-                <button mat-raised-button class="contact-btn" (click)="onContactSeller()">
+                <button
+                  mat-raised-button
+                  class="contact-btn"
+                  (click)="onContactSeller()"
+                >
                   Contactar vendedor
                 </button>
               </div>
@@ -95,23 +121,27 @@
               <mat-icon class="seller-icon">person</mat-icon>
               <div class="seller-details">
                 <span class="seller-label">Vendedor</span>
-                <span class="seller-value">{{seller?.name}} {{seller?.lastname}}</span>
+                <span class="seller-value"
+                  >{{ seller?.name }} {{ seller?.lastname }}</span
+                >
               </div>
             </div>
-            
+
             <div class="seller-item">
               <mat-icon class="seller-icon">phone</mat-icon>
               <div class="seller-details">
                 <span class="seller-label">Número de Teléfono</span>
-                <span class="seller-value">{{seller?.contactPhone || '—'}}</span>
+                <span class="seller-value">{{
+                  seller?.contactPhone || "—"
+                }}</span>
               </div>
             </div>
-            
+
             <div class="seller-item">
               <mat-icon class="seller-icon">email</mat-icon>
               <div class="seller-details">
                 <span class="seller-label">E-Mail</span>
-                <span class="seller-value">{{seller?.email}}</span>
+                <span class="seller-value">{{ seller?.email }}</span>
               </div>
             </div>
           </div>
@@ -121,8 +151,7 @@
         <div class="product-section">
           <h2 class="section-title">Información sobre el producto</h2>
           <div class="product-description-card">
-            <p>{{product.description}}</p>
-            <p class="measurements">{{additionalInfo.dimensions}}</p>
+            <p>{{ product.description }}</p>
           </div>
         </div>
 
@@ -130,20 +159,26 @@
         <div class="related-products-section">
           <h2 class="section-title">Productos relacionados</h2>
           <div class="related-products-container">
-            <button class="nav-button prev" (click)="scrollRelatedProducts('left')">
+            <button
+              class="nav-button prev"
+              (click)="scrollRelatedProducts('left')"
+            >
               <mat-icon>chevron_left</mat-icon>
             </button>
-            
-              <div class="related-products-scroll" #relatedProductsScroll>
-                <div class="related-products-grid">
-                  <app-product-card-small
-                    *ngFor="let p of relatedProducts"
-                    [product]="p"
-                  ></app-product-card-small>
-                </div>
+
+            <div class="related-products-scroll" #relatedProductsScroll>
+              <div class="related-products-grid">
+                <app-product-card-small
+                  *ngFor="let p of relatedProducts"
+                  [product]="p"
+                ></app-product-card-small>
               </div>
-            
-            <button class="nav-button next" (click)="scrollRelatedProducts('right')">
+            </div>
+
+            <button
+              class="nav-button next"
+              (click)="scrollRelatedProducts('right')"
+            >
               <mat-icon>chevron_right</mat-icon>
             </button>
           </div>

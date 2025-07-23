@@ -86,6 +86,7 @@ export class EditPublicationComponent implements OnInit {
       {
         label: "Modificar",
         type: "primary",
+        form: this.side === "left" ? "leftForm" : "rightForm",
         action: () => this.onSubmit(),
         disabled:
           this.side === "left" ? this.leftForm.invalid : this.rightForm.invalid,

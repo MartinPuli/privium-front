@@ -6,7 +6,7 @@
 >
   <!-- BLOQUE IZQUIERDO  (título, fotos, precio, condición) -->
   <ng-container *ngIf="side === 'left'">
-    <form [formGroup]="leftForm" class="left-form">
+    <form id="leftForm" [formGroup]="leftForm" class="left-form">
       <!-- TÍTULO -->
       <app-form-field
         formControlName="title"
@@ -74,7 +74,7 @@
 
   <!-- BLOQUE DERECHO (descripción, categorías, medios de pago) -->
   <ng-container *ngIf="side === 'right'">
-    <form [formGroup]="rightForm" class="right-form">
+    <form id="rightForm" [formGroup]="rightForm" class="right-form">
       <!-- DESCRIPCIÓN  -->
       <app-form-field
         type="textarea"

@@ -14,7 +14,9 @@ export class PublishInfoComponent {
   @Input() description = "";
   @Input() continueDisabled = false;
   @Input() showFooter = false;
-  @Input() disabled = false; 
+  @Input() disabled = false;
+  /** opcional: id del formulario asociado */
+  @Input() formId?: string;
 
   @Output() onCancel = new EventEmitter<void>();
   @Output() onContinue = new EventEmitter<void>();

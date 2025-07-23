@@ -61,8 +61,7 @@
   (close)="contactOpen = false"
   [width]="'90vw'"
 >
-  <form [formGroup]="contactForm" 
-  class="form-contact">
+  <form id="contactForm" [formGroup]="contactForm">
     <app-form-field
       label="Encabezado"
       formControlName="subject"
