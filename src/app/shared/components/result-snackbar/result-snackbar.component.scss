@@ -18,25 +18,25 @@
   height: 22px;
 }
 
-/* ----- colores de fondo según clase del contenedor ----- */
+/* tip extra: redondeamos el contenedor y color por defecto */
+:host {
+  border-radius: 8px;
+  background-color: var(--snack-bg-color, #1976d2);
+}
 
+/* Colores de fondo por estado (se usan como valores por defecto) */
 :host-context(.snack-success),
 :host-context(.success-snackbar) {
-  background-color: #2e7d32; /* verde 800 */
+  --snack-bg-color: #2e7d32; /* verde 800 */
 }
 
 :host-context(.snack-error),
 :host-context(.error-snackbar),
 :host-context(.error) {
-  background-color: #d32f2f; /* rojo 700 */
+  --snack-bg-color: #d32f2f; /* rojo 700 */
 }
 
 :host-context(.snack-info),
 :host-context(.info-snackbar) {
-  background-color: #1976d2; /* azul 700 */
-}
-
-/* tip extra: redondeamos el contenedor */
-:host {
-  border-radius: 8px;
+  --snack-bg-color: #1976d2; /* azul 700 */
 }
