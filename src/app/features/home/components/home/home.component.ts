@@ -14,6 +14,7 @@ import { Category } from "../../../../shared/models/category.model";
 import { HeaderComponent } from "src/app/shared/components/header/header.component";
 import { FooterComponent } from "src/app/shared/components/footer/footer.component";
 import { ProductCardSmallComponent } from "src/app/shared/components/product-card-small/product-card-small.component";
+import { DefaultImageDirective } from "../../../../shared/directives/default-image.directive";
 
 @Component({
   selector: "app-home",
@@ -28,6 +29,7 @@ import { ProductCardSmallComponent } from "src/app/shared/components/product-car
     ProductCardSmallComponent,
     HeaderComponent,
     FooterComponent,
+    DefaultImageDirective,
   ],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],

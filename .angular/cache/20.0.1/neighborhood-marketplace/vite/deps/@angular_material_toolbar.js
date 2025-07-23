@@ -1,8 +1,8 @@
 import "./chunk-CN4C2NBK.js";
+import "./chunk-EOFW2REK.js";
 import {
   MatCommonModule
 } from "./chunk-SSHI4TI4.js";
-import "./chunk-EOFW2REK.js";
 import "./chunk-K7QKZQK6.js";
 import "./chunk-UJ6WFDUK.js";
 import {

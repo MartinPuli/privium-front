@@ -1,12 +1,13 @@
 <mat-card class="product-card" [routerLink]="['/products', product.id]" role="article">
   <div class="product-image-container">
-    <img 
-      [src]="getMainImage()" 
+    <img
+      [src]="getMainImage()"
       [alt]="product.title"
       class="product-image"
       loading="lazy"
       width="280"
-      height="200">
+      height="200"
+      appDefaultImage>
     
     <div class="condition-badge" [class]="product.condition">
       {{getConditionText()}}

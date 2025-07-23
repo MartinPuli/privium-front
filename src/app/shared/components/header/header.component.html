@@ -14,6 +14,7 @@
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-3B1hX241DyVj0FoA34Z6lZidG4Ubv7.png"
           alt="Privium - Marketplace de barrios cerrados"
           class="logo-image"
+          appDefaultImage
         />
       </a>
     </div>
@@ -176,6 +177,7 @@
     mat-raised-button
     color="primary"
     class="w-100"
+    [disabled]="!priceRangeValid"
     mat-menu-close
     (click)="applyFilters()"
   >

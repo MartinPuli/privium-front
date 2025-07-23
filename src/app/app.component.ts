@@ -24,7 +24,7 @@ import { LoaderComponent } from "./shared/components/loader/loader.component";
 
     <ng-template #loading>
       <div class="app-init-loader">
-        <mat-spinner diameter="60"></mat-spinner>
+        <mat-spinner diameter="90"></mat-spinner>
       </div>
     </ng-template>
   `,

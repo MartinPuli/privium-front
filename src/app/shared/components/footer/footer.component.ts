@@ -14,6 +14,7 @@ import { ProfileService } from "../../services/profile.service";
 import { AuthService } from "../../services/auth.service";
 import { ContactService } from "../../services/contact.service";
 import { ListListingsRequestDto } from "../../models/listing.model";
+import { DefaultImageDirective } from '../../directives/default-image.directive';
 
 @Component({
   selector: "app-footer",
@@ -24,6 +25,7 @@ import { ListListingsRequestDto } from "../../models/listing.model";
     ReactiveFormsModule,
     DefaultModalComponent,
     FormFieldComponent,
+    DefaultImageDirective,
   ],
   templateUrl: "./footer.component.html",
   styleUrls: ["./footer.component.scss"],

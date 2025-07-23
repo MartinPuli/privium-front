@@ -4,7 +4,6 @@ import {
   ScrollDispatcher,
   ViewportRuler
 } from "./chunk-E7YVOAHY.js";
-import "./chunk-ISWNRYK3.js";
 import "./chunk-CN4C2NBK.js";
 import {
   _animationsDisabled
@@ -12,6 +11,8 @@ import {
 import {
   coerceBooleanProperty
 } from "./chunk-DQ7OVFPD.js";
+import "./chunk-ISWNRYK3.js";
+import "./chunk-EOFW2REK.js";
 import {
   ESCAPE,
   FocusMonitor,
@@ -20,7 +21,6 @@ import {
   MatCommonModule,
   hasModifierKey
 } from "./chunk-SSHI4TI4.js";
-import "./chunk-EOFW2REK.js";
 import {
   Directionality
 } from "./chunk-K7QKZQK6.js";

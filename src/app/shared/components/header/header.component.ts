@@ -18,6 +18,7 @@ import { MatListModule } from "@angular/material/list";
 import { AuthService } from "../../services/auth.service";
 import { CategoryService } from "../../services/category.service";
 import { CountryService } from "../../services/country.service";
+import { DefaultImageDirective } from '../../directives/default-image.directive';
 import { User } from "../../models/user.model";
 import { Category } from "../../models/category.model";
 import { Country } from "../../models/country.model";
@@ -48,6 +49,7 @@ import { number } from "zod";
     MatListModule,
     ListCategoriesComponent,
     MatSelectModule,
+    DefaultImageDirective,
   ],
   templateUrl: "./header.component.html",
   styleUrls: ["./header.component.scss"],
@@ -75,6 +77,15 @@ export class HeaderComponent implements OnInit {
     to: null as Date | null,
   };
   filters = { ...this.defaultFilters };
+
+  get priceRangeValid(): boolean {
+    const inRange = (val: number | null) =>
+      val == null || (val >= 1 && val <= 99999999);
+    const { min, max } = this.filters;
+    const rangeValid = inRange(min) && inRange(max);
+    const orderValid = min == null || max == null || min <= max;
+    return rangeValid && orderValid;
+  }
 
   mediosPago = [
     { value: "efectivo", label: "Efectivo" },

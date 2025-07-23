@@ -17,6 +17,7 @@ import {
   MatCheckboxChange,
   MatCheckboxModule,
 } from "@angular/material/checkbox";
+import { DefaultImageDirective } from "src/app/shared/directives/default-image.directive";
 
 @Component({
   selector: "app-publication-card",
@@ -29,6 +30,7 @@ import {
     EditPublicationComponent,
     MatIconModule,
     MatCheckboxModule,
+    DefaultImageDirective,
   ],
 })
 export class PublicationCardComponent {

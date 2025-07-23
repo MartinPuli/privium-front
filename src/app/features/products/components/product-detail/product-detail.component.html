@@ -10,7 +10,7 @@
           <span class="breadcrumb-separator">></span>
           <a routerLink="/products" class="breadcrumb-link">{{getCategoryNames()}}</a>
           <span class="breadcrumb-separator">></span>
-          <span class="breadcrumb-current">{{product.condition === 'new' ? 'Nuevo' : 'Usado'}}</span>
+          <span class="breadcrumb-current">{{product.condition 2' ? 'Nuevo' : 'Usado'}}</span>
           <span class="breadcrumb-separator">></span>
           <span class="breadcrumb-current">{{getProductType()}}</span>
         </nav>
@@ -31,16 +31,17 @@
                   class="thumbnail-btn"
                   [class.active]="i === currentImageIndex"
                   (click)="currentImageIndex = i">
-                  <img [src]="image" [alt]="'Imagen ' + (i + 1)" class="thumbnail-image">
+                  <img [src]="image" [alt]="'Imagen ' + (i + 1)" class="thumbnail-image" appDefaultImage>
                 </button>
               </div>
 
               <!-- Main Image -->
               <div class="main-image-container">
-                <img 
-                  [src]="getAllImages()[currentImageIndex]" 
+                <img
+                  [src]="getAllImages()[currentImageIndex]"
                   [alt]="product.title"
-                  class="main-image">
+                  class="main-image"
+                  appDefaultImage>
                 
                 <button 
                   mat-icon-button 
@@ -54,7 +55,7 @@
 
             <!-- Product Information -->
             <div class="product-info">
-              <div class="condition-badge">{{product.condition === 'new' ? 'Nuevo' : 'Usado'}}</div>
+              <div class="condition-badge">{{product.condition === 2 ? 'Nuevo' : 'Usado'}}</div>
               
               <div class="product-price">{{formatPrice(product.price)}}</div>
               
@@ -62,7 +63,7 @@
               
               <div class="product-location">
                 <mat-icon class="location-icon">location_on</mat-icon>
-                <span>{{product.location}}</span>
+                <span>{{product.countryId}}</span>
               </div>
 
               <!-- Métodos de pago -->
@@ -94,7 +95,7 @@
               <mat-icon class="seller-icon">person</mat-icon>
               <div class="seller-details">
                 <span class="seller-label">Vendedor</span>
-                <span class="seller-value">{{product.sellerName}}</span>
+                <span class="seller-value">s</span>
               </div>
             </div>
             
@@ -136,7 +137,7 @@
             <div class="related-products-scroll" #relatedProductsScroll>
               <div class="related-products-grid">
                 <div class="related-product" *ngFor="let i of [1,2,3,4,5,6]">
-                  <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png" alt="Producto relacionado">
+                  <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png" alt="Producto relacionado" appDefaultImage>
                   <div class="related-product-info">
                     <div class="related-price">${{65000 + (i * 5000)}}</div>
                     <div class="related-title">{{getRelatedProductTitle(i)}}</div>
