@@ -6,7 +6,6 @@
   flex-direction: column;
   margin-bottom: 16px;
   flex-wrap: wrap;
-
 }
 
 .section-title {
@@ -24,6 +23,29 @@
 
   .search-field {
     width: 220px;
+    width: 280px;
+
+    /* Estilo similar al buscador del header */
+    ::ng-deep {
+      .mat-mdc-form-field-flex,
+      .mat-mdc-text-field-wrapper {
+        background: $background-secondary;
+        border: 0px;
+      }
+
+      .mat-mdc-form-field-bottom-align{
+        height: 0px;
+      }
+
+      .mat-mdc-form-field-infix {
+        padding: 0.7rem 1rem;
+        min-height: auto;
+      }
+
+      .mat-icon {
+        color: $primary-navy;
+      }
+    }
   }
 }
 
@@ -39,7 +61,7 @@
 }
 
 :host ::ng-deep mat-checkbox.master-check .mdc-checkbox__background {
-  transform: scale(1.7);           
+  transform: scale(1.7);
 }
 
 .board-header {
