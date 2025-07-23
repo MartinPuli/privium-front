@@ -8,7 +8,7 @@
       mat-icon-button
       class="delete-btn"
       aria-label="Eliminar producto"
-      (click)="$event.stopPropagation(); onDelete()"
+      (click)="openDeleteModal()"
     >
       <mat-icon>delete</mat-icon>
     </button>
@@ -38,3 +38,19 @@
     </div>
   </mat-card-content>
 </mat-card>
+
+<app-default-modal
+  *ngIf="deleteOpen"
+  title="Eliminar publicación"
+  [buttons]="deleteButtons"
+  (close)="deleteOpen = false"
+>
+  <form [formGroup]="deleteForm">
+    <app-form-field
+      label="Motivo"
+      type="textarea"
+      formControlName="message"
+      [rows]="4"
+    ></app-form-field>
+  </form>
+</app-default-modal>
