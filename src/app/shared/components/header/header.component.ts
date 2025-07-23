@@ -76,6 +76,15 @@ export class HeaderComponent implements OnInit {
   };
   filters = { ...this.defaultFilters };
 
+  get priceRangeValid(): boolean {
+    const inRange = (val: number | null) =>
+      val == null || (val >= 1 && val <= 99999999);
+    const { min, max } = this.filters;
+    const rangeValid = inRange(min) && inRange(max);
+    const orderValid = min == null || max == null || min <= max;
+    return rangeValid && orderValid;
+  }
+
   mediosPago = [
     { value: "efectivo", label: "Efectivo" },
     { value: "transferencia", label: "Transferencia" },

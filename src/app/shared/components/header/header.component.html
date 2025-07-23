@@ -176,6 +176,7 @@
     mat-raised-button
     color="primary"
     class="w-100"
+    [disabled]="!priceRangeValid"
     mat-menu-close
     (click)="applyFilters()"
   >

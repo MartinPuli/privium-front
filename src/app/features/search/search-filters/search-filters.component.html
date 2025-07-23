@@ -29,7 +29,7 @@
       [hasError]="
         form.get('minPrice')!.invalid && form.get('minPrice')!.touched
       "
-      [errorMessage]="'Mín ≥ 0'"
+      [errorMessage]="'Entre 1 y 99 999 999'"
     ></app-form-field>
     <app-form-field
       type="money"
@@ -39,7 +39,7 @@
       [hasError]="
         form.get('maxPrice')!.invalid && form.get('maxPrice')!.touched
       "
-      [errorMessage]="'Máx ≥ 0'"
+      [errorMessage]="'Entre 1 y 99 999 999'"
     ></app-form-field>
   </div>
 
