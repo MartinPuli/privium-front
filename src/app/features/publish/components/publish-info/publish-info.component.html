@@ -22,6 +22,8 @@
       mat-raised-button
       color="primary"
       [disabled]="continueDisabled || disabled"
+      [attr.type]="formId ? 'submit' : 'button'"
+      [attr.form]="formId || null"
       (click)="onContinue.emit()"
     >
       Confirmar

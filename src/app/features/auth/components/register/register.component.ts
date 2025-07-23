@@ -92,6 +92,7 @@ export class RegisterComponent {
       {
         label: "Continuar",
         type: "submit",
+        form: "registerForm",
         action: () => this.onSubmit(),
         disabled: this.isLoading || this.registerForm.invalid,
       },

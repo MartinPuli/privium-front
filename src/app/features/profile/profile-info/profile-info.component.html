@@ -61,7 +61,7 @@
     [buttons]="modalButtons"
     (close)="closeModal()"
   >
-    <form [formGroup]="editForm">
+    <form id="editPhoneForm" [formGroup]="editForm">
       <app-form-field
         label="Número de teléfono"
         type="tel"

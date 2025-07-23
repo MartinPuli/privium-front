@@ -9,7 +9,12 @@
       maxWidth="70%"
       [links]="links"
     >
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <form
+        id="loginForm"
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()"
+        class="auth-form"
+      >
         <app-form-field
           label="Correo electrónico o número de teléfono"
           type="email"

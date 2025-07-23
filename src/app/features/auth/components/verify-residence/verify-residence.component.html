@@ -11,6 +11,7 @@
     >
       <form
         *ngIf="verificationForm"
+        id="verificationForm"
         [formGroup]="verificationForm"
         (ngSubmit)="onSubmit()"
         class="verification-form"

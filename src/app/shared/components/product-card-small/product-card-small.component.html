@@ -45,7 +45,7 @@
   [buttons]="deleteButtons"
   (close)="deleteOpen = false"
 >
-  <form [formGroup]="deleteForm">
+  <form id="deleteForm" [formGroup]="deleteForm">
     <app-form-field
       label="Motivo"
       type="textarea"

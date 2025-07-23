@@ -16,6 +16,7 @@ export interface ModalButton {
   type?: "primary" | "secondary";
   action: () => void;
   disabled?: boolean;
+  form?: string;
 }
 
 @Component({

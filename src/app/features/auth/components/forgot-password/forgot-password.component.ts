@@ -52,6 +52,7 @@ export class ForgotPasswordComponent {
       {
         label: "Enviar enlace",
         type: "submit",
+        form: "emailForm",
         disabled: this.isLoading || this.emailForm.invalid,
         loading: this.isLoading,
         action: () => this.onSubmit(),

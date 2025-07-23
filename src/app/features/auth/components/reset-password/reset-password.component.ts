@@ -73,6 +73,7 @@ export class ResetPasswordComponent implements OnInit {
       {
         label: "Actualizar contraseña",
         type: "submit",
+        form: "passwordForm",
         disabled: this.isLoading || this.passwordForm.invalid,
         loading: this.isLoading,
         action: () => this.onSubmit(),

@@ -79,6 +79,7 @@ export class ProfileInfoComponent implements OnInit {
       type: "primary",
       action: () => this.savePhone(),
       disabled: true, // arranca deshabilitado
+      form: "editPhoneForm",
     };
 
     this.modalButtons = [
