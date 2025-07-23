@@ -134,21 +134,14 @@
               <mat-icon>chevron_left</mat-icon>
             </button>
             
-            <div class="related-products-scroll" #relatedProductsScroll>
-              <div class="related-products-grid">
-                <div class="related-product" *ngFor="let i of [1,2,3,4,5,6]">
-                  <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png" alt="Producto relacionado" appDefaultImage>
-                  <div class="related-product-info">
-                    <div class="related-price">${{65000 + (i * 5000)}}</div>
-                    <div class="related-title">{{getRelatedProductTitle(i)}}</div>
-                    <div class="related-condition">{{i % 2 === 0 ? 'Nuevo' : 'Usado'}}</div>
-                  </div>
-                  <button mat-icon-button class="related-favorite">
-                    <mat-icon>favorite_border</mat-icon>
-                  </button>
+              <div class="related-products-scroll" #relatedProductsScroll>
+                <div class="related-products-grid">
+                  <app-product-card-small
+                    *ngFor="let p of relatedProducts"
+                    [product]="p"
+                  ></app-product-card-small>
                 </div>
               </div>
-            </div>
             
             <button class="nav-button next" (click)="scrollRelatedProducts('right')">
               <mat-icon>chevron_right</mat-icon>
