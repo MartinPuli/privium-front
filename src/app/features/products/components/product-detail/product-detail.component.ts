@@ -23,6 +23,7 @@ import { FooterComponent } from "src/app/shared/components/footer/footer.compone
 import { ProfileService } from "src/app/shared/services/profile.service"
 import { CountryService } from "src/app/shared/services/country.service"
 import { User } from "src/app/shared/models/user.model"
+import { ProductCardSmallComponent } from "src/app/shared/components/product-card-small/product-card-small.component"
 
 @Component({
   selector: "app-product-detail",
@@ -37,6 +38,7 @@ import { User } from "src/app/shared/models/user.model"
     MatProgressSpinnerModule,
     HeaderComponent,
     FooterComponent,
+    ProductCardSmallComponent,
   ],
   templateUrl: "./product-detail.component.html",
   styleUrls: ["./product-detail.component.scss"],
@@ -64,6 +66,8 @@ export class ProductDetailComponent implements OnInit {
     "VAJILLERO DE PINO",
     "MESA AUXILIAR",
   ]
+
+  relatedProducts: ListingResponseDto[] = []
 
   constructor(
     private route: ActivatedRoute,
@@ -100,6 +104,7 @@ export class ProductDetailComponent implements OnInit {
         this.product = { ...listing, ...infoResp.data } as ProductDetail
         this.isFavorite = false
         this.locationName = this.countryService.getNameById(listing.countryId)
+        this.relatedProducts = this.generateRelatedProducts()
         try {
           const userResp = await this.profileService.getUser(listing.userId)
           this.seller = userResp.data ?? null
@@ -171,6 +176,27 @@ export class ProductDetailComponent implements OnInit {
 
   getRelatedProductTitle(index: number): string {
     return this.relatedProductTitles[index - 1] || "PRODUCTO"
+  }
+
+  private generateRelatedProducts(): ListingResponseDto[] {
+    return Array.from({ length: 6 }, (_, i) => ({
+      id: i + 1,
+      title: this.getRelatedProductTitle(i + 1),
+      description: "",
+      price: 65000 + (i + 1) * 5000,
+      acceptsBarter: false,
+      acceptsCash: true,
+      acceptsTransfer: false,
+      acceptsCard: false,
+      type: "PRODUCTO",
+      userId: 0,
+      mainImage:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/PRODUCTO-grSPUw401cVgkGThaBcbXhJuT9WM63.png",
+      status: 1,
+      condition: (i + 1) % 2 === 0 ? 2 : 1,
+      createdAt: "",
+      countryId: this.product?.countryId ?? 1,
+    }))
   }
 
   scrollRelatedProducts(direction: "left" | "right"): void {
