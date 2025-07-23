@@ -1,29 +1,152 @@
-import { Component, Input } from "@angular/core"
-import { CommonModule } from "@angular/common"
-import { RouterModule } from "@angular/router"
+import { Component, Input } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Router, RouterModule } from "@angular/router";
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+  FormGroup,
+} from "@angular/forms";
+import { DefaultModalComponent, ModalButton } from "../default-modal/default-modal.component";
+import { FormFieldComponent } from "../form-field/form-field.component";
+import { CategoryService } from "../../services/category.service";
+import { ProfileService } from "../../services/profile.service";
+import { AuthService } from "../../services/auth.service";
+import { ContactService } from "../../services/contact.service";
+import { ListListingsRequestDto } from "../../models/listing.model";
 
 @Component({
   selector: "app-footer",
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    DefaultModalComponent,
+    FormFieldComponent,
+  ],
   templateUrl: "./footer.component.html",
   styleUrls: ["./footer.component.scss"],
 })
 export class FooterComponent {
-  @Input() logged: boolean = true;
-  currentYear = new Date().getFullYear()
+  @Input() logged = true;
+  currentYear = new Date().getFullYear();
 
+  /**
+   * Botones rápidos de búsqueda. Cada opción redirige a la pantalla de
+   * resultados con un filtro predefinido en el navigation state.
+   */
   categories = [
-    { name: "Vehículos", link: "/products?category=vehiculos" },
-    { name: "Hogar", link: "/products?category=hogar" },
-    { name: "Muebles", link: "/products?category=muebles" },
-    { name: "Indumentaria", link: "/products?category=indumentaria" },
-    { name: "Electrónica", link: "/products?category=electronica" },
-  ]
+    'Servicios',
+    'Inmuebles',
+    'Muebles',
+    'Vehículos',
+    'Indumentaria',
+  ];
 
-  helpLinks = [
-    { name: "Publicar", link: "/publish" },
-    { name: "Solución de problemas", link: "/help/problems" },
-    { name: "Centro de seguridad", link: "/help/security" },
-  ]
+  // ----- modals -----
+  contactOpen = false;
+  deleteOpen = false;
+  termsOpen = false;
+
+  contactForm: FormGroup = this.fb.group({
+    subject: ['', Validators.required],
+    body: ['', Validators.required],
+  });
+
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private categorySrv: CategoryService,
+    private profileSrv: ProfileService,
+    private auth: AuthService,
+    private contactSrv: ContactService
+  ) {}
+
+  // ----- navegación por categoría -----
+  onCategory(name: string): void {
+    const req: Partial<ListListingsRequestDto> = { page: 1, sortOrder: 'DESC' };
+
+    switch (name.toLowerCase()) {
+      case 'servicios':
+        req.type = 'SERVICIO';
+        break;
+      case 'inmuebles':
+        req.type = 'INMUEBLE';
+        break;
+      case 'muebles':
+        req.type = 'MUEBLE';
+        break;
+      case 'vehículos':
+      case 'vehiculos':
+        req.type = 'VEHICULO';
+        break;
+      case 'indumentaria':
+        req.categoryIds = ['5'];
+        break;
+      default: {
+        const cat = this.categorySrv
+          .getCached()
+          .find((c) => c.name.toLowerCase() === name.toLowerCase());
+        if (cat) req.categoryIds = [cat.id];
+      }
+    }
+
+    this.router.navigate(['/search'], { state: { request: req } });
+  }
+
+  goToPublish(): void {
+    this.router.navigate(['/publish']);
+  }
+
+  openTerms(): void {
+    this.termsOpen = true;
+  }
+
+  openDelete(): void {
+    this.deleteOpen = true;
+  }
+
+  openContact(): void {
+    this.contactForm.reset();
+    this.contactOpen = true;
+  }
+
+  get contactButtons(): ModalButton[] {
+    return [
+      { label: 'Cancelar', type: 'secondary', action: () => this.contactOpen = false },
+      {
+        label: 'Enviar',
+        type: 'primary',
+        action: () => this.sendContact(),
+        disabled: this.contactForm.invalid,
+      },
+    ];
+  }
+
+  get deleteButtons(): ModalButton[] {
+    return [
+      { label: 'Cancelar', type: 'secondary', action: () => (this.deleteOpen = false) },
+      { label: 'Confirmar', type: 'primary', action: () => this.deleteAccount() },
+    ];
+  }
+
+  readonly termsButtons: ModalButton[] = [
+    { label: 'Cerrar', type: 'primary', action: () => (this.termsOpen = false) },
+  ];
+
+  private async sendContact(): Promise<void> {
+    if (this.contactForm.invalid) return;
+    try {
+      await this.contactSrv.send(this.contactForm.value);
+    } finally {
+      this.contactOpen = false;
+    }
+  }
+
+  private async deleteAccount(): Promise<void> {
+    await this.profileSrv.deleteAccount();
+    this.deleteOpen = false;
+    this.auth.logout();
+  }
 }
