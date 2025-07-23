@@ -47,6 +47,7 @@ $container-w: 86%; // igual que el footer
   height: auto;
   padding: 1rem 1rem;
   gap: 2rem;
+  box-sizing: border-box;
 
   @include mq($bp-md) {
     gap: 1rem;
@@ -105,11 +106,12 @@ $container-w: 86%; // igual que el footer
     position: relative;
     display: flex;
     align-items: center;
+    border-left: 1px solid #e0e0e0;
 
     .category-toggle {
       @include pill(0 25px 25px 0);
       height: 40px;
-      border-left: 1px solid #e0e0e0;
+      border-left: none;
       padding: 0 1rem;
     }
 
@@ -168,6 +170,7 @@ $container-w: 86%; // igual que el footer
   width: $container-w;
   margin: 0 auto;
   padding: 1rem 1rem;
+  box-sizing: border-box;
 
   @include mq($bp-md) {
     width: 100%;
