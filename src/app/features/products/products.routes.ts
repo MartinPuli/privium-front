@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router"
-/*import { ProductDetailComponent } from "./components/product-detail/product-detail.component"
-*/
-export const productRoutes: Routes = [/*
+import { ProductDetailComponent } from "./components/product-detail/product-detail.component"
+
+export const productRoutes: Routes = [
   {
     path: ":id",
     component: ProductDetailComponent,
@@ -12,4 +12,4 @@ export const productRoutes: Routes = [/*
     },
   },
   { path: "", redirectTo: "/home", pathMatch: "full" },
-*/]
+]
