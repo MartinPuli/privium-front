@@ -1,4 +1,11 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  Component,
+  Input,
+  OnInit,
+  ElementRef,
+  ViewChild,
+  HostListener,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
@@ -60,6 +67,8 @@ export class HeaderComponent implements OnInit {
   selectedCategoryId: string | null = null;
   categories: Category[] = [];
   showCategories = false;
+  @ViewChild('catButton', { read: ElementRef })
+  catButtonRef!: ElementRef<HTMLElement>;
 
   @Input() logged = true;
   @Input() publishing = false;
@@ -153,6 +162,18 @@ export class HeaderComponent implements OnInit {
     this.selectedCategoryLabel = sel.name;
     this.selectedCategoryId = sel.idPath;
     this.showCategories = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as Node;
+    if (
+      this.showCategories &&
+      this.catButtonRef &&
+      !this.catButtonRef.nativeElement.contains(target)
+    ) {
+      this.showCategories = false;
+    }
   }
 
   applyFilters(): void {
