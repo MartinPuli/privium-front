@@ -60,8 +60,13 @@
   [buttons]="contactButtons"
   (close)="contactOpen = false"
 >
-  <form id="contactForm" [formGroup]="contactForm" 
+  <form id="contactForm" [formGroup]="contactForm"
       class="form-contact">
+    <app-form-field
+      label="Asunto"
+      formControlName="header"
+      [maxLength]="50"
+    ></app-form-field>
     <app-form-field
       label="Mensaje"
       type="textarea"

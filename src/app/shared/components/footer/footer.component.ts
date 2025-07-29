@@ -56,6 +56,7 @@ export class FooterComponent {
   deleteLoading = false;
 
   contactForm: FormGroup = this.fb.group({
+    header: ['', [Validators.required, Validators.maxLength(50)]],
     message: ['', Validators.required],
   });
 
@@ -147,7 +148,10 @@ export class FooterComponent {
     if (this.contactForm.invalid) return;
     try {
       this.contactLoading = true;
-      await this.contactSrv.send(this.contactForm.value);
+      await this.contactSrv.send(this.contactForm.value as {
+        header: string;
+        message: string;
+      });
       this.sb.openFromComponent(ResultSnackbarComponent, {
         data: { message: 'Mensaje enviado', status: 'success' },
         duration: 4000,
