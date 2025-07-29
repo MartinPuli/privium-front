@@ -41,6 +41,8 @@ export class DefaultModalComponent implements OnInit, OnDestroy {
     this.renderer.addClass(document.body, "modal-open");
   }
 
+  trackByIdx(index: number) { return index; }
+
   ngOnDestroy(): void {
     this.renderer.removeClass(document.body, "modal-open");
   }

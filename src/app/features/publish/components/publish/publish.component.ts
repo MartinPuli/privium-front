@@ -306,6 +306,21 @@ export class PublishComponent implements OnInit {
     this.imagesCtrl?.markAsTouched();
   }
 
+  onDetailsSubmit(): void {
+    const validMap = [
+      () => this.detailsForm.get('title')!.valid,
+      () => this.categories[0].idPath !== '',
+      () => this.detailsForm.get('description')!.valid,
+      () => true,
+      () => this.detailsForm.get('condition')!.valid,
+      () => this.selectedImages.length > 0,
+    ];
+
+    if (validMap[this.step2Stage]()) {
+      this.continueStage();
+    }
+  }
+
   /* ---------------- publicar ---------------- */
   publishListing(): void {
     if (this.detailsForm.invalid || this.commercialForm.invalid) {

@@ -53,7 +53,6 @@ export class ListCategoriesComponent implements OnInit, OnChanges {
   private loadChildren(): void {
     const prefix = this.parentId ? this.parentId + ">" : "";
     this.categories = this.categoryService.getByPrefix(prefix);
-    console.log(this.categories)
   }
 
   /** ¿Esta categoría tiene hijos según el flag? */

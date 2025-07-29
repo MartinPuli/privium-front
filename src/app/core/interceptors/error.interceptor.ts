@@ -15,8 +15,10 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       console.log(error);
       let errorMessage = "Ha ocurrido un error inesperado";
 
-      if (error.error?.messages[0]?.message) {
+      if (error.error?.messages) {
+        if(error.error.messages[0]?.message){
         errorMessage = error.error.messages[0].message;
+        }
       }
 
       // Mostrar el error en un snackbar

@@ -88,10 +88,11 @@ export class EditPublicationComponent implements OnInit {
       {
         label: "Modificar",
         type: "primary",
-        form: this.side === "left" ? "leftForm" : "rightForm",
         action: () => this.onSubmit(),
         disabled:
-          this.side === "left" ? this.leftForm.invalid : this.rightForm.invalid,
+          this.side === "left"
+            ? !this.leftForm || this.leftForm.invalid
+            : !this.rightForm || this.rightForm.invalid,
       },
     ];
   }
@@ -278,6 +279,7 @@ export class EditPublicationComponent implements OnInit {
   onSubmit(): void {
     // 1) Armo el DTO con buildRequest()
     const dto = this.buildRequest();
+    console.log("DTO a enviar:", dto);
 
     // 2) Extraigo siempre el archivo principal (si cambió)
     const mainFile =
