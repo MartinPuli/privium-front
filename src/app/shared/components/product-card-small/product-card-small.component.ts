@@ -47,6 +47,7 @@ export class ProductCardSmallComponent implements OnInit {
   private countries: Country[] = [];
   deleteForm: FormGroup;
   deleteOpen = false;
+  isDeleting = false;
 
   constructor(
     private auth: AuthService,
@@ -84,6 +85,7 @@ export class ProductCardSmallComponent implements OnInit {
   async sendDeleteMessage(): Promise<void> {
     if (this.deleteForm.invalid) return;
     try {
+      this.isDeleting = true;
       await this.adminSrv.deleteListing({
         listingId: this.product.id,
         ownerId: this.product.userId,
@@ -100,6 +102,7 @@ export class ProductCardSmallComponent implements OnInit {
 
       this.delete.emit(this.product.id);
     } finally {
+      this.isDeleting = false;
       this.deleteOpen = false;
     }
   }
@@ -113,6 +116,7 @@ export class ProductCardSmallComponent implements OnInit {
         form: 'deleteForm',
         action: () => this.sendDeleteMessage(),
         disabled: this.deleteForm.invalid,
+        loading: this.isDeleting,
       },
     ];
   }

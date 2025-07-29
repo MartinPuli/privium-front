@@ -23,9 +23,10 @@
       (click)="btn.action()"
       [attr.type]="btn.form ? 'submit' : 'button'"
       [attr.form]="btn.form || null"
-      [disabled]="btn.disabled"
+      [disabled]="btn.disabled || btn.loading"
     >
-      {{ btn.label }}
+      <mat-spinner *ngIf="btn.loading" diameter="20"></mat-spinner>
+      <span *ngIf="!btn.loading">{{ btn.label }}</span>
     </button>
   </footer>
 </div>

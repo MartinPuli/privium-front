@@ -12,6 +12,7 @@ import {
   MatPaginatorModule,
   PageEvent,
 } from "@angular/material/paginator";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 import { ListingService } from "src/app/shared/services/listing.service";
 import {
@@ -37,6 +38,7 @@ import { PublicationCardComponent } from "./publish-card/publication-card.compon
     MatInputModule,
     MatPaginatorModule,
     MatCheckboxModule,
+    MatProgressSpinnerModule,
     PublicationCardComponent
   ],
   templateUrl: "./my-publishes.component.html",
@@ -60,6 +62,10 @@ export class MyPublishesComponent implements OnInit {
   pageSize = 6;
   pageIndex = 0;
   length = 0;
+
+  isPausing = false;
+  isReactivating = false;
+  isDeleting = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -172,6 +178,8 @@ export class MyPublishesComponent implements OnInit {
     if (this.selectedIds.size !== 1) return;
     const id = Array.from(this.selectedIds)[0];
     const req: ListingRequestDto = { listingId: id, action };
+    this.isPausing = action === 'PAUSE';
+    this.isReactivating = action === 'REACTIVATE';
 
     this.ls.manageListingStatus(req).subscribe({
       next: () => {
@@ -201,6 +209,14 @@ export class MyPublishesComponent implements OnInit {
         });
 
         this.selectedIds.clear();
+      },
+      complete: () => {
+        this.isPausing = false;
+        this.isReactivating = false;
+      },
+      error: () => {
+        this.isPausing = false;
+        this.isReactivating = false;
       }
     });
   }
@@ -215,6 +231,7 @@ export class MyPublishesComponent implements OnInit {
       return this.ls.manageListingStatus(req);
     });
 
+    this.isDeleting = true;
     forkJoin(calls).subscribe({
       next: () => {
         // Quito las tarjetas eliminadas
@@ -238,6 +255,12 @@ export class MyPublishesComponent implements OnInit {
         });
 
         this.selectedIds.clear();
+      },
+      complete: () => {
+        this.isDeleting = false;
+      },
+      error: () => {
+        this.isDeleting = false;
       }
     });
   }
