@@ -71,7 +71,7 @@ $container-w: 86%; // igual que el footer
 .search-container {
   @include flex(row, center);
   flex: 1 1 auto;
-  
+
   padding: 0px 2rem;
   width: 100%;
   gap: 0; // un solo pill
@@ -81,12 +81,12 @@ $container-w: 86%; // igual que el footer
     margin-top: 1rem;
   }
 
-  ::ng-deep{
-    .mat-mdc-form-field-bottom-align{
-      height: 0px;;
+  ::ng-deep {
+    .mat-mdc-form-field-bottom-align {
+      height: 0px;
     }
 
-    .mdc-notched-outline__leading{
+    .mdc-notched-outline__leading {
       border: 0;
     }
   }
@@ -255,56 +255,43 @@ $container-w: 86%; // igual que el footer
   }
 }
 
-/* ───────── Paleta rápida ───────── */
-$apply-bg: #324bd9; // violeta-azul botón
-$apply-bg-h: darken($apply-bg, 6%);
-
 /* ───────── Tarjeta del menú ───────── */
 ::ng-deep .filter-menu.mat-mdc-menu-panel {
-  background: #f9f9ed;
-  border: 3px solid #1520479e;
+  
+  background: $background-secondary !important;
+  border: 2px solid $primary-navy;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-md;
   padding: 0; /* quita margen interno que añade Material */
 }
 
 ::ng-deep .filter-menu .menu-body {
   padding: 1rem 1.25rem;
-  border-radius: 4px 4px 0 0;
+  border-radius: $border-radius-md $border-radius-md 0 0;
+}
+
+::ng-deep .filter-menu .mdc-button {
+  margin-top: 15px;
 }
 
 .filter-menu {
   display: flex;
   flex-direction: column;
-  align-items: center ;
+  align-items: center;
   // borde y fondo de la “tarjeta”
-
-  background: #f9f9ed !important;
-  border: 3px solid #1520479e !important;
+  border: 2px solid $primary-navy !important;
+  border-radius: $border-radius-md !important;
+  box-shadow: $shadow-md !important;
   .menu-body {
     padding: 1rem 1.25rem;
     border-bottom: 0; // para que el borde quede solo en la “caja”
-    border-radius: 4px 4px 0 0;
-  }
-
-  // botón Aplicar (toma todo el ancho y remata la tarjeta)
-  .apply-btn {
-    border-radius: 0 0 4px 4px;
-    width: 40%;
-    font-weight: 600;
-    width: 100px !important;
-    letter-spacing: 0.2px;
-    background: $apply-bg !important;
-    color: #fff !important;
-    box-shadow: none;
-
-    &:hover {
-      background: $apply-bg-h !important;
-    }
+    border-radius: $border-radius-md $border-radius-md 0 0;
   }
 
   /* radios & checkboxes más visibles */
   mat-radio-button,
   mat-checkbox {
-    margin: 0.35rem 0;
+    margin: 0.35rem 0 1rem 0;
     .mdc-form-field {
       width: 100%;
     }

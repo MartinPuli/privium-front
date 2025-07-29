@@ -22,10 +22,20 @@
       [ngClass]="btn.type === 'primary' ? 'btn-primary' : 'btn-secondary'"
       type="button"
       (click)="$event.stopPropagation(); btn.action()"
+      [ngClass]="[
+        btn.type === 'primary' ? 'btn-primary' : 'btn-secondary',
+        btn.loading ? 'loading' : ''
+      ]"
+      [attr.type]="btn.form ? 'submit' : 'button'"
+      [attr.form]="btn.form || null"
       [disabled]="btn.disabled || btn.loading"
     >
-      <mat-spinner *ngIf="btn.loading" diameter="20"></mat-spinner>
-      <span *ngIf="!btn.loading">{{ btn.label }}</span>
+      <span>{{ btn.label }}</span>
+      <mat-spinner
+        *ngIf="btn.loading"
+        diameter="20"
+        class="btn-spinner"
+      ></mat-spinner>
     </button>
   </footer>
 </div>

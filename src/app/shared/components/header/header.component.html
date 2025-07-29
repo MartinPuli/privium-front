@@ -37,12 +37,19 @@
         #catButton
         (click)="$event.stopPropagation()"
       >
-        <button mat-button class="category-toggle" (click)="onCategoryButtonClick()">
+        <button
+          mat-button
+          class="category-toggle"
+          (click)="onCategoryButtonClick()"
+        >
           {{ selectedCategoryLabel }}
           <mat-icon class="down-arrow" aria-hidden="true">expand_more</mat-icon>
         </button>
         <div class="categories-dropdown" *ngIf="showCategories">
-          <app-list-categories (categorySelected)="onCategorySelect($event)" [orientation]="'left'"></app-list-categories>
+          <app-list-categories
+            (categorySelected)="onCategorySelect($event)"
+            [orientation]="'left'"
+          ></app-list-categories>
         </div>
       </div>
     </div>
@@ -176,18 +183,19 @@
       <mat-radio-button value="nuevo">Nuevo</mat-radio-button><br />
       <mat-radio-button value="usado">Usado</mat-radio-button>
     </mat-radio-group>
-  </div>
 
-  <button
-    mat-raised-button
-    color="primary"
-    class="w-100"
-    [disabled]="!priceRangeValid"
-    mat-menu-close
-    (click)="applyFilters()"
-  >
-    Aplicar
-  </button>
+    <button
+      class="apply-button"
+      mat-stroked-button
+      color="primary"
+      class="w-100"
+      [disabled]="!priceRangeValid"
+      mat-menu-close
+      (click)="applyFilters()"
+    >
+      Aplicar
+    </button>
+  </div>
 </mat-menu>
 
 <!-- ════════ 2. Precio ════════ -->
@@ -216,17 +224,18 @@
       />
       <mat-hint align="end">Entre 1 y 99 999 999</mat-hint>
     </mat-form-field>
-  </div>
 
-  <button
-    mat-raised-button
-    color="primary"
-    class="w-100"
-    mat-menu-close
-    (click)="applyFilters()"
-  >
-    Aplicar
-  </button>
+    <button
+      class="apply-button"
+      mat-stroked-button
+      color="primary"
+      class="w-100"
+      mat-menu-close
+      (click)="applyFilters()"
+    >
+      Aplicar
+    </button>
+  </div>
 </mat-menu>
 
 <!-- ════════ 3. Distancia ════════ -->
@@ -238,17 +247,18 @@
       <mat-radio-button [value]="30">Menos de 30 km</mat-radio-button><br />
       <mat-radio-button [value]="60">Menos de 60 km</mat-radio-button>
     </mat-radio-group>
-  </div>
 
-  <button
-    mat-raised-button
-    color="primary"
-    class="w-100"
-    mat-menu-close
-    (click)="applyFilters()"
-  >
-    Aplicar
-  </button>
+    <button
+      class="apply-button"
+      mat-stroked-button
+      color="primary"
+      class="w-100"
+      mat-menu-close
+      (click)="applyFilters()"
+    >
+      Aplicar
+    </button>
+  </div>
 </mat-menu>
 
 <!-- ════════ 4. Barrio privado ════════ -->
@@ -262,16 +272,18 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+
+    <button
+      class="apply-button"
+      mat-stroked-button
+      color="primary"
+      class="w-100"
+      mat-menu-close
+      (click)="applyFilters()"
+    >
+      Aplicar
+    </button>
   </form>
-  <button
-    mat-stroked-button
-    color="primary"
-    class="apply-btn small"
-    mat-menu-close
-    (click)="applyFilters()"
-  >
-    Aplicar
-  </button>
 </mat-menu>
 
 <!-- ════════ 5. Medio de pago ════════ -->
@@ -284,17 +296,18 @@
     >
       {{ mp.label }}
     </mat-checkbox>
-  </div>
 
-  <button
-    mat-raised-button
-    color="primary"
-    class="w-100"
-    mat-menu-close
-    (click)="applyFilters()"
-  >
-    Aplicar
-  </button>
+    <button
+      class="apply-button"
+      mat-stroked-button
+      color="primary"
+      class="w-100"
+      mat-menu-close
+      (click)="applyFilters()"
+    >
+      Aplicar
+    </button>
+  </div>
 </mat-menu>
 
 <!-- ════════ 6. Fecha de publicación ════════ -->
@@ -319,15 +332,16 @@
       ></mat-datepicker-toggle>
       <mat-datepicker #pickerTo></mat-datepicker>
     </mat-form-field>
-  </div>
 
-  <button
-    mat-raised-button
-    color="primary"
-    class="w-100"
-    mat-menu-close
-    (click)="applyFilters()"
-  >
-    Aplicar
-  </button>
+    <button
+      class="apply-button"
+      mat-stroked-button
+      color="primary"
+      class="w-100"
+      mat-menu-close
+      (click)="applyFilters()"
+    >
+      Aplicar
+    </button>
+  </div>
 </mat-menu>
