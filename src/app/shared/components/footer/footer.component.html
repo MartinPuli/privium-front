@@ -59,17 +59,13 @@
   title="Contacto"
   [buttons]="contactButtons"
   (close)="contactOpen = false"
-  [width]="'90vw'"
 >
-  <form id="contactForm" [formGroup]="contactForm">
-    <app-form-field
-      label="Encabezado"
-      formControlName="subject"
-    ></app-form-field>
+  <form id="contactForm" [formGroup]="contactForm" 
+      class="form-contact">
     <app-form-field
       label="Mensaje"
       type="textarea"
-      formControlName="body"
+      formControlName="message"
       [rows]="4"
     ></app-form-field>
   </form>
