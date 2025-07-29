@@ -52,6 +52,7 @@ export class FooterComponent {
   termsOpen = false;
 
   contactForm: FormGroup = this.fb.group({
+    header: ['', Validators.required],
     message: ['', Validators.required],
   });
 
@@ -140,7 +141,10 @@ export class FooterComponent {
   private async sendContact(): Promise<void> {
     if (this.contactForm.invalid) return;
     try {
-      await this.contactSrv.send(this.contactForm.value);
+      await this.contactSrv.send({
+        messageHeader: this.contactForm.value.header,
+        message: this.contactForm.value.message,
+      });
     } finally {
       this.contactOpen = false;
     }

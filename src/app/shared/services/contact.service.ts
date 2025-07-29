@@ -9,7 +9,7 @@ export class ContactService {
 
   constructor(private http: HttpClient) {}
 
-  send(payload: { message: string }): Promise<ResponseDto> {
+  send(payload: { messageHeader: string; message: string }): Promise<ResponseDto> {
     return firstValueFrom(this.http.post<ResponseDto>(this.baseUrl, payload));
   }
 }
