@@ -247,7 +247,7 @@ export class EditPublicationComponent implements OnInit {
     const auxCurrent = this.selectedImages.slice(1).map((i) => i.preview);
     const auxChanged =
       auxCurrent.length !== origAux.length ||
-      !auxCurrent.every((p) => origAux.includes(p));
+      auxCurrent.some((p, idx) => p !== origAux[idx]);
     const imagesUrl = auxChanged ? auxCurrent : null;
 
     /* --- request ----------------------------------------- */
@@ -283,11 +283,16 @@ export class EditPublicationComponent implements OnInit {
     const mainFile =
       dto.mainImage !== null ? this.selectedImages[0].file : null;
 
-    // 3) Auxiliares: si dto.imagesUrl===null → null
-    //    si dto.imagesUrl!==null → file[] (aunque sea [])
+    // 3) Auxiliares: solo se envían aquellas que cambiaron
     const auxFiles =
       dto.imagesUrl !== null
-        ? this.selectedImages.slice(1).map((i) => i.file)
+        ? this.selectedImages
+            .slice(1)
+            .map((img, idx) =>
+              img.preview !== this.fullInfo.auxiliaryImages[idx]?.imgUrl
+                ? img.file
+                : null
+            )
         : null;
 
     // 4) Emito
