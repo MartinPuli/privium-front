@@ -20,6 +20,7 @@ import { AuthService } from '../../services/auth.service';
 import { CountryService } from '../../services/country.service';
 import { Country } from '../../models/country.model';
 import { ListingService } from '../../services/listing.service';
+import { AdminService } from '../../services/admin.service';
 import { ResultSnackbarComponent } from '../result-snackbar/result.snackbar.component';
 import { DefaultImageDirective } from '../../directives/default-image.directive';
 
@@ -52,6 +53,7 @@ export class ProductCardSmallComponent implements OnInit {
     private countrySrv: CountryService,
     private fb: FormBuilder,
     private listingSrv: ListingService,
+    private adminSrv: AdminService,
     private snackBar: MatSnackBar,
     private router: Router
   ) {
@@ -82,9 +84,9 @@ export class ProductCardSmallComponent implements OnInit {
   async sendDeleteMessage(): Promise<void> {
     if (this.deleteForm.invalid) return;
     try {
-      await this.listingSrv.sendDeleteMessage({
+      await this.adminSrv.deleteListing({
         listingId: this.product.id,
-        userId: this.product.userId,
+        ownerId: this.product.userId,
         message: this.deleteForm.value.message,
       });
 

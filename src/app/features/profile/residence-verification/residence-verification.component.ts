@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ResultWarnComponent } from "src/app/shared/components/result-warn/result-warn.component";
 
 import { ResidenceService } from "src/app/shared/services/residence.service";
+import { AdminService } from "src/app/shared/services/admin.service";
 import { firstValueFrom } from "rxjs";
 import {
   ResidenceProof,
@@ -52,7 +53,10 @@ export class ResidenceVerificationComponent implements OnInit {
     description: string;
   } | null = null;
 
-  constructor(private residenceSvc: ResidenceService) {}
+  constructor(
+    private residenceSvc: ResidenceService,
+    private adminSvc: AdminService
+  ) {}
 
   async ngOnInit() {
     await this.loadProofs();
@@ -109,7 +113,7 @@ export class ResidenceVerificationComponent implements OnInit {
   async handleDecision(proof: ResidenceProofDto, approved: boolean) {
     try {
       await firstValueFrom(
-        this.residenceSvc.approveResidence(proof.userId, approved)
+        this.adminSvc.approveResidence(proof.userId, approved)
       );
 
       // éxito
