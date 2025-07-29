@@ -46,6 +46,11 @@
   }
 }
 
+/* Loader wrapper when fetching proofs */
+.rv-loader {
+  align-items: center;
+}
+
 .rv-warn {
   width: 60% !important;
   margin: auto;
