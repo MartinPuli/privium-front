@@ -65,8 +65,8 @@ export class ListingService {
   /** ───────────── Edición de publicación con archivos ───────────── */
   editListing(
     dto: ListingRequestDto,
-    mainImageFile?: File,
-    auxFiles: File[] = []
+    mainImageFile?: File | null,
+    auxFiles: File[] | null = []
   ): Observable<ResponseDto> {
     const form = new FormData();
 
@@ -76,13 +76,19 @@ export class ListingService {
       new Blob([JSON.stringify(dto)], { type: "application/json" })
     );
 
-    // 2) Imágen principal (si viene)
+    // 2) Imagen principal (si viene)
     if (mainImageFile) {
       form.append("mainImage", mainImageFile, mainImageFile.name);
     }
 
-    // 3) Imágenes auxiliares (hasta 4 más, como en addListing)
-    auxFiles.slice(0, 4).forEach((f) => form.append("images", f, f.name));
+    // 3) Imágenes auxiliares numeradas (hasta 4)
+    if (auxFiles && auxFiles.length) {
+      auxFiles.slice(0, 4).forEach((f, idx) => {
+        if (f) {
+          form.append(`image${idx + 1}`, f, f.name);
+        }
+      });
+    }
 
     // 4) Post multipart/form-data
     return this.http.post<ResponseDto>(`${this.base}editListing`, form);
