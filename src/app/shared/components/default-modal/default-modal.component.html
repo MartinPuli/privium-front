@@ -19,14 +19,21 @@
   <footer class="modal-footer" *ngIf="buttons?.length">
     <button
       *ngFor="let btn of buttons"
-      [ngClass]="btn.type === 'primary' ? 'btn-primary' : 'btn-secondary'"
+      [ngClass]="[
+        btn.type === 'primary' ? 'btn-primary' : 'btn-secondary',
+        btn.loading ? 'loading' : ''
+      ]"
       (click)="btn.action()"
       [attr.type]="btn.form ? 'submit' : 'button'"
       [attr.form]="btn.form || null"
       [disabled]="btn.disabled || btn.loading"
     >
-      <mat-spinner *ngIf="btn.loading" diameter="20"></mat-spinner>
-      <span *ngIf="!btn.loading">{{ btn.label }}</span>
+      <span>{{ btn.label }}</span>
+      <mat-spinner
+        *ngIf="btn.loading"
+        diameter="20"
+        class="btn-spinner"
+      ></mat-spinner>
     </button>
   </footer>
 </div>
