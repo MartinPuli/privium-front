@@ -16,7 +16,12 @@
       <h1 class="step-title">Completá los datos del producto</h1>
     </div>
     <section *ngIf="progress.currentStep === 2">
-      <form id="detailsForm" [formGroup]="detailsForm" class="details-form">
+      <form
+        id="detailsForm"
+        [formGroup]="detailsForm"
+        class="details-form"
+        (ngSubmit)="onDetailsSubmit()"
+      >
         <!-- Título -->
         <app-publish-info
           [formId]="'detailsForm'"
@@ -227,7 +232,12 @@
       </h1>
     </div>
     <section *ngIf="progress.currentStep === 3">
-      <form id="commercialForm" [formGroup]="commercialForm" class="commercial-form">
+      <form
+        id="commercialForm"
+        [formGroup]="commercialForm"
+        class="commercial-form"
+        (ngSubmit)="publishListing()"
+      >
         <app-publish-info
           [formId]="'commercialForm'"
           title="Precio"
@@ -266,10 +276,19 @@
 
         <div class="publish-final">
           <button
+            mat-stroked-button
+            color="accent"
+            type="button"
+            (click)="previousStep()"
+            class="cancel-button"
+          >
+            Cancelar
+          </button>
+          <button
             mat-raised-button
             color="accent"
             class="publish-button"
-            (click)="publishListing()"
+            type="submit"
             [disabled]="isLoading"
           >
             <ng-container *ngIf="!isLoading; else loading">
