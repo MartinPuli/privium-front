@@ -15,6 +15,8 @@ import { AuthService } from "../../services/auth.service";
 import { ContactService } from "../../services/contact.service";
 import { ListListingsRequestDto } from "../../models/listing.model";
 import { DefaultImageDirective } from '../../directives/default-image.directive';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ResultSnackbarComponent } from '../result-snackbar/result.snackbar.component';
 
 @Component({
   selector: "app-footer",
@@ -63,7 +65,8 @@ export class FooterComponent {
     private categorySrv: CategoryService,
     private profileSrv: ProfileService,
     private auth: AuthService,
-    private contactSrv: ContactService
+    private contactSrv: ContactService,
+    private sb: MatSnackBar
   ) {}
 
   // ----- navegación por categoría -----
@@ -145,6 +148,13 @@ export class FooterComponent {
     try {
       this.contactLoading = true;
       await this.contactSrv.send(this.contactForm.value);
+      this.sb.openFromComponent(ResultSnackbarComponent, {
+        data: { message: 'Mensaje enviado', status: 'success' },
+        duration: 4000,
+        panelClass: 'success-snackbar',
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
     } finally {
       this.contactLoading = false;
       this.contactOpen = false;
