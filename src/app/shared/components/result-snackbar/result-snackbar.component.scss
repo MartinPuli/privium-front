@@ -1,42 +1,16 @@
 @import '../../../../shared/styles/variables'; 
 
-/* ----- estilos internos del contenido ----- */
 .snack-wrapper {
   display: flex;
   align-items: center;
   gap: 12px;
   font-weight: 500;
-  color: $white; // texto siempre blanco
   width: 100%;
-  height: 100%;
-  padding: 8px 4px;
+  padding: 8px 6px;
 }
 
 .snack-icon {
   font-size: 22px;
   width: 22px;
   height: 22px;
-}
-
-/* tip extra: redondeamos el contenedor y color por defecto */
-:host {
-  border-radius: 8px;
-  background-color: var(--snack-bg-color, #1976d2);
-}
-
-/* Colores de fondo por estado (se usan como valores por defecto) */
-:host-context(.snack-success),
-:host-context(.success-snackbar) {
-  --snack-bg-color: #2e7d32; /* verde 800 */
-}
-
-:host-context(.snack-error),
-:host-context(.error-snackbar),
-:host-context(.error) {
-  --snack-bg-color: #d32f2f; /* rojo 700 */
-}
-
-:host-context(.snack-info),
-:host-context(.info-snackbar) {
-  --snack-bg-color: #1976d2; /* azul 700 */
 }
