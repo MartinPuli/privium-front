@@ -261,14 +261,16 @@ $apply-bg-h: darken($apply-bg, 6%);
 
 /* ───────── Tarjeta del menú ───────── */
 ::ng-deep .filter-menu.mat-mdc-menu-panel {
-  background: #f9f9ed;
-  border: 3px solid #1520479e;
+  background: $white;
+  border: 2px solid $primary-navy;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-md;
   padding: 0; /* quita margen interno que añade Material */
 }
 
 ::ng-deep .filter-menu .menu-body {
   padding: 1rem 1.25rem;
-  border-radius: 4px 4px 0 0;
+  border-radius: $border-radius-md $border-radius-md 0 0;
 }
 
 .filter-menu {
@@ -277,27 +279,29 @@ $apply-bg-h: darken($apply-bg, 6%);
   align-items: center ;
   // borde y fondo de la “tarjeta”
 
-  background: #f9f9ed !important;
-  border: 3px solid #1520479e !important;
+  background: $white !important;
+  border: 2px solid $primary-navy !important;
+  border-radius: $border-radius-md !important;
+  box-shadow: $shadow-md !important;
   .menu-body {
     padding: 1rem 1.25rem;
     border-bottom: 0; // para que el borde quede solo en la “caja”
-    border-radius: 4px 4px 0 0;
+    border-radius: $border-radius-md $border-radius-md 0 0;
   }
 
   // botón Aplicar (toma todo el ancho y remata la tarjeta)
   .apply-btn {
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 $border-radius-md $border-radius-md;
     width: 40%;
     font-weight: 600;
     width: 100px !important;
     letter-spacing: 0.2px;
-    background: $apply-bg !important;
-    color: #fff !important;
+    background: $primary-green !important;
+    color: $white !important;
     box-shadow: none;
 
     &:hover {
-      background: $apply-bg-h !important;
+      background: darken($primary-green, 6%) !important;
     }
   }
 
