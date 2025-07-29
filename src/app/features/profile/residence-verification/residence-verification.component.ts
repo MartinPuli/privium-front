@@ -45,6 +45,8 @@ export class ResidenceVerificationComponent implements OnInit {
   pageIndex = 0;
   length = 0;
 
+  decisionLoading: { id: number; approved: boolean } | null = null;
+
   /** Estado del result-warn (null = no mostrar) */
   warn: {
     status: 0 | 1;
@@ -111,6 +113,7 @@ export class ResidenceVerificationComponent implements OnInit {
   /* ------------------------- aprobar / rechazar ---------------------- */
 
   async handleDecision(proof: ResidenceProofDto, approved: boolean) {
+    this.decisionLoading = { id: proof.id, approved };
     try {
       await firstValueFrom(
         this.adminSvc.approveResidence(proof.userId, approved)
@@ -148,6 +151,8 @@ export class ResidenceVerificationComponent implements OnInit {
         subtitle: "No se pudo procesar la solicitud",
         description: "Intenta nuevamente.",
       };
+    } finally {
+      this.decisionLoading = null;
     }
   }
 

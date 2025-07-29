@@ -50,6 +50,8 @@ export class FooterComponent {
   contactOpen = false;
   deleteOpen = false;
   termsOpen = false;
+  contactLoading = false;
+  deleteLoading = false;
 
   contactForm: FormGroup = this.fb.group({
     message: ['', Validators.required],
@@ -122,6 +124,7 @@ export class FooterComponent {
         form: 'contactForm',
         action: () => this.sendContact(),
         disabled: this.contactForm.invalid,
+        loading: this.contactLoading,
       },
     ];
   }
@@ -129,7 +132,7 @@ export class FooterComponent {
   get deleteButtons(): ModalButton[] {
     return [
       { label: 'Cancelar', type: 'secondary', action: () => (this.deleteOpen = false) },
-      { label: 'Confirmar', type: 'primary', action: () => this.deleteAccount() },
+      { label: 'Confirmar', type: 'primary', action: () => this.deleteAccount(), loading: this.deleteLoading },
     ];
   }
 
@@ -140,14 +143,18 @@ export class FooterComponent {
   private async sendContact(): Promise<void> {
     if (this.contactForm.invalid) return;
     try {
+      this.contactLoading = true;
       await this.contactSrv.send(this.contactForm.value);
     } finally {
+      this.contactLoading = false;
       this.contactOpen = false;
     }
   }
 
   private async deleteAccount(): Promise<void> {
+    this.deleteLoading = true;
     await this.profileSrv.deleteAccount();
+    this.deleteLoading = false;
     this.deleteOpen = false;
     this.auth.logout();
   }
