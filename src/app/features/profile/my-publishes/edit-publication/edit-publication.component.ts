@@ -34,6 +34,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { CommonModule } from "@angular/common";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DefaultImageDirective } from "src/app/shared/directives/default-image.directive";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ResultSnackbarComponent } from "src/app/shared/components/result-snackbar/result.snackbar.component";
 
 @Component({
   selector: "app-edit-publication",
@@ -97,7 +99,7 @@ export class EditPublicationComponent implements OnInit {
   }
 
   /* ---------- ctor / init ---------------------------------- */
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private sb: MatSnackBar) {}
 
   ngOnInit(): void {
     /* ----- IMÁGENES ---------------------------------------- */
@@ -157,24 +159,64 @@ export class EditPublicationComponent implements OnInit {
   ==========================================================*/
   addImages(evt: Event): void {
     const files = Array.from((evt.target as HTMLInputElement).files || []);
-    for (const f of files) {
-      if (this.selectedImages.length >= this.maxImages) break;
-      if (f.size > this.maxSize) continue;
+
+    files.forEach((f) => {
+      const currentCount = this.selectedImages.filter((i) => i.preview).length;
+      if (currentCount >= this.maxImages) return;
+
+      // ► Tamaño máximo
+      if (f.size > this.maxSize) {
+        this.sb.openFromComponent(ResultSnackbarComponent, {
+          data: {
+            message: `La imagen ${f.name} supera los 5\u00A0MB`,
+            status: "error",
+          },
+          duration: 4000,
+          horizontalPosition: "center",
+          verticalPosition: "bottom",
+          panelClass: "error-snackbar",
+        });
+        return;
+      }
+
+      // ► Duplicados
+      const already = this.selectedImages.some(
+        (i) => i.preview && i.file.name === f.name && i.file.size === f.size
+      );
+      if (already) {
+        this.sb.openFromComponent(ResultSnackbarComponent, {
+          data: {
+            message: `No puedes insertar 2 veces la misma imagen`,
+            status: "error",
+          },
+          duration: 4000,
+          horizontalPosition: "center",
+          verticalPosition: "bottom",
+          panelClass: "error-snackbar",
+        });
+        return;
+      }
 
       const reader = new FileReader();
-      reader.onload = (e) =>
-        this.selectedImages.push({
-          file: f,
-          preview: e.target!.result as string,
-        });
+      reader.onload = (e) => {
+        const slot = this.selectedImages.findIndex((img) => !img.preview);
+        const img = { file: f, preview: e.target!.result as string };
+        if (slot === -1) {
+          this.selectedImages.push(img);
+        } else {
+          this.selectedImages[slot] = img;
+        }
+        this.leftForm.get("images")!.setValue(this.selectedImages);
+      };
       reader.readAsDataURL(f);
-    }
-    this.leftForm.get("images")!.setValue(this.selectedImages);
+    });
+
     (evt.target as HTMLInputElement).value = "";
   }
 
   removeImage(i: number): void {
-    this.selectedImages.splice(i, 1);
+    if (!this.selectedImages[i]) return;
+    this.selectedImages[i] = { file: new File([], ""), preview: "" };
     this.leftForm.get("images")!.setValue(this.selectedImages);
   }
 
@@ -244,10 +286,12 @@ export class EditPublicationComponent implements OnInit {
     const mainImage = mainImgCurrent !== orig.mainImage ? mainImgCurrent : null;
 
     /* --- auxiliares -------------------------------------- */
-    const auxCurrent = this.selectedImages.slice(1).map((i) => i.preview);
+    const auxCurrent = this.selectedImages
+      .slice(1)
+      .map((i) => (i.preview ? i.preview : null));
     const auxChanged =
       auxCurrent.length !== origAux.length ||
-      auxCurrent.some((p, idx) => p !== origAux[idx]);
+      auxCurrent.some((p, idx) => p !== (origAux[idx] ?? null));
     const imagesUrl = auxChanged ? auxCurrent : null;
 
     /* --- request ----------------------------------------- */
@@ -289,6 +333,7 @@ export class EditPublicationComponent implements OnInit {
         ? this.selectedImages
             .slice(1)
             .map((img, idx) =>
+              img.preview &&
               img.preview !== this.fullInfo.auxiliaryImages[idx]?.imgUrl
                 ? img.file
                 : null
