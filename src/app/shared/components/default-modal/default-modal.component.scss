@@ -71,12 +71,31 @@
 
 /* Buttons */
 .modal-footer button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Urbanist', sans-serif;
   font-size: 1rem;
   padding: 10px 24px;
   border-radius: 4px;
   border: none;
   cursor: pointer;
+}
+
+.modal-footer button.loading span {
+  visibility: hidden;
+}
+
+.modal-footer button .btn-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modal-footer button .btn-spinner circle {
+  stroke: $white;
 }
 
 .modal-footer .btn-primary {
