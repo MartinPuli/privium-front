@@ -66,7 +66,7 @@ export class ListingService {
   editListing(
     dto: ListingRequestDto,
     mainImageFile?: File | null,
-    auxFiles: File[] | null = []
+    auxFiles: (File | null)[] | null = []
   ): Observable<ResponseDto> {
     const form = new FormData();
 

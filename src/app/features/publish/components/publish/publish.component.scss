@@ -76,8 +76,12 @@ label.mdc-label {
   gap: 1rem;
 
   .cancel-button {
+    font-size: 1.2rem;
     color: $primary-navy !important;
-    font-weight: 600;
+    font-weight: 500;
+    width: 150px;
+    background: transparent;
+    border: 0px;
   }
 }
 
