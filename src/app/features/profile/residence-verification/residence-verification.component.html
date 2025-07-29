@@ -2,7 +2,7 @@
   <app-header [logged]="true"></app-header>
   <div class="rv-main">
     <!-- 1) Spinner -->
-    <div class="rv-container" *ngIf="isLoading">
+    <div class="rv-container rv-loader" *ngIf="isLoading">
       <mat-spinner></mat-spinner>
     </div>
 
