@@ -63,6 +63,11 @@
   <form id="contactForm" [formGroup]="contactForm" 
       class="form-contact">
     <app-form-field
+      label="Encabezado"
+      type="text"
+      formControlName="header"
+    ></app-form-field>
+    <app-form-field
       label="Mensaje"
       type="textarea"
       formControlName="message"
