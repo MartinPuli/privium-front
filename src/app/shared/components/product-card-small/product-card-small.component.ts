@@ -23,6 +23,7 @@ import { ListingService } from '../../services/listing.service';
 import { AdminService } from '../../services/admin.service';
 import { ResultSnackbarComponent } from '../result-snackbar/result.snackbar.component';
 import { DefaultImageDirective } from '../../directives/default-image.directive';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-product-card-small',
@@ -86,11 +87,13 @@ export class ProductCardSmallComponent implements OnInit {
     if (this.deleteForm.invalid) return;
     try {
       this.isDeleting = true;
-      await this.adminSrv.deleteListing({
-        listingId: this.product.id,
-        ownerId: this.product.userId,
-        message: this.deleteForm.value.message,
-      });
+      await firstValueFrom(
+        this.adminSrv.deleteListing({
+          listingId: this.product.id,
+          ownerId: this.product.userId,
+          message: this.deleteForm.value.message,
+        })
+      );
 
       this.snackBar.openFromComponent(ResultSnackbarComponent, {
         data: { message: 'Mensaje enviado', status: 'success' },

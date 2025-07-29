@@ -1,11 +1,12 @@
-import { Component, type OnInit } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
+import { Component, type OnInit, OnDestroy } from "@angular/core";
+import { RouterOutlet, Router, NavigationEnd } from "@angular/router";
 import { Title, Meta } from "@angular/platform-browser";
 import { AuthService } from "./shared/services/auth.service";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { CommonModule } from "@angular/common";
 import { LoaderService } from "./shared/services/loader.service";
 import { LoaderComponent } from "./shared/components/loader/loader.component";
+import { Subscription, filter } from "rxjs";
 
 @Component({
   selector: "app-root",
@@ -30,19 +31,27 @@ import { LoaderComponent } from "./shared/components/loader/loader.component";
   `,
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   initialized = false;
+  private navSub?: Subscription;
   constructor(
     private titleService: Title,
     private metaService: Meta,
     private authService: AuthService,
-    public loader: LoaderService
+    public loader: LoaderService,
+    private router: Router
   ) {
   }
 
   async ngOnInit(): Promise<void> {
     await this.authService.loadInitialData();
     this.initialized = true;
+
+    this.navSub = this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe(() => {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      });
 
     this.titleService.setTitle(
       "Privium - Marketplace Privado de Barrios Cerrados"
@@ -117,5 +126,9 @@ export class AppComponent implements OnInit {
     script.type = "application/ld+json";
     script.text = JSON.stringify(structuredData);
     document.head.appendChild(script);
+  }
+
+  ngOnDestroy(): void {
+    this.navSub?.unsubscribe();
   }
 }
