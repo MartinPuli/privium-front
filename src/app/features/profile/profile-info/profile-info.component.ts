@@ -18,7 +18,7 @@ import { User } from "src/app/shared/models/user.model";
 import { HeaderComponent } from "src/app/shared/components/header/header.component";
 import { FooterComponent } from "src/app/shared/components/footer/footer.component";
 import { FormFieldComponent } from "src/app/shared/components/form-field/form-field.component";
-import { DefaultModalComponent } from "src/app/shared/components/default-modal/default-modal.component";
+import { DefaultModalComponent, ModalButton } from "src/app/shared/components/default-modal/default-modal.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MyPublishesComponent } from "../my-publishes/my-publishes.component";
 import { CountryService } from "src/app/shared/services/country.service";
