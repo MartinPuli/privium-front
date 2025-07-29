@@ -147,18 +147,4 @@ export class ListingService {
     return { products, hasMore: products.length === pageSize };
   }
 
-  /**
-   * Envía al backend un mensaje para solicitar la eliminación de una
-   * publicación. El backend se encargará de notificar al usuario dueño
-   * de la misma por email.
-   */
-  sendDeleteMessage(payload: {
-    listingId: number;
-    userId: number;
-    message: string;
-  }): Promise<ResponseDto> {
-    return firstValueFrom(
-      this.http.post<ResponseDto>(this.base + 'deleteMessage', payload)
-    );
-  }
 }
