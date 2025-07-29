@@ -63,13 +63,9 @@
 >
   <form id="contactForm" [formGroup]="contactForm">
     <app-form-field
-      label="Encabezado"
-      formControlName="subject"
-    ></app-form-field>
-    <app-form-field
       label="Mensaje"
       type="textarea"
-      formControlName="body"
+      formControlName="message"
       [rows]="4"
     ></app-form-field>
   </form>

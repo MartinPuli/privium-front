@@ -5,11 +5,11 @@ import { ResponseDto } from '../models/responses.model';
 
 @Injectable({ providedIn: 'root' })
 export class ContactService {
-  private baseUrl = 'http://localhost:8080/api/privium/contact';
+  private baseUrl = 'http://localhost:8080/api/privium/contact/send';
 
   constructor(private http: HttpClient) {}
 
-  send(payload: { subject: string; body: string }): Promise<ResponseDto> {
+  send(payload: { message: string }): Promise<ResponseDto> {
     return firstValueFrom(this.http.post<ResponseDto>(this.baseUrl, payload));
   }
 }
