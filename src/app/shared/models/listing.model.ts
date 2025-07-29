@@ -71,7 +71,7 @@ export interface ProductDetail extends ListingResponseDto, ListingInfoResponseDt
 export interface EditPayload {
   dto: ListingRequestDto;
   mainImageFile: File | null;
-  auxFiles: File[] | null;
+  auxFiles: (File | null)[] | null;
 }
 
 export interface ListingRequestDto {
