@@ -52,8 +52,7 @@ export class FooterComponent {
   termsOpen = false;
 
   contactForm: FormGroup = this.fb.group({
-    subject: ['', Validators.required],
-    body: ['', Validators.required],
+    message: ['', Validators.required],
   });
 
   constructor(
