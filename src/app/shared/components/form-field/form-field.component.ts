@@ -62,6 +62,7 @@ export class FormFieldComponent implements ControlValueAccessor {
   @Input() prefixIcon?: string;
   @Input() suffixIcon?: string;
   @Input() currencySymbol: string = "$";
+  @Input() maxLength?: number;
 
   @Output() selected = new EventEmitter<any>();
 

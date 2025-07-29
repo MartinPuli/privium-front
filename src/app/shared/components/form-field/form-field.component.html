@@ -75,6 +75,7 @@
       [placeholder]="placeholder"
       [value]="value"
       [disabled]="disabled"
+      [attr.maxLength]="maxLength ?? null"
       [class.has-prefix]="prefixIcon"
       [class.has-suffix]="
         suffixIcon || (type === 'password' && showPasswordToggle)
@@ -105,6 +106,7 @@
     [placeholder]="placeholder"
     [value]="value"
     [disabled]="disabled"
+    [attr.maxLength]="maxLength ?? null"
     [rows]="rows"
     [class.has-error]="hasError"
     class="form-textarea"

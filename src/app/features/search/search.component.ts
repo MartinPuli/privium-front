@@ -87,6 +87,7 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private listingSrv: ListingService,
     public categorySrv: CategoryService,
     private countrySrv: CountryService,
@@ -118,9 +119,19 @@ export class SearchComponent implements OnInit {
     const st = window.history.state as {
       request?: Partial<ListListingsRequestDto>;
     };
+
     if (st.request) {
       this.request = st.request;
+    } else {
+      const qp = this.route.snapshot.queryParamMap;
+      const req: Partial<ListListingsRequestDto> = {};
+      const term = qp.get('searchTerm');
+      if (term) req.searchTerm = term;
+      const catIds = qp.getAll('categoryIds');
+      if (catIds.length) req.categoryIds = catIds;
+      this.request = req;
     }
+
     this.current = { ...this.request };
     this.initCategorySlots();
     this.loadListings();

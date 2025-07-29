@@ -74,6 +74,11 @@ label.mdc-label {
   justify-content: flex-end;
   margin: 2rem 0;
   gap: 1rem;
+
+  .cancel-button {
+    color: $primary-navy !important;
+    font-weight: 600;
+  }
 }
 
 /* utilidades */
