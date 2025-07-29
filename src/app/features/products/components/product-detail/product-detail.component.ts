@@ -70,6 +70,8 @@ export class ProductDetailComponent implements OnInit {
     this.route.params.subscribe((params) => {
       const productId = Number.parseInt(params["id"], 10)
       if (productId) {
+        this.isLoading = true
+        this.currentImageIndex = 0
         const nav = this.router.getCurrentNavigation()
         const req = (nav?.extras.state as any)?.request as Partial<ListListingsRequestDto> | undefined
         this.loadProduct(productId, req)
