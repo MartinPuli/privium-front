@@ -10,7 +10,6 @@ import { ResidenceProofDto } from '../models/ResidenceProof.model';
 export class ResidenceService {
   private baseUrl = 'http://localhost:8080/api/privium/residence';
   private proofsEndpoint = `${this.baseUrl}/proofs`;
-  private approveEndpoint = `${this.baseUrl}/approveResidence`;
 
   constructor(private http: HttpClient) {}
 
@@ -18,11 +17,4 @@ export class ResidenceService {
     return this.http.post<ResponseDataDto<ResidenceProofDto[]>>(this.proofsEndpoint, { });
   }
 
-  approveResidence(
-    idUser: number,
-    approved: boolean
-  ): Observable<ResponseDto> {
-    const body = { idUser, approved };
-    return this.http.post<ResponseDto>(this.approveEndpoint, body);
-  }
 }

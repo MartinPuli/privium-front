@@ -92,3 +92,9 @@ export interface ListingRequestDto {
   action?: string;
 }
 
+
+export interface ListingAdminRequestDto {
+  listingId: number;
+  ownerId: number;
+  message: string;
+}
