@@ -233,7 +233,7 @@ app-product-card-small{
 
 // Loading and empty states - menos padding
 .loading-section {
-  padding: 2rem 0; // Reducido
+  padding: 1.5rem 0; // Reducido
   
   @media (max-width: 768px) {
     padding: 1.5rem 0;
@@ -244,16 +244,20 @@ app-product-card-small{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.3rem;
     
     p {
       color: var(--text-secondary);
-      font-size: 1.1rem;
+      font-size: 1.5rem;
       text-align: center;
       
       @media (max-width: 480px) {
         font-size: 1rem;
       }
+    }
+
+    mat-spinner{
+      width: 100px;
     }
   }
 }
