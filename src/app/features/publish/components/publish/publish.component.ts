@@ -373,6 +373,17 @@ export class PublishComponent implements OnInit {
     });
   }
 
+  @HostListener('window:keydown.enter', ['$event'])
+  onEnterPress(event: KeyboardEvent) {
+    event.preventDefault();
+
+    if (this.progress.currentStep === 2) {
+      this.onDetailsSubmit();
+    } else if (this.progress.currentStep === 3) {
+      this.publishListing();
+    }
+  }
+
   @ViewChildren("slot", { read: ElementRef })
   slots!: QueryList<ElementRef<HTMLElement>>;
 
