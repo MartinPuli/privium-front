@@ -14,7 +14,13 @@
           <h3 class="status">
             {{ listing.status === 1 ? "Activa" : "Pausada" }}
           </h3>
-          <mat-icon class="edit" (click)="openEdit('left')">edit</mat-icon>
+          <mat-icon
+            class="edit"
+            *ngIf="loadingSide !== 'left'"
+            (click)="openEdit('left')"
+            >edit</mat-icon
+          >
+          <mat-spinner *ngIf="loadingSide === 'left'" diameter="20"></mat-spinner>
         </div>
 
         <p class="condition">
@@ -34,7 +40,13 @@
   <mat-card class="right-card">
     <div class="info-row">
       <h3>Información sobre el producto</h3>
-      <mat-icon class="edit" (click)="openEdit('right')">edit</mat-icon>
+      <mat-icon
+        class="edit"
+        *ngIf="loadingSide !== 'right'"
+        (click)="openEdit('right')"
+        >edit</mat-icon
+      >
+      <mat-spinner *ngIf="loadingSide === 'right'" diameter="20"></mat-spinner>
     </div>
 
     <p class="label">Descripción</p>

@@ -13,6 +13,7 @@ import { CommonModule } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { EditPublicationComponent } from "../edit-publication/edit-publication.component";
 import { MatIconModule } from "@angular/material/icon";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import {
   MatCheckboxChange,
   MatCheckboxModule,
@@ -30,6 +31,7 @@ import { DefaultImageDirective } from "src/app/shared/directives/default-image.d
     EditPublicationComponent,
     MatIconModule,
     MatCheckboxModule,
+    MatProgressSpinnerModule,
     DefaultImageDirective,
   ],
 })
@@ -42,16 +44,23 @@ export class PublicationCardComponent {
 
   editingSide: "left" | "right" | null = null; // qué modal mostrar
   fullData!: ListingInfoResponseDto; // info extra (cats + imgs)
+  loadingSide: "left" | "right" | null = null;
 
   constructor(private listingSrv: ListingService, private sb: MatSnackBar) {}
 
   /* ----------------------------------------------------- abrimos modal */
   openEdit(side: "left" | "right") {
-
+    this.loadingSide = side;
     this.listingSrv.getListingInfo(this.listing.id).subscribe({
       next: ({ data }) => {
         this.fullData = data!;
         this.editingSide = side;
+      },
+      complete: () => {
+        this.loadingSide = null;
+      },
+      error: () => {
+        this.loadingSide = null;
       },
     });
   }

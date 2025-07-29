@@ -10,6 +10,7 @@ import {
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 export interface ModalButton {
   label: string;
@@ -17,12 +18,13 @@ export interface ModalButton {
   action: () => void;
   disabled?: boolean;
   form?: string;
+  loading?: boolean;
 }
 
 @Component({
   selector: "app-default-modal",
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule],
   templateUrl: "./default-modal.component.html",
   styleUrls: ["./default-modal.component.scss"],
 })

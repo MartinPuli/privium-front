@@ -48,6 +48,8 @@ export class ProfileInfoComponent implements OnInit {
   modalOpen = false;
   editForm!: FormGroup;
   modalButtons: any[] = [];
+  saveBtn!: ModalButton;
+  isSaving = false;
 
   constructor(
     private auth: AuthService,
@@ -74,22 +76,23 @@ export class ProfileInfoComponent implements OnInit {
     });
 
     /* botón “Modificar” (lo guardamos en variable para mutarlo después) */
-    const saveBtn = {
+    this.saveBtn = {
       label: "Modificar",
       type: "primary",
       action: () => this.savePhone(),
       disabled: true, // arranca deshabilitado
       form: "editPhoneForm",
+      loading: this.isSaving,
     };
 
     this.modalButtons = [
       { label: "Cancelar", type: "secondary", action: () => this.closeModal() },
-      saveBtn,
+      this.saveBtn,
     ];
 
     /* habilita/inhabilita en tiempo real */
     this.editForm.valueChanges.subscribe(({ value }) => {
-      saveBtn.disabled = !value || value === this.user.contactPhone;
+      this.saveBtn.disabled = !value || value === this.user.contactPhone;
     });
 
     this.modalOpen = true;
@@ -98,6 +101,9 @@ export class ProfileInfoComponent implements OnInit {
   async savePhone(): Promise<void> {
     if (this.editForm.invalid) return;
     const phone = this.editForm.value.value.trim();
+
+    this.isSaving = true;
+    if (this.saveBtn) this.saveBtn.loading = true;
 
     /* 1) Actualiza UI + storage */
     this.user.contactPhone = phone;
@@ -114,6 +120,8 @@ export class ProfileInfoComponent implements OnInit {
       verticalPosition: "bottom",
     });
 
+    this.isSaving = false;
+    if (this.saveBtn) this.saveBtn.loading = false;
     this.closeModal();
   }
 
