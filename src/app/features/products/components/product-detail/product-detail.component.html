@@ -28,45 +28,42 @@
       <div class="container">
         <div class="product-card">
           <div class="product-layout">
-            <!-- Product Images -->
-            <div class="product-images">
-              <!-- Thumbnails -->
-              <div class="image-thumbnails">
-                <button
-                  *ngFor="let image of getAllImages(); let i = index"
-                  class="thumbnail-btn"
-                  [class.active]="i === currentImageIndex"
-                  (click)="currentImageIndex = i"
-                >
-                  <img
-                    [src]="image"
-                    [alt]="'Imagen ' + (i + 1)"
-                    class="thumbnail-image"
-                    appDefaultImage
-                  />
-                </button>
-              </div>
-
-              <!-- Main Image -->
-              <div class="main-image-container">
+            <!-- Thumbnails -->
+            <div class="image-thumbnails">
+              <button
+                *ngFor="let image of getAllImages(); let i = index"
+                class="thumbnail-btn"
+                [class.active]="i === currentImageIndex"
+                (click)="currentImageIndex = i"
+              >
                 <img
-                  [src]="getAllImages()[currentImageIndex]"
-                  [alt]="product.title"
-                  class="main-image"
+                  [src]="image"
+                  [alt]="'Imagen ' + (i + 1)"
+                  class="thumbnail-image"
                   appDefaultImage
                 />
+              </button>
+            </div>
 
-                <button
-                  mat-icon-button
-                  class="favorite-btn"
-                  [class.favorited]="isFavorite"
-                  (click)="onToggleFavorite()"
-                >
-                  <mat-icon>{{
-                    isFavorite ? "favorite" : "favorite_border"
-                  }}</mat-icon>
-                </button>
-              </div>
+            <!-- Main Image -->
+            <div class="main-image-container">
+              <img
+                [src]="getAllImages()[currentImageIndex]"
+                [alt]="product.title"
+                class="main-image"
+                appDefaultImage
+              />
+
+              <button
+                mat-icon-button
+                class="favorite-btn"
+                [class.favorited]="isFavorite"
+                (click)="onToggleFavorite()"
+              >
+                <mat-icon>{{
+                  isFavorite ? "favorite" : "favorite_border"
+                }}</mat-icon>
+              </button>
             </div>
 
             <!-- Product Information -->
@@ -98,6 +95,17 @@
                     {{ method }}
                   </span>
                 </div>
+              </div>
+
+              <div class="product-actions">
+                <button
+                  mat-raised-button
+                  color="accent"
+                  class="contact-btn"
+                  (click)="onContactSeller()"
+                >
+                  Contactar vendedor
+                </button>
               </div>
             </div>
           </div>
