@@ -61,6 +61,7 @@ export class EditPublicationComponent implements OnInit {
   @Input({ required: true }) fullInfo!: ListingInfoResponseDto;
   /** qué sección se edita: 'left' (básicos) o 'right' (extra) */
   @Input({ required: true }) side!: "left" | "right";
+  @Input() saving = false;
 
   @Output() saved = new EventEmitter<EditPayload>();
   @Output() closed = new EventEmitter<void>();
@@ -86,15 +87,16 @@ export class EditPublicationComponent implements OnInit {
         label: "Cancelar",
         type: "secondary",
         action: () => this.closed.emit(),
+        disabled: this.saving,
       },
       {
         label: "Modificar",
         type: "primary",
         action: () => this.onSubmit(),
         disabled:
-          this.side === "left"
-            ? !this.leftForm || this.leftForm.invalid
-            : !this.rightForm || this.rightForm.invalid,
+          this.saving ||
+          (this.side === "left" ? this.leftForm.invalid : this.rightForm.invalid),
+        loading: this.saving,
       },
     ];
   }
