@@ -36,8 +36,8 @@ export class LoginComponent {
 
   /** Reactive Form con sus validaciones */
   readonly loginForm = this.fb.group({
-    email: ["", [Validators.required, Validators.email]],
-    password: ["", [Validators.required, Validators.minLength(6)]],
+    email: ["", [Validators.required]],
+    password: ["", [Validators.required]],
   });
 
   /** Botones que mostrará <app-auth-card>. */
@@ -114,9 +114,6 @@ export class LoginComponent {
   getError(field: "email" | "password"): string {
     const ctrl = this.loginForm.get(field);
     if (ctrl?.hasError("required")) return "Este campo es requerido";
-    if (ctrl?.hasError("email")) return "Ingresá un e-mail válido";
-    if (ctrl?.hasError("minlength"))
-      return "La contraseña debe tener al menos 6 caracteres";
     return "";
   }
 }

@@ -15,6 +15,8 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  ValidatorFn,
+  AbstractControl,
 } from "@angular/forms";
 import {
   ListingInfoResponseDto,
@@ -34,8 +36,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { CommonModule } from "@angular/common";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { DefaultImageDirective } from "src/app/shared/directives/default-image.directive";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { ResultSnackbarComponent } from "src/app/shared/components/result-snackbar/result.snackbar.component";
 
 @Component({
   selector: "app-edit-publication",
@@ -59,7 +59,7 @@ export class EditPublicationComponent implements OnInit {
   /* ---------- inputs / outputs ----------------------------- */
   @Input({ required: true }) listing!: ListingResponseDto;
   @Input({ required: true }) fullInfo!: ListingInfoResponseDto;
-  /** qué sección se edita: 'left' (básicos) o 'right' (extra) */
+  /** 'left' (básicos) o 'right' (extra) */
   @Input({ required: true }) side!: "left" | "right";
   @Input() saving = false;
 
@@ -67,8 +67,8 @@ export class EditPublicationComponent implements OnInit {
   @Output() closed = new EventEmitter<void>();
 
   /* ---------- formularios ---------------------------------- */
-  leftForm!: FormGroup; // título, fotos, precio, condición
-  rightForm!: FormGroup; // descripción, categorías, medios de pago
+  leftForm!: FormGroup;
+  rightForm!: FormGroup;
 
   /* ---------- categorías ----------------------------------- */
   categories: { idPath: string; name: string }[] = [];
@@ -78,140 +78,149 @@ export class EditPublicationComponent implements OnInit {
   @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
   selectedImages: { file: File; preview: string }[] = [];
   readonly maxImages = 5;
-  readonly maxSize = 5 * 1024 * 1024;
+  readonly maxSize   = 5 * 1024 * 1024;   // 5 MB
+  readonly minImagesReq = 1;              // mínimo requerido
+
+  /* mensaje de error para mostrar debajo de las fotos */
+  imageError: string | null = null;
+
+  /** cuántas fotos reales hay */
+  get filledImages(): number {
+    return this.selectedImages.filter(img => !!img.preview).length;
+  }
+  /** índice portada */
+  get mainIndex(): number {
+    return this.selectedImages.findIndex(img => !!img.preview);
+  }
 
   /* ---------- botones del modal ---------------------------- */
   get modalButtons(): ModalButton[] {
     return [
       {
-        label: "Cancelar",
-        type: "secondary",
-        action: () => this.closed.emit(),
+        label   : "Cancelar",
+        type    : "secondary",
+        action  : () => this.closed.emit(),
         disabled: this.saving,
       },
       {
-        label: "Modificar",
-        type: "primary",
-        action: () => this.onSubmit(),
-        disabled:
-          this.saving ||
-          (this.side === "left" ? this.leftForm.invalid : this.rightForm.invalid),
-        loading: this.saving,
+        label   : "Modificar",
+        type    : "primary",
+        action  : () => this.onSubmit(),
+        disabled: this.saving ||
+                  (this.side === "left"
+                    ? this.leftForm.invalid
+                    : this.rightForm.invalid),
+        loading : this.saving,
       },
     ];
   }
 
   /* ---------- ctor / init ---------------------------------- */
-  constructor(private fb: FormBuilder, private sb: MatSnackBar) {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    /* ----- IMÁGENES ---------------------------------------- */
+    /* ▸ Imágenes iniciales (portada + auxiliares) */
     this.selectedImages = [
       { file: new File([], ""), preview: this.listing.mainImage },
-      ...this.fullInfo.auxiliaryImages.map((ai) => ({
-        file: new File([], ""),
-        preview: ai.imgUrl,
+      ...this.fullInfo.auxiliaryImages.map(ai => ({
+        file: new File([], ""), preview: ai.imgUrl,
       })),
     ].slice(0, this.maxImages);
 
-    /* ----- CATEGORÍAS ------------------------------------- */
-    this.categories = this.fullInfo.categories.map((c) => ({
-      idPath: c.categoryId,
-      name: c.description,
-    }));
-
-    /* 👉  si la última NO está vacía y aún caben más, agrega un slot “+” */
-    if (
-      this.categories.length < 10 &&
-      (this.categories.length === 0 ||
-        this.categories[this.categories.length - 1].idPath !== "")
-    ) {
-      this.categories.push({ idPath: "", name: "" });
+    while (this.selectedImages.length < this.maxImages) {
+      this.selectedImages.push({ file: new File([], ""), preview: "" });
     }
 
+    /* ▸ Categorías */
+    this.categories = this.fullInfo.categories.map(c => ({
+      idPath: c.categoryId,
+      name  : c.description,
+    }));
+    if (this.categories.length < 10 &&
+        (this.categories.length === 0 || this.categories.at(-1)!.idPath !== "")) {
+      this.categories.push({ idPath: "", name: "" });
+    }
     this.showList = this.categories.map(() => false);
 
-    /* ----- FORMULARIOS ------------------------------------ */
+    /* ▸ Validador “mínimo N imágenes” */
+    const minImages: ValidatorFn = (c: AbstractControl) =>
+      (c.value as { preview: string }[])
+        .filter(i => !!i.preview).length >= this.minImagesReq
+        ? null
+        : { tooFew: true };
+
+    /* ▸ Formularios */
     this.leftForm = this.fb.group({
-      title: [
-        this.listing.title,
-        [Validators.required, Validators.minLength(3)],
-      ],
-      price: [this.listing.price, [Validators.required, Validators.min(1)]],
+      title    : [this.listing.title,
+                  [Validators.required, Validators.minLength(3)]],
+      price    : [this.listing.price,
+                  [Validators.required, Validators.min(1)]],
       condition: [this.listing.condition, Validators.required],
-      images: [this.selectedImages, Validators.minLength(1)],
+      images   : [this.selectedImages, minImages],
     });
 
     this.rightForm = this.fb.group({
-      description: [this.listing.description, Validators.required],
-      categories: [[], Validators.minLength(1)],
-      paysCash: [this.listing.acceptsCash],
-      paysCard: [this.listing.acceptsCard],
-      paysTransf: [this.listing.acceptsTransfer],
-      paysBarter: [this.listing.acceptsBarter],
+      description : [this.listing.description, Validators.required],
+      categories  : [[], Validators.minLength(1)],
+      paysCash    : [this.listing.acceptsCash],
+      paysCard    : [this.listing.acceptsCard],
+      paysTransf  : [this.listing.acceptsTransfer],
+      paysBarter  : [this.listing.acceptsBarter],
     });
 
-    /* categorías iniciales al form */
-    this.rightForm
-      .get("categories")!
-      .setValue(this.categories.filter((c) => c.idPath).map((c) => c.idPath));
+    this.rightForm.get("categories")!.setValue(
+      this.categories.filter(c => c.idPath).map(c => c.idPath)
+    );
+
+    /* error inicial si aplica */
+    if (this.filledImages < this.minImagesReq) {
+      this.imageError = `Debes subir al menos ${this.minImagesReq} fotos`;
+    }
   }
 
   /* =========================================================
-     MÉTODOS PARA MANEJAR IMÁGENES  (solo en side 'left')
+     IMÁGENES
   ==========================================================*/
+  private setImageError(msg: string) {
+    this.imageError = msg;
+    this.leftForm.get("images")!.updateValueAndValidity({ emitEvent: false });
+  }
+  private clearImageError() {
+    this.imageError = null;
+    this.leftForm.get("images")!.updateValueAndValidity({ emitEvent: false });
+  }
+
   addImages(evt: Event): void {
-    const files = Array.from((evt.target as HTMLInputElement).files || []);
+    const files = Array.from((evt.target as HTMLInputElement).files ?? []);
+    this.clearImageError();
 
-    files.forEach((f) => {
-      const currentCount = this.selectedImages.filter((i) => i.preview).length;
-      if (currentCount >= this.maxImages) return;
+    files.forEach(file => {
+      if (this.filledImages >= this.maxImages) return;
 
-      // ► Tamaño máximo
-      if (f.size > this.maxSize) {
-        this.sb.openFromComponent(ResultSnackbarComponent, {
-          data: {
-            message: `La imagen ${f.name} supera los 5\u00A0MB`,
-            status: "error",
-          },
-          duration: 4000,
-          horizontalPosition: "center",
-          verticalPosition: "bottom",
-          panelClass: "error-snackbar",
-        });
+      /* ▸ peso */
+      if (file.size > this.maxSize) {
+        this.setImageError(`La imagen ${file.name} supera los 5 MB`);
         return;
       }
 
-      // ► Duplicados
-      const already = this.selectedImages.some(
-        (i) => i.preview && i.file.name === f.name && i.file.size === f.size
-      );
-      if (already) {
-        this.sb.openFromComponent(ResultSnackbarComponent, {
-          data: {
-            message: `No puedes insertar 2 veces la misma imagen`,
-            status: "error",
-          },
-          duration: 4000,
-          horizontalPosition: "center",
-          verticalPosition: "bottom",
-          panelClass: "error-snackbar",
-        });
-        return;
-      }
-
+      /* ▸ duplicado: comparar contra todas las previews existentes */
       const reader = new FileReader();
-      reader.onload = (e) => {
-        const slot = this.selectedImages.findIndex((img) => !img.preview);
-        const img = { file: f, preview: e.target!.result as string };
-        if (slot === -1) {
-          this.selectedImages.push(img);
-        } else {
-          this.selectedImages[slot] = img;
+      reader.onload = e => {
+        const preview = e.target!.result as string;
+        const dup = this.selectedImages.some(im => im.preview === preview);
+        if (dup) {
+          this.setImageError(`La imagen ${file.name} ya fue cargada en esta modificación`);
+          return;
         }
-        this.leftForm.get("images")!.setValue(this.selectedImages);
+
+        const slot = this.selectedImages.findIndex(im => !im.preview);
+        const img  = { file, preview };
+        slot === -1 ? this.selectedImages.push(img)
+                    : this.selectedImages[slot] = img;
+
+        this.leftForm.get("images")!.updateValueAndValidity();
       };
-      reader.readAsDataURL(f);
+      reader.readAsDataURL(file);
     });
 
     (evt.target as HTMLInputElement).value = "";
@@ -220,102 +229,99 @@ export class EditPublicationComponent implements OnInit {
   removeImage(i: number): void {
     if (!this.selectedImages[i]) return;
     this.selectedImages[i] = { file: new File([], ""), preview: "" };
+
+    if (this.filledImages < this.minImagesReq) {
+      this.setImageError(`Debes subir al menos ${this.minImagesReq} fotos`);
+    } else {
+      this.clearImageError();
+    }
     this.leftForm.get("images")!.setValue(this.selectedImages);
   }
 
   /* =========================================================
-     MÉTODOS PARA MANEJAR CATEGORÍAS  (solo en side 'right')
+     PORTADA SIEMPRE PRIMER SLOT
   ==========================================================*/
-  toggleList(i: number): void {
-    this.showList[i] = !this.showList[i];
-  }
-
-  clearCat(i: number) {
-    this.categories.splice(i, 1);
-    this.showList.splice(i, 1);
-
-    const reales = this.categories.filter((c) => c.idPath !== "");
-
-    this.categories = [...reales, { idPath: "", name: "" }];
-
-    this.showList = this.categories.map(() => false);
-
-    this.rightForm
-      .get("categories")!
-      .setValue(this.categories.filter((c) => c.idPath).map((c) => c.idPath));
-  }
-
-  onCategorySelected(i: number, sel: { idPath: string; name: string }): void {
-    const dup = this.categories.some(
-      (c, idx) => idx !== i && c.idPath === sel.idPath
-    );
-    if (dup) {
-      this.categories[i] = { idPath: "", name: "" };
-      this.showList[i] = false;
-      return;
+  private normalizeOrder(): void {
+    while (this.selectedImages.length < this.maxImages) {
+      this.selectedImages.push({ file: new File([], ""), preview: "" });
     }
-
-    this.categories[i] = sel;
-    this.showList[i] = false;
-
-    if (
-      i === this.categories.length - 1 &&
-      this.categories.length < 10 &&
-      sel.idPath !== ""
-    ) {
-      this.categories.push({ idPath: "", name: "" });
-      this.showList.push(false);
+    if (!this.selectedImages[0].preview) {
+      const next = this.selectedImages.findIndex((im, idx) => idx > 0 && im.preview);
+      if (next > 0) {
+        [this.selectedImages[0], this.selectedImages[next]] =
+          [this.selectedImages[next], this.selectedImages[0]];
+      }
     }
-    this.patchCategoriesToForm();
-  }
-
-  private patchCategoriesToForm(): void {
-    this.rightForm
-      .get("categories")!
-      .setValue(this.categories.filter((c) => c.idPath).map((c) => c.idPath));
   }
 
   /* =========================================================
-     CONSTRUIR DTO COMPLETO PARA editListing
+     CATEGORÍAS (métodos sin cambios)
+  ==========================================================*/
+  toggleList(i: number) { this.showList[i] = !this.showList[i]; }
+  clearCat(i: number) {
+    this.categories.splice(i, 1);
+    this.showList.splice(i, 1);
+    const reales = this.categories.filter(c => c.idPath);
+    this.categories = [...reales, { idPath: "", name: "" }];
+    this.showList  = this.categories.map(() => false);
+    this.patchCats();
+  }
+  onCategorySelected(i: number, sel: { idPath: string; name: string }) {
+    const dup = this.categories.some((c, idx) => idx !== i && c.idPath === sel.idPath);
+    if (dup) {
+      this.categories[i] = { idPath: "", name: "" };
+      this.showList[i]   = false;
+      return;
+    }
+    this.categories[i] = sel;
+    this.showList[i]   = false;
+
+    if (i === this.categories.length - 1 && this.categories.length < 10 && sel.idPath) {
+      this.categories.push({ idPath: "", name: "" });
+      this.showList.push(false);
+    }
+    this.patchCats();
+  }
+  private patchCats() {
+    this.rightForm
+      .get("categories")!
+      .setValue(this.categories.filter(c => c.idPath).map(c => c.idPath));
+  }
+
+  /* =========================================================
+     DTO
   ==========================================================*/
   private buildRequest(): ListingRequestDto {
-    const orig = this.listing;
-    const origAux = this.fullInfo.auxiliaryImages.map((ai) => ai.imgUrl);
+    this.normalizeOrder();
 
-    const origCatIds = this.fullInfo.categories.map((c) => c.categoryId);
+    const mainPreview = this.selectedImages[0].preview || null;
+    const mainImageStr =
+      mainPreview && mainPreview !== this.listing.mainImage ? mainPreview : null;
 
-    /* --- imagen principal -------------------------------- */
-    const mainImgCurrent = this.selectedImages[0]?.preview || "";
-    const mainImage = mainImgCurrent !== orig.mainImage ? mainImgCurrent : null;
-
-    /* --- auxiliares -------------------------------------- */
     const auxCurrent = this.selectedImages
-      .slice(1)
-      .map((i) => (i.preview ? i.preview : null));
-    const auxChanged =
-      auxCurrent.length !== origAux.length ||
-      auxCurrent.some((p, idx) => p !== (origAux[idx] ?? null));
-    const imagesUrl = auxChanged ? auxCurrent : null;
+      .slice(1, this.maxImages)
+      .map(im => im.preview || null);
 
-    /* --- request ----------------------------------------- */
+    const origAux = this.fullInfo.auxiliaryImages.map(ai => ai.imgUrl ?? null);
+    const auxChanged = auxCurrent.some((p, i) => p !== (origAux[i] ?? null));
+
     return {
-      listingId: orig.id,
-      title: this.leftForm.value.title ?? orig.title,
-      description: this.rightForm.value.description ?? orig.description,
-      price: this.leftForm.value.price ?? orig.price,
-      condition: this.leftForm.value.condition ?? orig.condition,
-      brand: orig.brand,
-      mainImage,
-      imagesUrl,
-      categoriesId: this.rightForm.value.categories?.length
-        ? this.rightForm.value.categories // nuevas si cambió
-        : origCatIds,
-      acceptsCash: this.rightForm.value.paysCash ?? orig.acceptsCash,
-      acceptsCard: this.rightForm.value.paysCard ?? orig.acceptsCard,
-      acceptsTransfer: this.rightForm.value.paysTransf ?? orig.acceptsTransfer,
-      acceptsBarter: this.rightForm.value.paysBarter ?? orig.acceptsBarter,
-      type: orig.type,
-      /* action se omite */
+      listingId    : this.listing.id,
+      title        : this.leftForm.value.title        ?? this.listing.title,
+      description  : this.rightForm.value.description ?? this.listing.description,
+      price        : this.leftForm.value.price        ?? this.listing.price,
+      condition    : this.leftForm.value.condition    ?? this.listing.condition,
+      brand        : this.listing.brand,
+      mainImage    : mainImageStr,
+      imagesUrl    : auxChanged ? auxCurrent : null,
+      categoriesId : this.rightForm.value.categories?.length
+                      ? this.rightForm.value.categories
+                      : this.fullInfo.categories.map(c => c.categoryId),
+      acceptsCash  : this.rightForm.value.paysCash    ?? this.listing.acceptsCash,
+      acceptsCard  : this.rightForm.value.paysCard    ?? this.listing.acceptsCard,
+      acceptsTransfer: this.rightForm.value.paysTransf ?? this.listing.acceptsTransfer,
+      acceptsBarter: this.rightForm.value.paysBarter  ?? this.listing.acceptsBarter,
+      type         : this.listing.type,
     };
   }
 
@@ -323,46 +329,39 @@ export class EditPublicationComponent implements OnInit {
      GUARDAR
   ==========================================================*/
   onSubmit(): void {
-    // 1) Armo el DTO con buildRequest()
+    if (this.filledImages < this.minImagesReq) {
+      this.setImageError(`Debes subir al menos ${this.minImagesReq} fotos`);
+      return;
+    }
     const dto = this.buildRequest();
-    console.log("DTO a enviar:", dto);
-
-    // 2) Extraigo siempre el archivo principal (si cambió)
     const mainFile =
       dto.mainImage !== null ? this.selectedImages[0].file : null;
 
-    // 3) Auxiliares: solo se envían aquellas que cambiaron
     const auxFiles =
       dto.imagesUrl !== null
         ? this.selectedImages
-            .slice(1)
-            .map((img, idx) =>
-              img.preview &&
-              img.preview !== this.fullInfo.auxiliaryImages[idx]?.imgUrl
-                ? img.file
+            .slice(1, this.maxImages)
+            .map((im, idx) =>
+              im.preview &&
+              im.preview !== this.fullInfo.auxiliaryImages[idx]?.imgUrl
+                ? im.file
                 : null
             )
         : null;
 
-    // 4) Emito
     this.saved.emit({ dto, mainImageFile: mainFile, auxFiles });
   }
 
+  /* =========================================================
+     CLICK FUERA PARA CERRAR DROPDOWNS
+  ==========================================================*/
   @ViewChildren("catSlot", { read: ElementRef })
   catSlots!: QueryList<ElementRef<HTMLElement>>;
-
-  /** Cuando se hace clic en cualquier parte del documento */
   @HostListener("document:click", ["$event"])
-  handleClickOutside(evt: MouseEvent) {
-    const target = evt.target as Node;
-
-    // Si el clic NO ocurrió dentro de ningún cat-slot, cerramos todos
-    const clickedInside = this.catSlots.some((slot) =>
-      slot.nativeElement.contains(target)
+  clickOut(evt: MouseEvent) {
+    const inside = this.catSlots.some(slot =>
+      slot.nativeElement.contains(evt.target as Node)
     );
-
-    if (!clickedInside) {
-      this.showList = this.showList.map(() => false);
-    }
+    if (!inside) this.showList = this.showList.map(() => false);
   }
 }

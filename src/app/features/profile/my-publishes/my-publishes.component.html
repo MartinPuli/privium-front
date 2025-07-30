@@ -68,6 +68,7 @@
       (listingModified)="load()"
       *ngFor="let item of listings"
       [listing]="item"
+      (reload)="load()"
       [selected]="selectedIds.has(item.id)"
       (selectionChange)="onCardSelect(item.id, $event)"
     ></app-publication-card>

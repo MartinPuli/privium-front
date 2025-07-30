@@ -141,12 +141,17 @@
     <div class="related-products-section">
       <h2 class="section-title">Productos relacionados</h2>
 
-      <div class="related-products-grid no-scroll">
+      <div class="related-products-grid no-scroll" *ngIf="relatedProducts.length > 0">
         <app-product-card-small
           *ngFor="let p of relatedProducts"
           [product]="p"
         ></app-product-card-small>
       </div>
+
+      <p class="no-products" *ngIf="relatedProducts.length === 0">
+        <mat-icon>inventory_2</mat-icon>
+        No hay productos relacionados a esta publicación
+      </p>
     </div>
   </main>
 

@@ -9,6 +9,20 @@
   margin-top: 30px;
 }
 
+.price-separer{
+  height: 20px;
+  display: block;
+  background: transparent;
+}
+
+.cdk-drag-preview {
+  border: 2px dashed #1976d2;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+
 .left-form,
 .right-form {
   padding: 10px 20px !important;
@@ -20,7 +34,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px; /* un poco más de aire */
-  margin-bottom: 35px;
+  margin-bottom: 15px;
 
   /* botón gris, con trazo discontinuo */
   .add-photo {
@@ -70,8 +84,8 @@
       background: #fff;
       border: 1px solid #999;
       border-radius: 50%;
-      width: 24px;
-      height: 24px;
+      width: 30px;
+      height: 30px;
       padding: 0;
     }
 
@@ -109,6 +123,14 @@
   }
 }
 
+.form-error {
+  color: #d32f2f;
+  font-size: 1rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+  margin-top: 4px;
+}
 
 /* radios “Nuevo / Usado” – márgenes más amplios */
 app-form-field[type="radio"] {

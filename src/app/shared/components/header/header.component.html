@@ -208,6 +208,7 @@
         type="number"
         in="1"
         max="99999999"
+        step="1000" 
         [(ngModel)]="filters.min"
       />
       <mat-hint align="end">Entre 1 y 99 999 999</mat-hint>
@@ -219,6 +220,7 @@
         matInput
         type="number"
         in="1"
+        step="1000" 
         max="99999999"
         [(ngModel)]="filters.max"
       />

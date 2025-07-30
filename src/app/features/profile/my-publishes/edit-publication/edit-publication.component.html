@@ -22,11 +22,11 @@
       <!-- FOTOS -->
       <p class="modal-label">Fotos</p>
       <div class="photos">
-        <!-- Botón seleccionar (solo si < 5) -->
+        <!-- Botón “Seleccionar” -->
         <button
           class="add-photo"
           type="button"
-          *ngIf="selectedImages.length < maxImages"
+          *ngIf="filledImages < maxImages"
           (click)="fileInput.click()"
         >
           <mat-icon>cloud_upload</mat-icon>
@@ -44,20 +44,23 @@
         />
 
         <!-- miniaturas -->
-        <div
-          class="thumb"
-          *ngFor="let img of selectedImages; let i = index"
-          [class.is-main]="i === 0"
-        >
-          <img [src]="img.preview" appDefaultImage />
-          <button mat-icon-button (click)="removeImage(i)">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
+        <ng-container *ngFor="let img of selectedImages; let i = index">
+          <div
+            class="thumb"
+            *ngIf="img.preview"
+            [class.is-main]="i === mainIndex"
+          >
+            <img [src]="img.preview" appDefaultImage />
+            <button mat-icon-button (click)="removeImage(i)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </ng-container>
       </div>
-      <small *ngIf="leftForm.get('images')!.invalid">
-        Subí al menos 1 foto
-      </small>
+      <span class="form-error" *ngIf="imageError">{{ imageError }}</span>
+
+      <span class="price-separer"></span>
+      <!-- PRECIO -->
       <app-form-field
         prefixIcon="$"
         [label]="'Precio'"
@@ -67,6 +70,7 @@
           leftForm.get('price')!.invalid && leftForm.get('price')!.touched
         "
         [errorMessage]="'Precio > 0'"
+        class="price-field"
       >
       </app-form-field>
     </form>

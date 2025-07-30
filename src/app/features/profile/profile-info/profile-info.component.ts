@@ -18,10 +18,14 @@ import { User } from "src/app/shared/models/user.model";
 import { HeaderComponent } from "src/app/shared/components/header/header.component";
 import { FooterComponent } from "src/app/shared/components/footer/footer.component";
 import { FormFieldComponent } from "src/app/shared/components/form-field/form-field.component";
-import { DefaultModalComponent, ModalButton } from "src/app/shared/components/default-modal/default-modal.component";
+import {
+  DefaultModalComponent,
+  ModalButton,
+} from "src/app/shared/components/default-modal/default-modal.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MyPublishesComponent } from "../my-publishes/my-publishes.component";
 import { CountryService } from "src/app/shared/services/country.service";
+import { ResultSnackbarComponent } from "src/app/shared/components/result-snackbar/result.snackbar.component";
 
 @Component({
   selector: "app-profile-info",
@@ -36,7 +40,7 @@ import { CountryService } from "src/app/shared/services/country.service";
     DefaultModalComponent,
     MatButtonModule,
     MatIconModule,
-    MyPublishesComponent
+    MyPublishesComponent,
   ],
   templateUrl: "./profile-info.component.html",
   styleUrls: ["./profile-info.component.scss"],
@@ -113,9 +117,13 @@ export class ProfileInfoComponent implements OnInit {
     /* 2) PATCH backend */
     await this.profileSvc.updateProfile({ phone });
 
-    this.snackBar.open("Telefono modificado correctamente", "Cerrar", {
+    this.snackBar.openFromComponent(ResultSnackbarComponent, {
+      data: {
+        message: "Teléfono actualizado correctamente",
+        status: "success",
+      },
       duration: 5000,
-      panelClass: ["success-snackbar"],
+      panelClass: "success-snackbar",
       horizontalPosition: "center",
       verticalPosition: "bottom",
     });
