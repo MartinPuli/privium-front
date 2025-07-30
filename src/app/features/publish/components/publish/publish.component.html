@@ -106,26 +106,11 @@
           </app-form-field>
         </app-publish-info>
 
-        <!-- Marca -->
-        <app-publish-info
-          [formId]="'detailsForm'"
-          *ngIf="step2Stage >= 3"
-          title="Marca"
-          [disabled]="cardDisabled(3)"
-          description="Ingresa la marca de tu producto"
-          [showFooter]="true"
-          (onCancel)="cancelStage()"
-          (onContinue)="continueStage()"
-        >
-          <app-form-field formControlName="brand" [disabled]="cardDisabled(3)">
-          </app-form-field>
-        </app-publish-info>
-
         <!-- Condición -->
         <app-publish-info
           [formId]="'detailsForm'"
-          *ngIf="step2Stage >= 4"
-          [disabled]="cardDisabled(4)"
+          *ngIf="step2Stage >= 3"
+          [disabled]="cardDisabled(3)"
           title="Condición"
           description="Especifica si el producto es nuevo o usado"
           [showFooter]="true"
@@ -136,7 +121,7 @@
           <app-form-field
             type="radio"
             formControlName="condition"
-            [disabled]="cardDisabled(4)"
+            [disabled]="cardDisabled(3)"
             [options]="[
               { value: 2, label: 'Nuevo' },
               { value: 1, label: 'Usado' }
@@ -150,12 +135,12 @@
         <!-- Fotos -->
         <app-publish-info
           [formId]="'detailsForm'"
-          *ngIf="step2Stage >= 5"
+          *ngIf="step2Stage >= 4"
           title="Fotos"
-          [disabled]="cardDisabled(5)"
+          [disabled]="cardDisabled(4)"
           description="La primera foto será la principal. Las demás se verán en el detalle"
           [showFooter]="true"
-          [continueDisabled]="selectedImages.length === 0 || cardDisabled(5)"
+          [continueDisabled]="selectedImages.length === 0 || cardDisabled(4)"
           (onCancel)="cancelStage()"
           (onContinue)="continueStage()"
         >

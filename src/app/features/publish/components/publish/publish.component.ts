@@ -95,7 +95,6 @@ export class PublishComponent implements OnInit {
     this.detailsForm = this.fb.group({
       title: ["", [Validators.required, Validators.minLength(3)]],
       description: ["", [Validators.required, Validators.minLength(10)]],
-      brand: [""],
       condition: [2, Validators.required],
       images: [[], Validators.required],
     });
@@ -146,7 +145,6 @@ export class PublishComponent implements OnInit {
         {
           title: "Título",
           description: "Descripción",
-          brand: "Marca",
           condition: "Condición",
           images: "Fotos",
           price: "Precio",
@@ -164,17 +162,19 @@ export class PublishComponent implements OnInit {
   }
 
   continueStage(): void {
-    if (this.step2Stage < 5) {
+    if (this.step2Stage < 4) {
       this.step2Stage++;
     } else {
       this.nextStep();
     }
   }
   clearStage(): void {
-    const map = ["title", "description", "brand", "condition", "images"][
+    const map = ["title", "", "description", "condition", "images"][
       this.step2Stage
     ];
-    this.detailsForm.get(map)?.reset(this.step2Stage === 4 ? [] : "");
+    if (map) {
+      this.detailsForm.get(map)?.reset(this.step2Stage === 4 ? [] : "");
+    }
   }
 
   cancelStage(): void {
@@ -311,7 +311,6 @@ export class PublishComponent implements OnInit {
       () => this.detailsForm.get('title')!.valid,
       () => this.categories[0].idPath !== '',
       () => this.detailsForm.get('description')!.valid,
-      () => true,
       () => this.detailsForm.get('condition')!.valid,
       () => this.selectedImages.length > 0,
     ];
@@ -335,7 +334,6 @@ export class PublishComponent implements OnInit {
     const dto: ListingRequestDto = {
       title: this.detailsForm.value.title,
       description: this.detailsForm.value.description,
-      brand: this.detailsForm.value.brand,
       condition: this.detailsForm.value.condition,
       price: this.commercialForm.value.price,
       acceptsCash: this.commercialForm.value.acceptsCash,
