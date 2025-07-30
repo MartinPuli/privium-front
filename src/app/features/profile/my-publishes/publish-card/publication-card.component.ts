@@ -45,6 +45,7 @@ export class PublicationCardComponent {
   editingSide: "left" | "right" | null = null; // qué modal mostrar
   fullData!: ListingInfoResponseDto; // info extra (cats + imgs)
   loadingSide: "left" | "right" | null = null;
+  saving = false;
 
   constructor(private listingSrv: ListingService, private sb: MatSnackBar) {}
 
@@ -67,6 +68,7 @@ export class PublicationCardComponent {
 
   onSave(payload: EditPayload): void {
     const { dto, mainImageFile, auxFiles } = payload;
+    this.saving = true;
     this.listingSrv.editListing(dto, mainImageFile!, auxFiles!).subscribe({
       next: () => {
         /* snackbar de éxito */
@@ -81,6 +83,12 @@ export class PublicationCardComponent {
         /* cerrar modal y refrescar la grilla */
         this.editingSide = null;
         this.reload.emit(); // el padre ejecuta listListings()
+      },
+      complete: () => {
+        this.saving = false;
+      },
+      error: () => {
+        this.saving = false;
       },
     });
   }
