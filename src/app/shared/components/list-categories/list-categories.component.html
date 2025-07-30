@@ -15,6 +15,7 @@
 
         <button
           *ngIf="hasChild(cat)"
+          type="button"
           class="expand-btn"
           (click)="toggleExpand(cat); $event.stopPropagation()"
         >
