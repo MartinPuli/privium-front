@@ -47,6 +47,9 @@ export class ListingService {
     mainImageFile: File,
     auxFiles: File[] = []
   ): Observable<ResponseDataDto<ListingResponseDto>> {
+    if (dto.type === 'SERVICIO') {
+      dto.condition = 2;
+    }
     const form = new FormData();
 
     form.append(
@@ -68,6 +71,9 @@ export class ListingService {
     mainImageFile?: File | null,
     auxFiles: (File | null)[] | null = []
   ): Observable<ResponseDto> {
+    if (dto.type === 'SERVICIO') {
+      dto.condition = 2;
+    }
     const form = new FormData();
 
     // 1) JSON con el DTO
