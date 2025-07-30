@@ -214,7 +214,7 @@ export class AuthService {
       return {
         id: payload.userId || payload.sub || payload.id,
         name: payload.name || payload.username,
-        lastname: payload.lastname || "",
+        lastName: payload.lastName || "",
         email: payload.email,
         verifiedEmail: payload.verifiedEmail || false,
         verifiedResidence: payload.verifiedResidence || false,

@@ -148,16 +148,14 @@ $container-w: 86%; // igual que el footer
 // ────────────────────────────────────────────
 .header-actions {
   .action-button {
+    height: 66px;
+    width: 66px;
     color: $white;
     mat-icon {
       font-size: 44px;
       height: 44px;
       width: 44px;
       transform: 0 !important;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
     }
   }
 }
@@ -257,7 +255,6 @@ $container-w: 86%; // igual que el footer
 
 /* ───────── Tarjeta del menú ───────── */
 ::ng-deep .filter-menu.mat-mdc-menu-panel {
-  
   background: $background-secondary !important;
   border: 2px solid $primary-navy;
   border-radius: $border-radius-md;

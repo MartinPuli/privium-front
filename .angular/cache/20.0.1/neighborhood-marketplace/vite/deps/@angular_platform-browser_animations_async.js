@@ -1,7 +1,7 @@
 import {
   DomRendererFactory2
-} from "./chunk-ONPQY3PL.js";
-import "./chunk-DE3MY7RS.js";
+} from "./chunk-72OWLRQS.js";
+import "./chunk-26L2P5NN.js";
 import "./chunk-W7ENOTKE.js";
 import {
   ANIMATION_MODULE_TYPE,
@@ -19,8 +19,10 @@ import {
   setClassMetadata,
   ɵɵdefineInjectable,
   ɵɵinvalidFactory
-} from "./chunk-2QVOP24D.js";
-import "./chunk-3KKC7HMJ.js";
+} from "./chunk-XNMGRNEU.js";
+import "./chunk-6WM4KJML.js";
+import "./chunk-N2Y53VC3.js";
+import "./chunk-3T6W7NID.js";
 import "./chunk-WDMUDEB6.js";
 
 // node_modules/@angular/platform-browser/fesm2022/animations/async.mjs
@@ -57,7 +59,7 @@ var AsyncAnimationRendererFactory = class _AsyncAnimationRendererFactory {
    * @internal
    */
   loadImpl() {
-    const loadFn = () => this.moduleImpl ?? import("./browser-ZYTBE6J4.js").then((m) => m);
+    const loadFn = () => this.moduleImpl ?? import("./browser-52EPKUCH.js").then((m) => m);
     let moduleImplPromise;
     if (this.loadingSchedulerFn) {
       moduleImplPromise = this.loadingSchedulerFn(loadFn);

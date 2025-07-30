@@ -15,6 +15,7 @@ export interface ListListingsRequestDto {
   conditionFilter?: number; // 1=usado,2=nuevo
   brandFilter?: string;
   listingId?: number;
+  notShownListing?: number; // Excluir una publicación específica
 
   type?: string;
   // Medios de pago

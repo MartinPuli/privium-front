@@ -1,38 +1,48 @@
-import { Component, OnInit } from "@angular/core"
-import { ActivatedRoute, Router, RouterModule } from "@angular/router"
-import { CommonModule } from "@angular/common"
-import { MatButtonModule } from "@angular/material/button"
-import { MatIconModule } from "@angular/material/icon"
-import { MatChipsModule } from "@angular/material/chips"
-import { MatBadgeModule } from "@angular/material/badge"
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner"
-import { firstValueFrom } from "rxjs"
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { ActivatedRoute, RouterModule } from "@angular/router";
+import { CommonModule } from "@angular/common";
 
-import { ListingService } from "../../../../shared/services/listing.service"
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatChipsModule } from "@angular/material/chips";
+import { MatBadgeModule } from "@angular/material/badge";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+
+import { forkJoin, from, of, Subscription } from "rxjs";
+import { switchMap, tap, finalize, map } from "rxjs/operators";
+
+import { ListingService } from "src/app/shared/services/listing.service";
 import {
   ProductDetail,
   ListListingsRequestDto,
   ListingResponseDto,
-} from "../../../../shared/models/listing.model"
-import { HeaderComponent } from "src/app/shared/components/header/header.component"
-import { FooterComponent } from "src/app/shared/components/footer/footer.component"
-import { ProfileService } from "src/app/shared/services/profile.service"
-import { CountryService } from "src/app/shared/services/country.service"
-import { User } from "src/app/shared/models/user.model"
-import { ProductCardSmallComponent } from "src/app/shared/components/product-card-small/product-card-small.component"
-import { DefaultImageDirective } from "src/app/shared/directives/default-image.directive"
+} from "src/app/shared/models/listing.model";
+import { ProfileService } from "src/app/shared/services/profile.service";
+import { CountryService } from "src/app/shared/services/country.service";
+import { User } from "src/app/shared/models/user.model";
+
+import { HeaderComponent } from "src/app/shared/components/header/header.component";
+import { FooterComponent } from "src/app/shared/components/footer/footer.component";
+import { ProductCardSmallComponent } from "src/app/shared/components/product-card-small/product-card-small.component";
+import { DefaultImageDirective } from "src/app/shared/directives/default-image.directive";
+import { AuthService } from "src/app/shared/services/auth.service";
 
 @Component({
   selector: "app-product-detail",
   standalone: true,
   imports: [
+    /* Angular */
     CommonModule,
     RouterModule,
+
+    /* Material */
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
     MatBadgeModule,
     MatProgressSpinnerModule,
+
+    /* Componentes compartidos */
     HeaderComponent,
     FooterComponent,
     ProductCardSmallComponent,
@@ -41,105 +51,131 @@ import { DefaultImageDirective } from "src/app/shared/directives/default-image.d
   templateUrl: "./product-detail.component.html",
   styleUrls: ["./product-detail.component.scss"],
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnDestroy {
+  /* ────────── Estado de la vista ────────── */
+  product: ProductDetail | null = null;
+  seller: User | null = null;
+  locationName: string | null = null;
 
-  product: ProductDetail | null = null
-  seller: User | null = null
-  locationName: string | null = null
-  currentImageIndex = 0
-  isLoading = true
-  isFavorite = false
+  currentImageIndex = 0;
+  isLoading = true;
+  isFavorite = false;
 
+  relatedProducts: ListingResponseDto[] = [];
+
+  /* helper de ejemplo */
   additionalInfo = {
     relatedSearch: "Muebles antiguos",
-    dimensions: "Medidas: 110 cm de ancho x 51 cm de profundidad x 89 cm de alto.",
-  }
+    dimensions:
+      "Medidas: 110 cm de ancho x 51 cm de profundidad x 89 cm de alto.",
+  };
 
-
-  relatedProducts: ListingResponseDto[] = []
+  private sub?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private listingService: ListingService,
     private profileService: ProfileService,
-    private countryService: CountryService,
+    private authService: AuthService,
+    private countryService: CountryService
   ) {}
 
+  /* ════════════════════════════════════════════════════════════════
+     CICLO DE VIDA
+     ════════════════════════════════════════════════════════════════ */
+
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      const productId = Number.parseInt(params["id"], 10)
-      if (productId) {
-        this.isLoading = true
-        this.currentImageIndex = 0
-        const nav = this.router.getCurrentNavigation()
-        const req = (nav?.extras.state as any)?.request as Partial<ListListingsRequestDto> | undefined
-        console.log(this.product)
-        this.loadProduct(productId, req)
-      }
-    })
-  }
+    /* Nos suscribimos a los cambios de :id en la URL */
+    this.sub = this.route.paramMap
+      .pipe(
+        tap(() => {
+          this.resetState();
+          this.isLoading = true; // ⬅️  ON (cada vez que cambia :id)
+        }),
 
-  private async loadProduct(id: number, req?: Partial<ListListingsRequestDto>): Promise<void> {
-    try {
-      const [listResp, infoResp] = await Promise.all([
-        firstValueFrom(
-          this.listingService.listListings(
-            req ?? { listingId: id, pageSize: 1 }
-          )
-        ),
-        firstValueFrom(this.listingService.getListingInfo(id)),
-      ])
+        switchMap((p) => {
+          const id = Number(p.get("id"));
+          console.log("⮕  Nuevo id:", id);
+          if (!id) {
+            return of(null);
+          }
 
-      const listing = listResp.data?.[0]
-      if (listing) {
-        this.product = { ...listing, ...infoResp.data } as ProductDetail
-        this.isFavorite = false
-        this.locationName = this.countryService.getNameById(listing.countryId)
+          return forkJoin({
+            listing: this.getListingById(id).pipe(
+              tap((r) => console.log("listing.id =>", r?.id)) // 2️⃣
+            ),
+            infoR: this.listingService.getListingInfo(id).pipe(
+              tap((r) => console.log("infoR.id =>", r.data)) // 3️⃣
+            ),
+          }).pipe(
+            map(({ listing, infoR }) => ({ listing, info: infoR.data! })),
 
-        try {
-          const relatedResp = await firstValueFrom(
-            this.listingService.listListings({
-              categoryIds: infoResp.data!.categories?.map((c) => c.categoryId) ?? [],
-              page: 1,
-              pageSize: 4,
+            /* ←── Apagamos el loader cuando el forkJoin termina
+             (éxito o error)   */
+            tap({
+              next: () => {
+                this.isLoading = false;
+              },
+              error: () => (this.isLoading = false),
             })
-          )
-          this.relatedProducts = relatedResp.data ?? []
-        } catch {
-          this.relatedProducts = []
-        }
-        try {
-          console.log("Fetching seller info for userId:", listing.userId)
-          const userResp = await this.profileService.getUser(listing.userId)
-          console.log("Seller info fetched:", userResp.data)
-          this.seller = userResp.data ?? null
-        } catch {}
-      }
-    } finally {
-      this.isLoading = false
-    }
+          );
+        })
+      )
+      .subscribe((result) => {
+        if (!result) {
+          return;
+        } // id inválido ⇒ vista “vacía”
+        console.log("Producto cargado:", result);
+
+        this.product = { ...result.listing, ...result.info } as ProductDetail;
+        this.locationName = this.countryService.getNameById(
+          result.listing!.countryId
+        );
+        this.isFavorite = false;
+
+        /* vendedor */
+        from(this.profileService.getUser(result.listing!.userId))
+          .pipe(map((r) => r.data ?? null))
+          .subscribe(
+            (u) => (this.seller = u),
+            () => (this.seller = null)
+          );
+
+        /* relacionados */
+        const catIds = result.info.categories?.map((c) => c.categoryId) ?? [];
+        this.listingService
+          .listListings({
+            categoryIds: catIds,
+            notShownListing: this.product.id,
+            notShownUser: this.authService.getCurrentUserId()!,
+            page: 1,
+            pageSize: 4,
+          })
+          .subscribe((r) => (this.relatedProducts = r.data ?? []));
+
+        console.log(this.product, this.seller);
+      });
   }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
+  }
+
+  /* ════════════════════════════════════════════════════════════════
+     HELPERS / UI
+     ════════════════════════════════════════════════════════════════ */
 
   getAllImages(): string[] {
-    if (!this.product) return []
-
-    const allImages = [this.product.mainImage]
-    this.product.auxiliaryImages?.forEach((auxImg) => {
-      allImages.push(auxImg.imgUrl)
-    })
-
-    return allImages.filter(Boolean)
-  }
-
-  onToggleFavorite(): void {
-    if (this.product) {
-      this.isFavorite = !this.isFavorite
+    if (!this.product) {
+      return [];
     }
-  }
 
-  onContactSeller(): void {
-    console.log("Contact seller:", this.product?.userId)
+    const urls = [
+      this.product.mainImage,
+      ...(this.product.auxiliaryImages?.map((a) => a.imgUrl) ?? []),
+    ].filter((u) => !!u); // ⇦ quita falsy ('', null, undefined)
+
+    return Array.from(new Set(urls)); // ⇦ quita duplicados
   }
 
   formatPrice(price: number): string {
@@ -147,42 +183,69 @@ export class ProductDetailComponent implements OnInit {
       style: "currency",
       currency: "ARS",
       minimumFractionDigits: 0,
-    }).format(price)
+    }).format(price);
   }
 
   getPaymentMethods(): string[] {
-    if (!this.product) return []
-
-    const methods: string[] = []
-    if (this.product.acceptsCash) methods.push("EFECTIVO")
-    if (this.product.acceptsBarter) methods.push("TRUEQUE")
-    if (this.product.acceptsCard) methods.push("TARJETA")
-    if (this.product.acceptsTransfer) methods.push("TRANSFERENCIA")
-    return methods
+    if (!this.product) {
+      return [];
+    }
+    const m: string[] = [];
+    if (this.product.acceptsCash) {
+      m.push("EFECTIVO");
+    }
+    if (this.product.acceptsBarter) {
+      m.push("TRUEQUE");
+    }
+    if (this.product.acceptsCard) {
+      m.push("TARJETA");
+    }
+    if (this.product.acceptsTransfer) {
+      m.push("TRANSFERENCIA");
+    }
+    return m;
   }
 
   getPaymentMethodClass(method: string): string {
-    const classMap: { [key: string]: string } = {
+    const css: Record<string, string> = {
       EFECTIVO: "efectivo",
       TRUEQUE: "trueque",
       TARJETA: "tarjeta",
       TRANSFERENCIA: "transferencia",
-    }
-    return classMap[method] || ""
+    };
+    return css[method] ?? "";
   }
 
   getProductType(): string {
-    return this.product?.type === "PRODUCTO" ? "Cómoda" : "Servicio"
+    return this.product?.type === "PRODUCTO" ? "Cómoda" : "Servicio";
   }
 
   getCategoryNames(): string {
-    if (!this.product?.categories) return "Muebles"
-    return this.product.categories.map((cat) => cat.description).join(", ")
+    return (
+      this.product?.categories?.map((c) => c.description).join(", ") ??
+      "Muebles"
+    );
   }
 
+  /* ════════════════════════════════════════════════════════════════
+     MÉTODOS PRIVADOS
+     ════════════════════════════════════════════════════════════════ */
 
-  goBack(): void {
-    this.router.navigate(["/home"])
+  /** Helper: obtiene un listing por ID reutilizando listListings() */
+  private getListingById(id: number) {
+    return this.listingService
+      .listListings({ listingId: id, pageSize: 1 })
+      .pipe(
+        map((r) => r.data?.find((l) => l.id === id) || null) // <-- filtra local
+      );
+  }
+
+  /** Limpia estado antes de cargar otro producto */
+  private resetState(): void {
+    this.product = null;
+    this.seller = null;
+    this.locationName = null;
+    this.relatedProducts = [];
+    this.currentImageIndex = 0;
   }
 }
-
