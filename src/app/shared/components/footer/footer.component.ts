@@ -147,14 +147,11 @@ export class FooterComponent {
   private async sendContact(): Promise<void> {
     if (this.contactForm.invalid) return;
     try {
+      
+      this.contactLoading = true;
       await this.contactSrv.send({
         messageHeader: this.contactForm.value.header,
         message: this.contactForm.value.message,
-      });
-      this.contactLoading = true;
-      await this.contactSrv.send(this.contactForm.value as {
-        messageHeader: string;
-        message: string;
       });
       this.sb.openFromComponent(ResultSnackbarComponent, {
         data: { message: 'Mensaje enviado', status: 'success' },
