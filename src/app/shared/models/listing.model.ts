@@ -86,7 +86,7 @@ export interface ListingRequestDto {
   acceptsCard?: boolean;
   type?: string;
   categoriesId?: string[];
-  imagesUrl?: File[] | string[] | null;
+  imagesUrl?: any;
   condition?: number;
   brand?: string;
   action?: string;

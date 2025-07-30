@@ -1,8 +1,10 @@
 <div class="product-detail-page">
+  <!-- ▸ Header global -->
   <app-header></app-header>
 
+  <!-- ▸ Cuerpo principal -->
   <main class="main-content" *ngIf="!isLoading && product">
-    <!-- Breadcrumb -->
+    <!-- ═══════════ Breadcrumb ═══════════ -->
     <div class="breadcrumb-container">
       <div class="container">
         <nav class="breadcrumb">
@@ -16,160 +18,156 @@
           <span class="breadcrumb-separator">></span>
 
           <!-- Tipo -->
-          <span class="breadcrumb-current">
-            {{ getProductType() }}
-          </span>
+          <span class="breadcrumb-current">{{ getProductType() }}</span>
         </nav>
       </div>
     </div>
 
-    <!-- Product Content -->
-    <div class="product-container">
-      <div class="container">
-        <div class="product-card">
-          <div class="product-layout">
-            <!-- Thumbnails -->
-            <div class="image-thumbnails" *ngIf="getAllImages().length > 1">
-              <button
-                *ngFor="let image of getAllImages().slice(0, 4); let i = index"
-                class="thumbnail-btn"
-                [class.active]="i === currentImageIndex"
-                (click)="currentImageIndex = i"
-              >
-                <img
-                  [src]="image"
-                  [alt]="'Imagen ' + (i + 1)"
-                  class="thumbnail-image"
-                  appDefaultImage
-                />
-              </button>
-            </div>
+    <!-- ═══════════ Tarjeta principal (grid: miniaturas • imagen • info) ═══════════ -->
 
-            <!-- Main Image -->
-            <div class="main-image-container">
-              <img
-                [src]="getAllImages()[currentImageIndex]"
-                [alt]="product.title"
-                class="main-image"
-                appDefaultImage
-              />
-
-              <button
-                mat-icon-button
-                class="favorite-btn"
-                [class.favorited]="isFavorite"
-                (click)="onToggleFavorite()"
-              >
-                <mat-icon>{{
-                  isFavorite ? "favorite" : "favorite_border"
-                }}</mat-icon>
-              </button>
-            </div>
-
-            <!-- Product Information -->
-            <div class="product-info">
-              <div class="condition-badge">
-                {{ product.condition === 2 ? "Nuevo" : "Usado" }}
-              </div>
-
-              <div class="product-price">{{ formatPrice(product.price) }}</div>
-
-              <h1 class="product-title">{{ product.title }}</h1>
-
-              <div class="product-location">
-                <mat-icon class="location-icon">location_on</mat-icon>
-                <span>{{ locationName }}</span>
-              </div>
-
-              <!-- Métodos de pago -->
-              <div
-                class="payment-methods"
-                *ngIf="getPaymentMethods().length > 0"
-              >
-                <div class="payment-chips">
-                  <span
-                    *ngFor="let method of getPaymentMethods()"
-                    class="payment-chip"
-                    [class]="getPaymentMethodClass(method)"
-                  >
-                    {{ method }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="product-actions">
-                <button
-                  mat-raised-button
-                  color="accent"
-                  class="contact-btn"
-                  (click)="onContactSeller()"
-                >
-                  Contactar vendedor
-                </button>
-              </div>
-            </div>
-          </div>
+    <div class="product-card">
+      <div class="product-layout">
+        <!-- ▲ Miniaturas (columna izquierda) -->
+        <div class="image-thumbnails" *ngIf="getAllImages().length > 1">
+          <button
+            *ngFor="let image of getAllImages(); let i = index"
+            class="thumbnail-btn"
+            [class.active]="i === currentImageIndex"
+            (click)="currentImageIndex = i"
+          >
+            <img
+              [src]="image"
+              [alt]="'Imagen ' + (i + 1)"
+              class="thumbnail-image"
+              appDefaultImage
+            />
+          </button>
         </div>
 
-        <!-- Información sobre el vendedor -->
-        <div class="seller-section">
-          <h2 class="section-title">Información sobre el vendedor</h2>
-          <div class="seller-info-card">
-            <div class="seller-item">
-              <mat-icon class="seller-icon">person</mat-icon>
-              <div class="seller-details">
-                <span class="seller-label">Vendedor</span>
-                <span class="seller-value"
-                  >{{ seller?.name }} {{ seller?.lastname }}</span
-                >
-              </div>
-            </div>
+        <!-- ▲ Imagen principal (columna central) -->
+        <div class="main-image-container">
+          <img
+            class="main-image"
+            [src]="getAllImages()[currentImageIndex]"
+            [alt]="product.title"
+            appDefaultImage
+          />
 
-            <div class="seller-item">
-              <mat-icon class="seller-icon">phone</mat-icon>
-              <div class="seller-details">
-                <span class="seller-label">Número de Teléfono</span>
-                <span class="seller-value">{{
-                  seller?.contactPhone || "—"
-                }}</span>
-              </div>
-            </div>
-
-            <div class="seller-item">
-              <mat-icon class="seller-icon">email</mat-icon>
-              <div class="seller-details">
-                <span class="seller-label">E-Mail</span>
-                <span class="seller-value">{{ seller?.email }}</span>
-              </div>
-            </div>
-          </div>
+          <button
+            mat-icon-button
+            class="favorite-btn"
+            [class.favorited]="isFavorite"
+            (click)="onToggleFavorite()"
+            aria-label="Marcar favorito"
+          >
+            <mat-icon>
+              {{ isFavorite ? "favorite" : "favorite_border" }}
+            </mat-icon>
+          </button>
         </div>
 
-        <!-- Información sobre el producto -->
-        <div class="product-section">
-          <h2 class="section-title">Información sobre el producto</h2>
-          <div class="product-description-card">
-            <p>{{ product.description }}</p>
+        <!-- ▲ Datos del producto (columna derecha) -->
+        <div class="product-info">
+          <span class="condition-badge">
+            {{ product.condition === 2 ? "Nuevo" : "Usado" }}
+          </span>
+
+          <div class="product-price">
+            {{ formatPrice(product.price) }}
           </div>
-        </div>
 
-        <!-- Productos relacionados -->
-        <!-- Productos relacionados -->
-        <div class="related-products-section">
-          <h2 class="section-title">Productos relacionados</h2>
+          <h1 class="product-title">{{ product.title }}</h1>
 
-          <div class="related-products-grid no-scroll">
-            <app-product-card-small
-              *ngFor="let p of relatedProducts"
-              [product]="p">
-            </app-product-card-small>
+          <div class="product-location">
+            <mat-icon class="location-icon">location_on</mat-icon>
+            <span>{{ locationName }}</span>
+          </div>
+
+          <!-- Métodos de pago -->
+          <div class="payment-methods" *ngIf="getPaymentMethods().length > 0">
+            <div class="payment-chips">
+              <span
+                *ngFor="let method of getPaymentMethods()"
+                class="payment-chip"
+                [class]="getPaymentMethodClass(method)"
+              >
+                {{ method }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Botón de contacto -->
+          <div class="product-actions">
+            <button
+              mat-raised-button
+              class="contact-btn"
+              (click)="onContactSeller()"
+            >
+              Contactar vendedor
+            </button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- ═══════════ Información sobre el vendedor ═══════════ -->
+    <div class="seller-section">
+      <h2 class="section-title">Información sobre el vendedor</h2>
+
+      <div class="seller-info-card">
+        <div class="seller-item">
+          <mat-icon class="seller-icon">person</mat-icon>
+          <div class="seller-details">
+            <span class="seller-label">Vendedor</span>
+            <span class="seller-value">
+              {{ seller?.name }} {{ seller?.lastname }}
+            </span>
+          </div>
+        </div>
+
+        <div class="seller-item">
+          <mat-icon class="seller-icon">phone</mat-icon>
+          <div class="seller-details">
+            <span class="seller-label">Número de Teléfono</span>
+            <span class="seller-value">
+              {{ seller?.contactPhone || "—" }}
+            </span>
+          </div>
+        </div>
+
+        <div class="seller-item">
+          <mat-icon class="seller-icon">email</mat-icon>
+          <div class="seller-details">
+            <span class="seller-label">E-mail</span>
+            <span class="seller-value">{{ seller?.email }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ Descripción del producto ═══════════ -->
+    <div class="product-section">
+      <h2 class="section-title">Información sobre el producto</h2>
+
+      <div class="product-description-card">
+        <p>{{ product.description }}</p>
+      </div>
+    </div>
+
+    <!-- ═══════════ Productos relacionados ═══════════ -->
+    <div class="related-products-section">
+      <h2 class="section-title">Productos relacionados</h2>
+
+      <div class="related-products-grid no-scroll">
+        <app-product-card-small
+          *ngFor="let p of relatedProducts"
+          [product]="p"
+        ></app-product-card-small>
+      </div>
+    </div>
   </main>
 
-  <!-- Loading State -->
+  <!-- ▸ Skeleton de carga -->
   <div class="loading-container" *ngIf="isLoading">
     <div class="container">
       <div class="loading-skeleton">
@@ -184,5 +182,6 @@
     </div>
   </div>
 
+  <!-- ▸ Footer global -->
   <app-footer></app-footer>
 </div>

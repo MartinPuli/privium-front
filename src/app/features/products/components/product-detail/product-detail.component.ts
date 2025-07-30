@@ -74,6 +74,7 @@ export class ProductDetailComponent implements OnInit {
         this.currentImageIndex = 0
         const nav = this.router.getCurrentNavigation()
         const req = (nav?.extras.state as any)?.request as Partial<ListListingsRequestDto> | undefined
+        console.log(this.product)
         this.loadProduct(productId, req)
       }
     })
@@ -109,7 +110,9 @@ export class ProductDetailComponent implements OnInit {
           this.relatedProducts = []
         }
         try {
+          console.log("Fetching seller info for userId:", listing.userId)
           const userResp = await this.profileService.getUser(listing.userId)
+          console.log("Seller info fetched:", userResp.data)
           this.seller = userResp.data ?? null
         } catch {}
       }

@@ -190,16 +190,27 @@ export class AuthService {
 
   private isTokenExpired(token: string): boolean {
     try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
+      const payload = JSON.parse(this.decodeBase64(token.split(".")[1]));
       return payload.exp < Date.now() / 1000;
     } catch {
       return true;
     }
   }
 
+  private decodeBase64(b64: string): string {
+    const base64 = b64.replace(/-/g, "+").replace(/_/g, "/");
+    const decoded = atob(base64);
+    return decodeURIComponent(
+      decoded
+        .split("")
+        .map((c) => `%${("00" + c.charCodeAt(0).toString(16)).slice(-2)}`)
+        .join("")
+    );
+  }
+
   private decodeToken(token: string): User | null {
     try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
+      const payload = JSON.parse(this.decodeBase64(token.split(".")[1]));
       return {
         id: payload.userId || payload.sub || payload.id,
         name: payload.name || payload.username,
