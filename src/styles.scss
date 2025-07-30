@@ -36,10 +36,20 @@
 }
 
 .mat-mdc-snack-bar-container.offset-80 {
-  margin-bottom: 80px !important;   
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important; 
+  margin-bottom: 80px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
   border-radius: 5px !important;
   background: #d32f2f !important;
+}
+
+/*
+ * Move all result snackbars slightly above the bottom edge.
+ * Applies to success, error and info variants.
+ */
+.mat-mdc-snack-bar-container.success-snackbar,
+.mat-mdc-snack-bar-container.error-snackbar,
+.mat-mdc-snack-bar-container.info-snackbar {
+  margin-bottom: 80px !important;
 }
 
 
