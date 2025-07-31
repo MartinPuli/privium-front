@@ -6,7 +6,12 @@
   ></mat-checkbox>
 
   <mat-card class="left-card">
-    <img class="thumbnail" [src]="listing.mainImage" alt="foto" appDefaultImage />
+    <img
+      class="thumbnail"
+      [src]="listing.mainImage"
+      [alt]="listing.title || 'Imagen de publicaci\u00f3n'"
+      loading="lazy"
+      appDefaultImage decoding="async" />
 
     <div class="text">
       <div>

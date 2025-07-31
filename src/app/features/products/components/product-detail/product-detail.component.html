@@ -41,9 +41,9 @@
             <img
               [src]="img"
               class="thumbnail-image"
-              [alt]="'Vista ' + (i + 1)"
-              appDefaultImage
-            />
+              [alt]="product.title + ' vista ' + (i + 1)"
+              loading="lazy"
+              appDefaultImage decoding="async" />
           </button>
         </div>
 
@@ -55,8 +55,8 @@
             class="main-image"
             [src]="getAllImages()[currentImageIndex]"
             [alt]="product.title"
-            appDefaultImage
-          />
+            loading="lazy"
+            appDefaultImage decoding="async" />
         </div>
 
         <!-- ▲ Datos del producto (columna derecha) -->
