@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { ResponseDto } from '../models/responses.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ContactService {
-  private baseUrl = 'http://localhost:8080/api/privium/contact/send';
+  private baseUrl = `${environment.apiBaseUrl}/contact/send`;
 
   constructor(private http: HttpClient) {}
 

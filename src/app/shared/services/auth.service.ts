@@ -22,12 +22,13 @@ import { ResponseDto, AuthResponse } from "../models/responses.model";
 import { ResponseDataDto } from "../models/responses.model";
 import { CategoryService } from "./category.service";
 import { CountryService } from "./country.service";
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  private readonly API_URL = "http://localhost:8080/api/privium/auth";
+  private readonly API_URL = `${environment.apiBaseUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 

@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ResponseDto } from '../models/responses.model';
 import { ListingAdminRequestDto } from '../models/listing.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
-  private readonly base = 'http://localhost:8080/api/privium/admin';
+  private readonly base = `${environment.apiBaseUrl}/admin`;
 
   constructor(private http: HttpClient) {}
 
