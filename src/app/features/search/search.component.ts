@@ -73,7 +73,11 @@ export class SearchComponent implements OnInit {
   products: ListingResponseDto[] = [];
   page = 1;
   hasMore = false;
-  readonly maxRows = 5;
+  /**
+   * Cantidad máxima de elementos por página en la búsqueda
+   * Se fija en 100 para obtener hasta ese número de productos
+   */
+  readonly pageSize = 100;
 
   isLoading = false;
 
@@ -202,8 +206,7 @@ export class SearchComponent implements OnInit {
 
   /** Carga datos y actualiza chips */
   private loadListings(): void {
-    const pageSize =
-      Math.min(this.maxRows, window.innerWidth < 600 ? 2 : 5) * 4;
+    const pageSize = this.pageSize;
 
     this.isLoading = true;
     this.cdr.markForCheck(); // ← marca aquí
