@@ -1,6 +1,12 @@
 <mat-card class="product-card" (click)="onSelect()">
   <div class="image-wrapper">
-  <img mat-card-image [src]="product.mainImage" [alt]="product.title" appDefaultImage />
+  <img
+    mat-card-image
+    [src]="product.mainImage"
+    [alt]="product.title"
+    loading="lazy"
+    appDefaultImage
+  />
 
     <!-- Ícono de eliminar solo para admin -->
     <button
