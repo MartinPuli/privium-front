@@ -7,6 +7,7 @@ import {
 } from "../models/category.model";
 import { ResponseDataDto } from "../models/responses.model";
 import { BehaviorSubject, map, Observable, tap } from "rxjs";
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: "root",
@@ -16,7 +17,7 @@ export class CategoryService {
   private getCategoriesUrl: string;
 
   constructor(private http: HttpClient) {
-    this.baseBackendUrl = "http://localhost:8080/api/privium/categories/";
+    this.baseBackendUrl = `${environment.apiBaseUrl}/categories/`;
     this.getCategoriesUrl = this.baseBackendUrl + "getCategories";
   }
 

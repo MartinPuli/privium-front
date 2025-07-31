@@ -9,12 +9,13 @@ import {
 import { ResponseDto, ResponseDataDto } from "../models/responses.model";
 import { AuthService } from "./auth.service";
 import { lastValueFrom, firstValueFrom, map, Observable } from "rxjs";
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: "root",
 })
 export class ListingService {
-  private readonly base = "http://localhost:8080/api/privium/listings/";
+  private readonly base = `${environment.apiBaseUrl}/listings/`;
 
   constructor(private http: HttpClient, private auth: AuthService) {}
 

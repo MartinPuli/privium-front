@@ -10,8 +10,13 @@ Este repositorio contiene la aplicación web de **Privium**, un marketplace priv
 1. Clona este repositorio.
 2. Instala las dependencias:
    ```bash
-   npm install
-   ```
+ npm install
+  ```
+
+### Configuración de entorno
+La comunicación con la API utiliza los archivos de `src/environments`.
+Modifica `environment.ts` para desarrollo y `environment.prod.ts` para
+producción indicando la URL base del backend.
 
 ## Uso
 ### Servidor de desarrollo de Angular
