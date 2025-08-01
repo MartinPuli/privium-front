@@ -16,9 +16,7 @@ import {
   UserRequestDto,
   LoginRequest,
   RegisterRequest,
-  VerificationRequest,
 } from "../models/user.model";
-import { ResponseDto, AuthResponse } from "../models/responses.model";
 import { ResponseDataDto } from "../models/responses.model";
 import { CategoryService } from "./category.service";
 import { CountryService } from "./country.service";
@@ -70,7 +68,6 @@ export class AuthService {
   }
 
   register(userData: RegisterRequest): Observable<ResponseDataDto> {
-    console.log("A");
     return this.http.post<ResponseDataDto>(
       `${this.API_URL}/register`,
       userData

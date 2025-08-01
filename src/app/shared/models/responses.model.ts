@@ -23,8 +23,3 @@ export interface ResponseDto {
 }
 
 
-export interface AuthResponse {
-  code: string
-  description: string
-  data?: string // JWT token
-}
