@@ -44,7 +44,7 @@
           </div>
         </div>
 
-        <div class="products-grid" *ngIf="neighborhoodProducts.length">
+        <div class="products-grid nearby-products-grid" *ngIf="neighborhoodProducts.length">
           <app-product-card-small
             *ngFor="let p of neighborhoodProducts; trackBy: trackByProductId"
             [product]="p">
