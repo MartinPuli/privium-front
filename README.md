@@ -34,6 +34,21 @@ npx ng build
 ```
 Los archivos listos para desplegar quedarán en `dist/`.
 
+### Docker
+Para crear una imagen de contenedor ejecuta:
+```bash
+docker build -t privium-front .
+```
+Esto compila la aplicación con Angular y la sirve mediante Nginx.
+Puedes definir el dominio del backend con la variable de construcción `BACKEND_DOMAIN`:
+```bash
+docker build --build-arg BACKEND_DOMAIN=https://mi.backend.com/api/privium -t privium-front .
+```
+Una vez creada la imagen, inicia el contenedor con:
+```bash
+docker run -p 4200:80 privium-front
+```
+
 ### Prototipos con Next.js
 En la carpeta `components` se encuentran componentes UI basados en React. Para probarlos se utilizó un pequeño proyecto de Next.js presente en la carpeta `app`. Para levantar dicho entorno ejecuta:
 ```bash
