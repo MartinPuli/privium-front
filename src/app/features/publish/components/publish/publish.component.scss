@@ -16,6 +16,22 @@
   min-height: 58vh;
   justify-content: center;
   gap: 60px;
+
+  @media (max-width: $breakpoint-lg) {
+    width: 80%;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    width: 90%;
+    margin: 60px auto;
+    gap: 40px;
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    width: 95%;
+    margin: 40px auto;
+    gap: 30px;
+  }
 }
 
 .step-header {
@@ -32,6 +48,26 @@
     font-weight: 750;
     color: $primary-navy;
     margin: 0;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    .step-indicator {
+      font-size: 1.4rem;
+    }
+
+    .step-title {
+      font-size: 1.8rem;
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    .step-indicator {
+      font-size: 1.2rem;
+    }
+
+    .step-title {
+      font-size: 1.5rem;
+    }
   }
 }
 
@@ -50,6 +86,10 @@
 
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+
+  @media (max-width: $breakpoint-md) {
+    width: 100%;
+  }
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
@@ -83,6 +123,15 @@ label.mdc-label {
     background: transparent;
     border: 0px;
   }
+
+  @media (max-width: $breakpoint-md) {
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+    }
+  }
 }
 
 /* utilidades */
@@ -110,6 +159,10 @@ label.mdc-label {
   align-items: center;
   display: flex;
   transition: border-color 0.3s ease;
+
+  @media (max-width: $breakpoint-md) {
+    min-height: 120px;
+  }
 
   &:hover {
     border-color: $primary-navy;
@@ -161,6 +214,22 @@ label.mdc-label {
     font-size: 0.9rem;
     color: $text-light;
   }
+
+  @media (max-width: $breakpoint-md) {
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+
+    small {
+      font-size: 0.8rem;
+    }
+  }
 }
 
 .image-preview-grid {
@@ -168,6 +237,24 @@ label.mdc-label {
   display: grid;
   grid-template-columns: repeat(5, 1fr); /* siempre 5 columnas iguales */
   gap: 3rem;
+
+  @media (max-width: $breakpoint-xl) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: $breakpoint-lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .image-preview-item {
@@ -215,6 +302,10 @@ label.mdc-label {
   background: transparent;
   cursor: pointer;
   min-height: 120px;
+
+  @media (max-width: $breakpoint-md) {
+    min-height: 100px;
+  }
 
   &:hover {
     border-color: $primary-navy;
