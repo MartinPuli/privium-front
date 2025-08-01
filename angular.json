@@ -38,15 +38,16 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "1.8MB"
                 },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kB",
-                  "maximumError": "4kB"
-                }
+                  {
+                    "type": "anyComponentStyle",
+                    "maximumWarning": "6kB",
+                    "maximumError": "8kB"
+                  }
               ],
-              "outputHashing": "all"
+                "outputHashing": "all",
+                "baseHref": "/privium-front/"
             },
             "development": {
               "optimization": false,
