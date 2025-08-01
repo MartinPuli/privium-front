@@ -94,3 +94,39 @@
     }
   }
 }
+
+@media (max-width: $breakpoint-md) {
+  .product-card {
+    border-width: 3px;
+
+    mat-card-content {
+      padding: 10px 20px 10px 10px;
+
+      .price {
+        font-size: 1.2rem;
+      }
+
+      .title {
+        font-size: 0.95rem;
+      }
+
+      .location {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .product-card {
+    mat-card-content {
+      .price {
+        font-size: 1.1rem;
+      }
+
+      .title {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
