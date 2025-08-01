@@ -54,8 +54,7 @@
               [src]="img.preview"
               [alt]="'Imagen ' + (i + 1)"
               loading="lazy"
-              appDefaultImage
-            />
+              appDefaultImage decoding="async" />
             <button mat-icon-button (click)="removeImage(i)">
               <mat-icon>close</mat-icon>
             </button>
