@@ -62,7 +62,7 @@
             <button
               mat-raised-button
               color="primary"
-              [disabled]="decisionLoading?.id === p.id"
+              [disabled]="!!decisionLoading"
               (click)="handleDecision(p, true)"
             >
               <mat-spinner *ngIf="decisionLoading?.id === p.id && decisionLoading?.approved" diameter="20"></mat-spinner>
@@ -71,7 +71,7 @@
             <button
               mat-raised-button
               color="warn"
-              [disabled]="decisionLoading?.id === p.id"
+              [disabled]="!!decisionLoading"
               (click)="handleDecision(p, false)"
             >
               <mat-spinner *ngIf="decisionLoading?.id === p.id && !decisionLoading?.approved" diameter="20"></mat-spinner>
