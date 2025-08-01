@@ -1,5 +1,8 @@
 @import "../../../../shared/styles/variables";
 
+$bp-md: 768px;
+$container-w: 86%;
+
 .footer {
   background-color: $primary-navy;
   color: white;
@@ -7,7 +10,8 @@
 }
 
 .footer-container {
-  padding: 1rem 00%;
+  width: $container-w;
+  padding: 1rem 0;
   margin: 0 auto;
 
   li{
@@ -55,6 +59,10 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
+  @media (max-width: $bp-md) {
+    width: 100%;
+  }
 }
 
 .footer-content {
@@ -64,9 +72,11 @@
   padding: 5rem 7% 0 7%;
   margin-bottom: 2rem;
 
-  @media (max-width: 768px) {
-    gap: 5rem;
-    text-align: left;
+  @media (max-width: $bp-md) {
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    text-align: center;
   }
 }
 
@@ -75,6 +85,11 @@
   width: auto;
   margin-top: 2.7rem;
   object-fit: contain;
+
+  @media (max-width: $bp-md) {
+    height: 60px;
+    margin-top: 0;
+  }
 }
 
 .footer-bottom {
@@ -84,8 +99,9 @@
 }
 
 // Responsive design
-@media (max-width: 576px) {
+@media (max-width: $bp-md) {
   .footer-container {
+    width: 100%;
     padding: 2rem 1rem 1rem;
   }
 
