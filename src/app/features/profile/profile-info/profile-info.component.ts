@@ -53,6 +53,7 @@ export class ProfileInfoComponent implements OnInit {
   editForm!: FormGroup;
   modalButtons: any[] = [];
   saveBtn!: ModalButton;
+  cancelBtn!: ModalButton;
   isSaving = false;
 
   constructor(
@@ -89,10 +90,14 @@ export class ProfileInfoComponent implements OnInit {
       loading: this.isSaving,
     };
 
-    this.modalButtons = [
-      { label: "Cancelar", type: "secondary", action: () => this.closeModal() },
-      this.saveBtn,
-    ];
+    this.cancelBtn = {
+      label: "Cancelar",
+      type: "secondary",
+      action: () => this.closeModal(),
+      disabled: this.isSaving,
+    };
+
+    this.modalButtons = [this.cancelBtn, this.saveBtn];
 
     /* habilita/inhabilita en tiempo real */
     this.editForm.valueChanges.subscribe(({ value }) => {
@@ -108,6 +113,7 @@ export class ProfileInfoComponent implements OnInit {
 
     this.isSaving = true;
     if (this.saveBtn) this.saveBtn.loading = true;
+    if (this.cancelBtn) this.cancelBtn.disabled = true;
 
     /* 1) Actualiza UI + storage */
     this.user.contactPhone = phone;
@@ -130,6 +136,7 @@ export class ProfileInfoComponent implements OnInit {
 
     this.isSaving = false;
     if (this.saveBtn) this.saveBtn.loading = false;
+    if (this.cancelBtn) this.cancelBtn.disabled = false;
     this.closeModal();
   }
 

@@ -112,7 +112,7 @@ export class ProductCardSmallComponent implements OnInit {
 
   get deleteButtons(): ModalButton[] {
     return [
-      { label: 'Cancelar', type: 'secondary', action: () => (this.deleteOpen = false) },
+      { label: 'Cancelar', type: 'secondary', action: () => (this.deleteOpen = false), disabled: this.isDeleting },
       {
         label: 'Enviar',
         type: 'primary',
