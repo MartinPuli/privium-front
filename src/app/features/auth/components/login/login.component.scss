@@ -9,20 +9,49 @@
 /* Asegura que los mat-form-field usen todo el ancho */
 .mat-form-field { width: 100%; }
 
-/* Ajustes para pantallas pequeñas */
-@media (max-width: $breakpoint-sm) {
-  /* el contenedor del card ocupa todo el ancho en móvil */
+
+// Responsive: mobile first
+@media (max-width: 900px) {
   :host ::ng-deep app-auth-card .auth-wrapper {
-    max-width: 100%;
+    max-width: 98vw;
+    padding: 0 2vw;
   }
-  /* reduce un poco la separación entre campos */
   .auth-form {
-    gap: 24px;
+    gap: 20px;
   }
 }
 
-/* ---------- Responsivo opcional ---------- */
+@media (max-width: 600px) {
+  :host ::ng-deep app-auth-card .auth-wrapper {
+    max-width: 100vw;
+    padding: 0 1vw;
+  }
+  .auth-form {
+    gap: 14px;
+  }
+  .auth-form app-form-field {
+    font-size: 1rem;
+  }
+  .auth-form input, .auth-form input[type="password"] {
+    font-size: 1rem;
+    padding: 12px 10px;
+  }
+}
+
 @media (max-width: 480px) {
+  .auth-main {
+    padding: 0;
+  }
+  .auth-form {
+    gap: 10px;
+  }
+  .auth-form app-form-field {
+    font-size: 0.95rem;
+  }
+  .auth-form input, .auth-form input[type="password"] {
+    font-size: 0.95rem;
+    padding: 10px 6px;
+  }
   .inline-links {
     flex-direction: column;
     align-items: flex-start;
