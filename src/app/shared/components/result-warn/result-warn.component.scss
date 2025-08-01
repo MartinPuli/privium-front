@@ -1,4 +1,4 @@
-@import '../../../../shared/styles/variables'; 
+@import '../../../../shared/styles/variables';
 
 /* Contenedor principal */
 .rw-container {
@@ -66,8 +66,7 @@
     align-self: flex-start;
     min-width: 260px;
     font-size: 1.2rem;
-    padding: 22px;
-    align-self: flex-end;
+    padding: 22px 32px;
   }
 }
 
@@ -81,16 +80,18 @@
 }
 
 /* Responsivo */
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-md) {
   .rw-container {
     flex-direction: column;
     text-align: center;
     gap: 24px;
+    padding: 32px 24px;
   }
 
   .rw-icon {
     width: 120px;
     height: 120px;
+    border-width: 12px;
     mat-icon {
       font-size: 64px;
       width: 64px;
@@ -98,7 +99,28 @@
     }
   }
 
+  .rw-texts {
+    width: 100%;
+    gap: 16px;
+
+    .rw-title {
+      font-size: 1.8rem;
+    }
+
+    .rw-subtitle {
+      font-size: 1.3rem;
+    }
+
+    .rw-description {
+      font-size: 1rem;
+      max-width: none;
+    }
+  }
+
   .rw-btn {
     align-self: center;
+    min-width: 180px;
+    padding: 14px 24px;
+    font-size: 1rem;
   }
 }
