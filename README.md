@@ -15,8 +15,9 @@ Este repositorio contiene la aplicación web de **Privium**, un marketplace priv
 
 ### Configuración de entorno
 La comunicación con la API utiliza los archivos de `src/environments`.
-Modifica `environment.ts` para desarrollo y `environment.prod.ts` para
-producción indicando la URL base del backend.
+Ahora el dominio del backend se lee de la variable de entorno `BACKEND_DOMAIN`.
+Puedes copiar `.env.example` y ajustar el valor según tu servidor.
+`environment.ts` y `environment.prod.ts` toman ese valor durante la compilación.
 
 ## Uso
 ### Servidor de desarrollo de Angular

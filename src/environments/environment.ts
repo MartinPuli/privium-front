@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8080/api/privium'
+  apiBaseUrl:
+    import.meta.env.BACKEND_DOMAIN || 'http://localhost:8080/api/privium',
 };

@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://privium.com/api/privium'
+  apiBaseUrl:
+    import.meta.env.BACKEND_DOMAIN || 'https://privium.com/api/privium',
 };
