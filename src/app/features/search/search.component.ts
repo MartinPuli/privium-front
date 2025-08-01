@@ -175,6 +175,10 @@ export class SearchComponent implements OnInit {
     this.drawer?.close();
   }
 
+  openFilters() {
+    this.drawer?.open();
+  }
+
   setSort(order: "ASC" | "DESC") {
     if (this.sortOrder === order) return;
     this.sortOrder = order;

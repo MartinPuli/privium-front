@@ -119,8 +119,18 @@
   }
 }
 
+
 .filters-drawer {
   width: 300px;
+  @media (min-width: 900px) {
+    display: none;
+  }
+}
+
+.desktop-only {
+  @media (max-width: 900px) {
+    display: none;
+  }
 }
 
 .hamburger {

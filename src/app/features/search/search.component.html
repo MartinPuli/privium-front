@@ -15,6 +15,14 @@
     <main class="search-main">
       <!-- Título -->
       <div class="search-title">
+        <button
+          mat-icon-button
+          class="hamburger"
+          aria-label="Mostrar filtros"
+          (click)="openFilters()"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
         <mat-icon>search</mat-icon>
         <h1>
           Búsqueda<b *ngIf="current.searchTerm">": {{ current.searchTerm }}"</b>
