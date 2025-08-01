@@ -108,4 +108,12 @@ $container-w: 86%;
   .footer-content {
     gap: 1.5rem;
   }
+
+  .footer-container a,
+  .footer-container h3 {
+    font-size: 1rem;
+  }
+  .footer-container p, .footer-container li, .footer-links a {
+    font-size: 0.95rem;
+  }
 }

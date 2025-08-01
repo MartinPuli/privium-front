@@ -28,9 +28,26 @@
   }
 
   @media (max-width: $breakpoint-sm) {
-    width: 95%;
-    margin: 40px auto;
-    gap: 30px;
+    width: 99vw;
+    margin: 20px auto;
+    gap: 16px;
+    font-size: 0.97rem;
+    .step-header .step-title {
+      font-size: 1.1rem;
+    }
+    .step-header .step-indicator {
+      font-size: 1rem;
+    }
+    input, textarea, select {
+      font-size: 0.95rem;
+      padding: 8px 6px;
+    }
+    button, .mat-raised-button {
+      font-size: 0.95rem;
+      min-width: 90px;
+      padding: 8px 8px;
+      height: 32px;
+    }
   }
 }
 

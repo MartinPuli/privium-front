@@ -98,18 +98,16 @@
 @media (max-width: $breakpoint-md) {
   .product-card {
     border-width: 3px;
-
+    max-width: 320px;
+    min-width: 180px;
     mat-card-content {
-      padding: 10px 20px 10px 10px;
-
+      padding: 8px 12px 8px 8px;
       .price {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
-
       .title {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
       }
-
       .location {
         font-size: 0.8rem;
       }
@@ -119,13 +117,15 @@
 
 @media (max-width: $breakpoint-sm) {
   .product-card {
+    max-width: 98vw;
+    min-width: 120px;
     mat-card-content {
+      padding: 6px 6px 6px 6px;
       .price {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
-
       .title {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
       }
     }
   }

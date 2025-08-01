@@ -1,12 +1,23 @@
 @import '../../../../shared/styles/variables'; 
 
+
 .snack-wrapper {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   font-weight: 500;
   width: 100%;
+  max-width: 420px;
   padding: 8px 6px;
+}
+
+@media (max-width: 600px) {
+  .snack-wrapper {
+    max-width: 90vw;
+    font-size: 0.95rem;
+    gap: 6px;
+    padding: 6px 2px;
+  }
 }
 
 .snack-icon {

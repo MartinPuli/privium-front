@@ -186,26 +186,48 @@
 @media (max-width: 768px) {
   .card-inner {
     flex-direction: column;
-    padding: 24px;
+    padding: 12px 6px;
+    border-radius: 6px;
+    gap: 10px;
   }
-
   .left-card,
   .right-card {
     flex: 1 1 100%;
+    padding: 10px 4px;
+    border-radius: 6px;
   }
-
   .left-card {
     flex-direction: column;
     align-items: center;
-    gap: 16px;
-
+    gap: 8px;
     .thumbnail {
-      width: 180px;
-      height: 180px;
+      width: 80px;
+      height: 80px;
+      padding: 2px;
+    }
+    .price {
+      font-size: 1rem;
+    }
+    .desc {
+      font-size: 0.8rem;
+    }
+    .condition {
+      font-size: 0.7rem;
+    }
+    .type {
+      font-size: 0.7rem;
     }
   }
-
   .right-card {
-    margin-top: 16px;
+    margin-top: 8px;
+    h3 {
+      font-size: 0.9rem;
+    }
+    .label {
+      font-size: 0.8rem;
+    }
+    .body, .desc {
+      font-size: 0.7rem;
+    }
   }
 }
