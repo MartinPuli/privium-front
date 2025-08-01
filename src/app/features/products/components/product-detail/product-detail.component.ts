@@ -95,17 +95,14 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
         switchMap((p) => {
           const id = Number(p.get("id"));
-          console.log("⮕  Nuevo id:", id);
           if (!id) {
             return of(null);
           }
 
           return forkJoin({
             listing: this.getListingById(id).pipe(
-              tap((r) => console.log("listing.id =>", r?.id)) // 2️⃣
             ),
             infoR: this.listingService.getListingInfo(id).pipe(
-              tap((r) => console.log("infoR.id =>", r.data)) // 3️⃣
             ),
           }).pipe(
             map(({ listing, infoR }) => ({ listing, info: infoR.data! })),
@@ -125,7 +122,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         if (!result) {
           return;
         } // id inválido ⇒ vista “vacía”
-        console.log("Producto cargado:", result);
 
         this.product = { ...result.listing, ...result.info } as ProductDetail;
         this.locationName = this.countryService.getNameById(
@@ -152,8 +148,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
             pageSize: 4,
           })
           .subscribe((r) => (this.relatedProducts = r.data ?? []));
-
-        console.log(this.product, this.seller);
       });
   }
 

@@ -69,7 +69,6 @@ export class PublicationCardComponent {
   onSave(payload: EditPayload): void {
     const { dto, mainImageFile, auxFiles } = payload;
     this.saving = true;
-    console.log("onSave", dto, mainImageFile, auxFiles);
     this.listingSrv.editListing(dto, mainImageFile!, auxFiles!).subscribe({
       next: () => {
         /* snackbar de éxito */
