@@ -70,6 +70,9 @@ export class HeaderComponent implements OnInit {
   @ViewChild('catButton', { read: ElementRef })
   catButtonRef!: ElementRef<HTMLElement>;
 
+  /** Controla la visibilidad del menú en pantallas pequeñas */
+  isMobileMenuOpen = false;
+
   @Input() logged = true;
   @Input() publishing = false;
 
@@ -240,5 +243,10 @@ export class HeaderComponent implements OnInit {
 
   goToPublish(): void {
     this.router.navigate(["/publish"]);
+  }
+
+  /** Abre o cierra el menú móvil */
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 }

@@ -160,6 +160,11 @@ $container-w: 86%; // igual que el footer
   }
 }
 
+// Botón de menú para móviles oculto por defecto
+.mobile-menu-toggle {
+  display: none;
+}
+
 .user-info {
   padding: 1rem;
   display: flex;
@@ -321,6 +326,21 @@ $container-w: 86%; // igual que el footer
   .search-container {
     order: 3;
     width: 100%;
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+    color: $white;
+  }
+
+  .search-container,
+  .category-nav {
+    display: none;
+  }
+
+  .search-container.mobile-open,
+  .category-nav.mobile-open {
+    display: block;
   }
 }
 
