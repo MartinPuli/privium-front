@@ -9,6 +9,18 @@
 /* Asegura que los mat-form-field usen todo el ancho */
 .mat-form-field { width: 100%; }
 
+/* Ajustes para pantallas pequeñas */
+@media (max-width: $breakpoint-sm) {
+  /* el contenedor del card ocupa todo el ancho en móvil */
+  :host ::ng-deep app-auth-card .auth-wrapper {
+    max-width: 100%;
+  }
+  /* reduce un poco la separación entre campos */
+  .auth-form {
+    gap: 24px;
+  }
+}
+
 /* ---------- Responsivo opcional ---------- */
 @media (max-width: 480px) {
   .inline-links {
