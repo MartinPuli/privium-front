@@ -20,3 +20,22 @@
 .terms{
   font-size: 25px;
 }
+
+/* Ajustes específicos para móviles */
+@media (max-width: $breakpoint-sm) {
+  :host ::ng-deep app-auth-card .auth-wrapper {
+    max-width: 100%;
+  }
+
+  .auth-form {
+    gap: 24px;
+  }
+
+  .form-row {
+    gap: 24px;
+  }
+
+  .terms {
+    font-size: 1rem;
+  }
+}
