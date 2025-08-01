@@ -46,8 +46,8 @@
                     "maximumError": "8kB"
                   }
               ],
-                "outputHashing": "all",
-                "baseHref": "/privium-front/"
+                "baseHref": "/privium-front/",
+                "deployUrl": "/privium-front/"
             },
             "development": {
               "optimization": false,
