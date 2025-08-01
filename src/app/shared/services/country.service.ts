@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { CountryResponseDto, Country } from "../models/country.model";
 import { BehaviorSubject, map, Observable, tap } from "rxjs";
 import { ResponseDataDto } from "../models/responses.model";
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: "root",
@@ -12,7 +13,7 @@ export class CountryService {
   private getCountriesUrl: string;
 
   constructor(private http: HttpClient) {
-    this.baseBackendUrl = "http://localhost:8080/api/privium/countries/";
+    this.baseBackendUrl = `${environment.apiBaseUrl}/countries/`;
     this.getCountriesUrl = this.baseBackendUrl + "getCountries";
   }
 

@@ -50,7 +50,12 @@
             *ngIf="img.preview"
             [class.is-main]="i === mainIndex"
           >
-            <img [src]="img.preview" appDefaultImage />
+            <img
+              [src]="img.preview"
+              [alt]="'Imagen ' + (i + 1)"
+              loading="lazy"
+              appDefaultImage
+            />
             <button mat-icon-button (click)="removeImage(i)">
               <mat-icon>close</mat-icon>
             </button>

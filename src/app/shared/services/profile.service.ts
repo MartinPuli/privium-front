@@ -7,13 +7,14 @@ import { User } from "../models/user.model";
 
 import { RegisterRequest } from "../models/user.model";
 import { ResponseDto } from "../models/responses.model";
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: "root" })
 export class ProfileService {
   private baseBackendUrl: string;
 
   constructor(private http: HttpClient) {
-    this.baseBackendUrl = "http://localhost:8080/api/privium/users";
+    this.baseBackendUrl = `${environment.apiBaseUrl}/users`;
   }
 
 

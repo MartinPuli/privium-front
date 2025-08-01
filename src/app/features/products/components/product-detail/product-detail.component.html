@@ -41,7 +41,8 @@
             <img
               [src]="img"
               class="thumbnail-image"
-              [alt]="'Vista ' + (i + 1)"
+              [alt]="product.title + ' vista ' + (i + 1)"
+              loading="lazy"
               appDefaultImage
             />
           </button>
@@ -55,6 +56,7 @@
             class="main-image"
             [src]="getAllImages()[currentImageIndex]"
             [alt]="product.title"
+            loading="lazy"
             appDefaultImage
           />
         </div>

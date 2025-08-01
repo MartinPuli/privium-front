@@ -181,7 +181,12 @@
                   class="image-preview-item"
                   *ngFor="let img of selectedImages; let i = index"
                 >
-                  <img [src]="img.preview" [alt]="'Imagen ' + (i + 1)" appDefaultImage />
+                  <img
+                    [src]="img.preview"
+                    [alt]="'Imagen ' + (i + 1)"
+                    loading="lazy"
+                    appDefaultImage
+                  />
                   <button
                     type="button"
                     mat-icon-button

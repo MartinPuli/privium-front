@@ -3,7 +3,6 @@ export interface User {
   name: string
   lastName: string
   email: string
-  passwordHash?: string
   dni?: string
   contactPhone?: string
   verifiedEmail: boolean
@@ -67,8 +66,3 @@ export interface RegisterRequest {
   proofImageBase64?: string
 }
 
-export interface VerificationRequest {
-  idUser: number
-  proofMessage: string
-  proofImageBase64: string
-}
