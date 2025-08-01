@@ -5,7 +5,7 @@
     <!-- ========== PASO 1 ========== -->
     <app-publish-type-step
       *ngIf="progress.currentStep === 1"
-      (continue)="nextStep()"
+      (continue)="onTypeContinue($event)"
     >
     </app-publish-type-step>
 
@@ -109,7 +109,7 @@
         <!-- Condición -->
         <app-publish-info
           [formId]="'detailsForm'"
-          *ngIf="step2Stage >= 3"
+          *ngIf="step2Stage >= 3 && !skipCondition"
           [disabled]="cardDisabled(3)"
           title="Condición"
           description="Especifica si el producto es nuevo o usado"
@@ -135,12 +135,12 @@
         <!-- Fotos -->
         <app-publish-info
           [formId]="'detailsForm'"
-          *ngIf="step2Stage >= 4"
+          *ngIf="step2Stage >= (skipCondition ? 3 : 4)"
           title="Fotos"
-          [disabled]="cardDisabled(4)"
+          [disabled]="cardDisabled(skipCondition ? 3 : 4)"
           description="La primera foto será la principal. Las demás se verán en el detalle"
           [showFooter]="true"
-          [continueDisabled]="selectedImages.length === 0 || cardDisabled(4)"
+          [continueDisabled]="selectedImages.length === 0 || cardDisabled(skipCondition ? 3 : 4)"
           (onCancel)="cancelStage()"
           (onContinue)="continueStage()"
         >

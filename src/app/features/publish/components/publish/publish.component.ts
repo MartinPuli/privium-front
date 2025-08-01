@@ -72,6 +72,9 @@ export class PublishComponent implements OnInit {
   progress = { currentStep: 1 };
   step2Stage = 0; // sub‑secciones
 
+  type: 'PRODUCTO' | 'VEHICULO' | 'INMUEBLE' | 'MUEBLE' | 'SERVICIO' | null = null;
+  skipCondition = false;
+
   /* ---------------- formularios ---------------- */
   detailsForm!: FormGroup;
   commercialForm!: FormGroup;
@@ -90,6 +93,17 @@ export class PublishComponent implements OnInit {
     private sb: MatSnackBar,
     private listingsService: ListingService
   ) {}
+
+  onTypeContinue(
+    type: 'PRODUCTO' | 'VEHICULO' | 'INMUEBLE' | 'MUEBLE' | 'SERVICIO'
+  ): void {
+    this.type = type;
+    this.skipCondition = type === 'SERVICIO';
+    if (this.skipCondition) {
+      this.detailsForm.get('condition')?.setValue(2);
+    }
+    this.nextStep();
+  }
 
   ngOnInit(): void {
     this.detailsForm = this.fb.group({
@@ -162,18 +176,21 @@ export class PublishComponent implements OnInit {
   }
 
   continueStage(): void {
-    if (this.step2Stage < 4) {
+    const maxStage = this.skipCondition ? 3 : 4;
+    if (this.step2Stage < maxStage) {
       this.step2Stage++;
     } else {
       this.nextStep();
     }
   }
   clearStage(): void {
-    const map = ["title", "", "description", "condition", "images"][
-      this.step2Stage
-    ];
+    const mapArr = this.skipCondition
+      ? ["title", "", "description", "images"]
+      : ["title", "", "description", "condition", "images"];
+    const map = mapArr[this.step2Stage];
     if (map) {
-      this.detailsForm.get(map)?.reset(this.step2Stage === 4 ? [] : "");
+      const imgStage = this.skipCondition ? 3 : 4;
+      this.detailsForm.get(map)?.reset(this.step2Stage === imgStage ? [] : "");
     }
   }
 
@@ -311,7 +328,10 @@ export class PublishComponent implements OnInit {
       () => this.detailsForm.get('title')!.valid,
       () => this.categories[0].idPath !== '',
       () => this.detailsForm.get('description')!.valid,
-      () => this.detailsForm.get('condition')!.valid,
+      () =>
+        this.skipCondition
+          ? this.selectedImages.length > 0
+          : this.detailsForm.get('condition')!.valid,
       () => this.selectedImages.length > 0,
     ];
 
@@ -340,7 +360,7 @@ export class PublishComponent implements OnInit {
       acceptsCard: this.commercialForm.value.acceptsCard,
       acceptsTransfer: this.commercialForm.value.acceptsTransfer,
       acceptsBarter: this.commercialForm.value.acceptsBarter,
-      type: "PRODUCTO", // o según tu lógica
+      type: this.type ?? "PRODUCTO",
       categoriesId: this.categories
         .filter((c) => c.idPath)
         .map((c) => c.idPath),
