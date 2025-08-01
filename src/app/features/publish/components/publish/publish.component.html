@@ -268,6 +268,7 @@
             mat-stroked-button
             color="accent"
             type="button"
+            [disabled]="isLoading"
             (click)="previousStep()"
             class="cancel-button"
           >
