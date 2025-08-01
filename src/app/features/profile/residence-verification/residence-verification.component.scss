@@ -57,6 +57,13 @@
   padding: 80px 10px;
 }
 
+@media (max-width: $breakpoint-md) {
+  .rv-warn {
+    width: 100% !important;
+    padding: 40px 16px;
+  }
+}
+
 /* Tarjeta ocupa todo el ancho */
 .rv-card {
   width: 100%;
