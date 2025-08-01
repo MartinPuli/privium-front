@@ -90,7 +90,6 @@ export class ForgotPasswordComponent {
       // si no arroja error → éxito
       this.success = true;
     } catch (err) {
-      console.error("resetPassword error", err);
     } finally {
       this.isLoading = false;
     }

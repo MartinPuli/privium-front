@@ -52,7 +52,6 @@ export class VerifyEmailComponent implements OnInit {
           )
         ),
         catchError((err) => {
-          console.error("verifyEmail error", err);
           this.setError(
             "Token inválido",
             "No pudimos verificar tu correo.",

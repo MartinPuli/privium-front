@@ -136,7 +136,6 @@ export class ResetPasswordComponent implements OnInit {
         "Ahora puedes ingresar con tu nueva contraseña."
       );
     } catch (err) {
-      console.error("updatePassword error", err);
       this.setError(
         "Error al actualizar",
         "No pudimos cambiar tu contraseña.",

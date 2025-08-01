@@ -163,7 +163,6 @@ export class AuthService {
         const user = JSON.parse(userStr);
         this.currentUserSubject.next(user);
       } catch (error) {
-        console.error("Error parsing user from storage:", error);
         this.logout();
       }
     }
@@ -179,7 +178,6 @@ export class AuthService {
         switchMap(() => this.countryService.loadCountries()),
         map(() => void 0),
         catchError((err) => {
-          console.error("Error cargando catálogos:", err);
           return of(void 0);
         })
       )
@@ -225,7 +223,6 @@ export class AuthService {
         role: payload.role || "USER",
       };
     } catch (error) {
-      console.error("Error decoding token:", error);
       return null;
     }
   }

@@ -25,6 +25,7 @@ import { FormFieldComponent } from "src/app/shared/components/form-field/form-fi
 import { RegisterRequest } from "src/app/shared/models/user.model";
 import { RegistrationDataService } from "src/app/shared/services/registration-data.service";
 import { firstValueFrom } from "rxjs";
+import { ResultSnackbarComponent } from "src/app/shared/components/result-snackbar/result.snackbar.component";
 
 @Component({
   selector: "app-verify-residence",
@@ -136,12 +137,12 @@ export class VerifyResidenceComponent implements OnInit {
           proofImageBase64: base64,
         });
       });
-    } else{
+    } else {
       const draft = this.regData.getRegistrationData()!;
-        this.regData.setRegistrationData({
-          ...draft,
-          proofImageBase64: undefined,
-        });
+      this.regData.setRegistrationData({
+        ...draft,
+        proofImageBase64: undefined,
+      });
     }
   }
 
@@ -175,16 +176,16 @@ export class VerifyResidenceComponent implements OnInit {
       await firstValueFrom(this.authService.register(payload));
 
       // 5) Mostrar snackbar de éxito
-      this.snackBar.open(
-        "Registro completado! Revisa tu email para verificar tu cuenta.",
-        "Cerrar",
-        {
-          duration: 5000,
-          panelClass: ["success-snackbar"],
-          horizontalPosition: "center",
-          verticalPosition: "bottom",
-        }
-      );
+      this.snackBar.openFromComponent(ResultSnackbarComponent, {
+        data: {
+          message: "Registro completado! Revisa tu email para verificar tu cuenta.",
+          status: "success",
+        },
+        duration: 5000,
+        panelClass: "success-snackbar",
+        horizontalPosition: "center",
+        verticalPosition: "bottom",
+      });
 
       // 6) Limpiar formulario (sin emitir valueChanges) y servicio
       this.verificationForm.reset(undefined, { emitEvent: false });
@@ -193,7 +194,6 @@ export class VerifyResidenceComponent implements OnInit {
       // 7) Navegar al siguiente paso
       this.router.navigate(["/auth/login"]);
     } catch (error) {
-      console.error("Error during registration:", error);
       // aquí podrías setear showGeneralError = true si quieres alertar al usuario
     } finally {
       this.isLoading = false;

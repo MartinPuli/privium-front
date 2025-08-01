@@ -153,8 +153,7 @@ export class RegisterComponent {
       .subscribe({
         next: (opts) => {
           this.countryOptions = opts;
-        },
-        error: (err) => console.error("Error cargando países", err),
+        }
       });
   }
 
