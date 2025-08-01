@@ -182,3 +182,30 @@
 :host ::ng-deep mat-checkbox.inner-check .mdc-checkbox__background {
   transform: scale(1.5);
 }
+
+@media (max-width: 768px) {
+  .card-inner {
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  .left-card,
+  .right-card {
+    flex: 1 1 100%;
+  }
+
+  .left-card {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    .thumbnail {
+      width: 180px;
+      height: 180px;
+    }
+  }
+
+  .right-card {
+    margin-top: 16px;
+  }
+}
