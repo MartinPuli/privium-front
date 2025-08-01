@@ -121,7 +121,7 @@ export class FooterComponent {
 
   get contactButtons(): ModalButton[] {
     return [
-      { label: 'Cancelar', type: 'secondary', action: () => this.contactOpen = false },
+      { label: 'Cancelar', type: 'secondary', action: () => this.contactOpen = false, disabled: this.contactLoading },
       {
         label: 'Enviar',
         type: 'primary',
@@ -135,7 +135,7 @@ export class FooterComponent {
 
   get deleteButtons(): ModalButton[] {
     return [
-      { label: 'Cancelar', type: 'secondary', action: () => (this.deleteOpen = false) },
+      { label: 'Cancelar', type: 'secondary', action: () => (this.deleteOpen = false), disabled: this.deleteLoading },
       { label: 'Confirmar', type: 'primary', action: () => this.deleteAccount(), loading: this.deleteLoading },
     ];
   }
