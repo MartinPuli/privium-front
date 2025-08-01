@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   apiBaseUrl:
-    'https://privium-back-1.onrender.com/',
+    'https://privium-back-1.onrender.com',
 };
