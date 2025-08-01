@@ -83,3 +83,49 @@
     line-height: 2.5rem;
   }
 }
+
+@media (max-width: 768px) {
+  .prof-main {
+    padding: 60px 8%;
+    gap: 40px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+
+    mat-icon {
+      font-size: 3rem;
+      height: 50px;
+      width: 50px;
+    }
+  }
+
+  .profile-wrapper p {
+    font-size: 1rem;
+  }
+
+  .info-container {
+    flex-direction: column;
+  }
+
+  .info-card {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .prof-main {
+    padding: 40px 5%;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+
+    mat-icon {
+      font-size: 2.5rem;
+      height: 40px;
+      width: 40px;
+    }
+  }
+}
