@@ -38,6 +38,7 @@
             placeholder="Ej: Sillón de 3 cuerpos de cuero"
             formControlName="title"
             [disabled]="cardDisabled(0)"
+            [maxLength]="100"
             [hasError]="hasError('details', 'title')"
             [errorMessage]="getError('details', 'title')"
           >
@@ -100,6 +101,7 @@
             [disabled]="cardDisabled(2)"
             placeholder="Características, medidas, etc."
             formControlName="description"
+            [maxLength]="1000"
             [hasError]="hasError('details', 'description')"
             [errorMessage]="getError('details', 'description')"
           >

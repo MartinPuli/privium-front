@@ -60,16 +60,43 @@ export class RegisterComponent {
      Formulario
      ----------------------------------------------------------- */
 
+  private readonly passwordPattern =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
   registerForm: FormGroup = this.fb.group(
     {
-      name: ["", [Validators.required, Validators.minLength(2)]],
-      lastname: ["", [Validators.required, Validators.minLength(2)]],
-      dni: ["", [Validators.required, Validators.pattern(/^\d{7,9}$/)]],
-      email: ["", [Validators.required, Validators.email]],
-      phone: [""],
+      name: [
+        "",
+        [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+      ],
+      lastname: [
+        "",
+        [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+      ],
+      dni: [
+        "",
+        [
+          Validators.required,
+          Validators.pattern(/^\d{7,9}$/),
+          Validators.maxLength(9),
+        ],
+      ],
+      email: [
+        "",
+        [Validators.required, Validators.email, Validators.maxLength(100)],
+      ],
+      phone: ["", [Validators.maxLength(20)]],
       countryId: [null, Validators.required],
-      password: ["", [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ["", Validators.required],
+      password: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(50),
+          Validators.pattern(this.passwordPattern),
+        ],
+      ],
+      confirmPassword: ["", [Validators.required, Validators.maxLength(50)]],
       acceptTerms: [false, Validators.requiredTrue],
     },
     { validators: this.passwordsMatch }
@@ -191,10 +218,19 @@ export class RegisterComponent {
         c.errors!["minlength"].requiredLength
       } caracteres`;
     }
+    if (c.hasError("maxlength")) {
+      return `El campo ${this.label(field)} debe tener como máximo ${
+        c.errors!["maxlength"].requiredLength
+      } caracteres`;
+    }
     if (this.registerForm.hasError("mismatch") && field === "confirmPassword") {
       return "Las contraseñas no coinciden";
     }
-    if (c.hasError("pattern") && field === "dni") return "DNI inválido";
+    if (c.hasError("pattern")) {
+      if (field === "dni") return "DNI inválido";
+      if (field === "password")
+        return "Debe incluir mayúscula, minúscula, número y símbolo";
+    }
     return "";
   }
 

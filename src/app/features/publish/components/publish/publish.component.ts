@@ -107,8 +107,18 @@ export class PublishComponent implements OnInit {
 
   ngOnInit(): void {
     this.detailsForm = this.fb.group({
-      title: ["", [Validators.required, Validators.minLength(3)]],
-      description: ["", [Validators.required, Validators.minLength(10)]],
+      title: [
+        "",
+        [Validators.required, Validators.minLength(3), Validators.maxLength(100)],
+      ],
+      description: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(1000),
+        ],
+      ],
       condition: [2, Validators.required],
       images: [[], Validators.required],
     });
@@ -139,6 +149,10 @@ export class PublishComponent implements OnInit {
     if (c.hasError("minlength"))
       return `Debe tener al menos ${
         c.errors!["minlength"].requiredLength
+      } caracteres`;
+    if (c.hasError("maxlength"))
+      return `Debe tener como máximo ${
+        c.errors!["maxlength"].requiredLength
       } caracteres`;
     if (c.hasError("min")) return "Debe ser mayor que cero";
     if (c.hasError("pattern")) return "Formato inválido";
