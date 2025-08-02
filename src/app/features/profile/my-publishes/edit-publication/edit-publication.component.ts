@@ -191,7 +191,9 @@ export class EditPublicationComponent implements OnInit {
   }
 
   addImages(evt: Event): void {
-    const files = Array.from((evt.target as HTMLInputElement).files ?? []);
+    const input = evt.target as HTMLInputElement;
+    const remaining = this.maxImages - this.filledImages;
+    const files = Array.from(input.files ?? []).slice(0, remaining);
     this.clearImageError();
 
     files.forEach(file => {
@@ -223,7 +225,7 @@ export class EditPublicationComponent implements OnInit {
       reader.readAsDataURL(file);
     });
 
-    (evt.target as HTMLInputElement).value = "";
+    input.value = "";
   }
 
   removeImage(i: number): void {

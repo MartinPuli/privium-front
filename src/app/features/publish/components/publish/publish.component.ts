@@ -260,7 +260,8 @@ export class PublishComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (!input.files) return;
 
-    const files = Array.from(input.files);
+    const remaining = this.maxImages - this.selectedImages.length;
+    const files = Array.from(input.files).slice(0, remaining);
 
     files.forEach((file) => {
       if (this.selectedImages.length >= this.maxImages) return;
