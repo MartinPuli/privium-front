@@ -36,8 +36,13 @@
         <p class="desc">{{ listing.title }}</p>
         <!-- título, sin cambios -->
       </div>
-      <!-- tipo al pie, sin subtítulo -->
-      <p class="type">{{ listing.type }}</p>
+      <!-- información inferior -->
+      <div class="bottom-info">
+        <p class="type">{{ listing.type }}</p>
+        <p class="created">
+          Publicado el {{ listing.createdAt | date: 'dd/MM/yyyy' }}
+        </p>
+      </div>
     </div>
   </mat-card>
 

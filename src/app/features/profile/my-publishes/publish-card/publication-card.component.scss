@@ -54,6 +54,15 @@
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    .bottom-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .created {
+      font-size: 0.9rem;
+      color: $text-light;
+    }
   }
   .status {
     font-size: 1.5rem;
@@ -215,6 +224,9 @@
       font-size: 0.7rem;
     }
     .type {
+      font-size: 0.7rem;
+    }
+    .created {
       font-size: 0.7rem;
     }
   }
