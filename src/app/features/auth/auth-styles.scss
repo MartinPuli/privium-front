@@ -16,3 +16,10 @@
   justify-content: center;
   align-items: center;        /* ← centra verticalmente       */
 }
+
+/* Más espacio entre inputs y botones en formularios de login y register */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}

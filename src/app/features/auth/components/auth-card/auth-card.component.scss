@@ -1,169 +1,182 @@
 @import "../../../../../shared/styles/variables";
 
-/* ---------- Layout general + fondo ---------- */
-// Layout responsive y menos padding
 :host {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  font-family: "Urbanist", sans-serif;
-  align-items: center;
-  padding: 24px 8px;
+  width: 70%;
 }
 
-/* === wrapper exterior: controla ancho y centrado ============= */
 .auth-wrapper {
   width: 100%;
-  font-family: "Urbanist";
+  max-width: none !important;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 480px;
+  font-family: "Urbanist", sans-serif;
 }
 
-/* === header sin fondo/borde ================================== */
 .auth-header {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  button[mat-icon-button] {
-    align-self: flex-start;
-    color: $primary-navy;
-  }
-  h1 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 600;
-    color: $primary-navy;
-  }
-  p {
-    margin: 0;
-    font-weight: 500;
-    font-size: 1.1rem;
-    color: $text-light;
-  }
+  padding: 0 0 12px 0;
+}
+.auth-header button[mat-icon-button] {
+  align-self: flex-start;
+  color: $primary-navy;
+}
+.auth-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: $primary-navy;
+}
+.auth-header p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: $text-light;
 }
 
-/* === tarjeta crema =========================================== */
 .auth-card {
   background: #f9f9ed;
   border-radius: 8px;
-  padding: 48px 32px;
+  padding: 48px 32px 40px 32px;
   box-shadow: 4px 8px 16px rgba(0 0 0 / 0.08);
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 32px;
 }
 
-/* ---------- Footer (botones) ---------- */
+.content {
+  width: 100%;
+}
+
 footer {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
   flex-wrap: wrap;
-  button {
-    flex: 0 0 auto;
-    min-width: 180px;
-    max-width: 320px;
-    width: 100%;
-    padding: 12px 20px;
-    background-color: $primary-navy;
-    height: 44px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.08rem;
-    color: $white;
-    white-space: nowrap;
-  }
-  button:disabled,
-  button.mdc-button--disabled {
-    background-color: #bdbdbd;
-    color: $white;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
+}
+footer button {
+  flex: 0 0 auto;
+  min-width: 180px;
+  max-width: 320px;
+  width: 100%;
+  padding: 12px 20px;
+  background-color: $primary-navy;
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.08rem;
+  color: $white;
+  white-space: nowrap;
+}
+footer button:disabled,
+footer button.mdc-button--disabled {
+  background-color: #bdbdbd;
+  color: $white;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* ---------- Links ---------- */
 .links {
   display: flex;
   justify-content: space-between;
   gap: 24px;
   flex-wrap: wrap;
+}
+.links a {
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 20px;
+}
+.links a.primary {
+  color: $primary-navy;
+}
+.links a.secondary {
+  color: $text-light;
+}
+.links a:hover {
+  text-decoration: underline;
+}
 
-  a {
-    cursor: pointer;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 20px;
+@media (max-width: 900px) {
+  .auth-wrapper {
+    max-width: 98vw;
+    padding: 0 2vw;
+    gap: 16px;
+  }
 
-    &.primary {
-      color: $primary-navy;
-    }
-    &.secondary {
-      color: $text-light;
-    }
+  .auth-card label {
+    font-size: 0.85rem !important;
+  }
 
-    &:hover {
-      text-decoration: underline;
-    }
+  :host {
+    width: 75%;
   }
 }
 
-/* ---------- Responsive ---------- */
 @media (max-width: 600px) {
-  :host {
-    padding: 2px 0 0 0;
-  }
   .auth-wrapper {
-    max-width: 100% !important;
-    gap: 6px;
+    max-width: 100vw !important;
+    padding: 0 1vw;
+    gap: 12px;
+  }
+  .auth-header {
+    padding: 0 0 8px 0;
   }
   .auth-header h1 {
-    font-size: 1.08rem;
-    margin-bottom: 2px;
+    font-size: 1.5rem !important;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.1;
   }
-  .auth-header p {
-    font-size: 0.82rem;
-    margin-bottom: 2px;
+  .auth-header .subtitle {
+    font-size: 1.15rem !important;
+    font-weight: 500;
+    margin-bottom: 10px;
+    line-height: 1.2;
   }
   .auth-card {
-    padding: 8px 1vw 12px 1vw;
-    gap: 5px;
+    padding: 26px 20px;
+    gap: 22px;
     border-radius: 6px;
-    font-size: 0.97rem;
+    font-size: 0.91rem;
   }
   .auth-card label {
-    font-size: 0.97rem;
+    font-size: 0.91rem;
     margin-bottom: 2px;
   }
-  .auth-card input, .auth-card textarea, .auth-card select {
-    font-size: 0.82rem;
-    padding: 5px 3px;
+  .auth-card input,
+  .auth-card textarea,
+  .auth-card select {
+    font-size: 0.74rem;
+    padding: 4px 2px;
     border-radius: 5px;
   }
   footer {
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
     align-items: stretch;
-    button {
-      width: 100%;
-      min-width: 0;
-      max-width: none;
-      font-size: 0.93rem;
-      padding: 8px 0;
-      height: 32px;
-      margin: 0;
-      box-sizing: border-box;
-      border-radius: 6px;
-    }
+  }
+  footer button {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    font-size: 0.89rem;
+    padding: 7px 0;
+    height: 30px;
+    margin: 0;
+    box-sizing: border-box;
+    border-radius: 6px;
   }
   .links {
     flex-direction: column;
     align-items: flex-start;
     gap: 2px;
-    a {
-      font-size: 0.82rem;
-    }
+  }
+  .links a {
+    font-size: 0.9rem;
   }
 }

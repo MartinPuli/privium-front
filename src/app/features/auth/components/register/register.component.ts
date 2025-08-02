@@ -211,7 +211,7 @@ export class RegisterComponent {
   getError(field: string): string {
     const c = this.registerForm.get(field);
     if (!c) return "";
-    if (c.hasError("required")) return `${this.label(field)} es requerido`;
+    if (c.hasError("required")) return `Este campo es requerido`;
     if (c.hasError("email")) return "Ingresá un email válido";
     if (c.hasError("minlength")) {
       return `El campo ${this.label(field)} debe tener al menos ${

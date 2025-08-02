@@ -14,6 +14,15 @@
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;  /* una sola columna en tablets     */
+    gap: 26px !important;
+  }
+
+  @media (max-width: 600px) {
+    gap: 18px !important;
+  }
+
+  @media (max-width: 480px) {
+    gap: 8px !important;
   }
 }
 
@@ -22,20 +31,14 @@
 }
 
 /* Ajustes específicos para móviles */
-@media (max-width: $breakpoint-sm) {
-  :host ::ng-deep app-auth-card .auth-wrapper {
-    max-width: 100%;
-  }
-
+@media (max-width: 900px) {
   .auth-form {
-    gap: 24px;
+    gap: 20px;
   }
+}
 
-  .form-row {
-    gap: 24px;
-  }
-
-  .terms {
-    font-size: 1rem;
+@media (max-width: 600px) {
+  .auth-form {
+    gap: 14px !important;
   }
 }
