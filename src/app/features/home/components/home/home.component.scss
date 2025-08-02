@@ -60,21 +60,19 @@ app-product-card-small {
   font-weight: 600;
   color: $primary-navy;
   margin: 0;
+  padding: 3rem 0;
+  background-color: #dfe0d5; // Cambiar a #dfe0d5
+
   @media (max-width: 1200px) {
     font-size: 1.75rem;
   }
   @media (max-width: 768px) {
     font-size: 1.2rem;
+    padding: 1.5rem 0;
   }
   @media (max-width: 600px) {
     font-size: 1.05rem;
   }
-  background-color: #dfe0d5; // Cambiar a #dfe0d5
-
-  @media (max-width: 768px) {
-    padding: 1.5rem 0;
-  }
-
   @media (max-width: 480px) {
     padding: 1rem 0;
   }
