@@ -41,7 +41,7 @@
             <li><a role="button" (click)="openContact()">Contacto</a></li>
             <li><a role="button" (click)="openTerms()">Terminos y condiciones</a></li>
             <li><a>Politica de seguridad</a></li>
-            <li><a role="button" (click)="openDelete()">Cerrar cuenta</a></li>
+            <li><a role="button" (click)="openDelete()">Borrar cuenta</a></li>
           </ul>
         </nav>
       </div>
@@ -80,12 +80,12 @@
 <!-- Delete Account Modal -->
 <app-default-modal
   *ngIf="deleteOpen"
-  title="¿Cerrar cuenta?"
+  title="¿Borrar cuenta?"
   [buttons]="deleteButtons"
   (close)="deleteOpen = false"
 >
   <p>
-    ¿Estás seguro de que deseas cerrar tu cuenta? Esta acción no se puede
+    ¿Estás seguro de que deseas borrar tu cuenta? Esta acción no se puede
     deshacer.
   </p>
 </app-default-modal>
