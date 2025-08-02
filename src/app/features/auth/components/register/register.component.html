@@ -22,12 +22,14 @@
           <app-form-field
             label="Nombre"
             formControlName="name"
+            [maxLength]="50"
             [hasError]="hasError('name')"
             [errorMessage]="getError('name')"
           />
           <app-form-field
             label="Apellido"
             formControlName="lastname"
+            [maxLength]="50"
             [hasError]="hasError('lastname')"
             [errorMessage]="getError('lastname')"
           />
@@ -39,6 +41,7 @@
             type="email"
             formControlName="email"
             placeholder="ejemplo@correo.com"
+            [maxLength]="100"
             [hasError]="hasError('email')"
             [errorMessage]="getError('email')"
           />
@@ -56,23 +59,25 @@
           />
         </div>
 
-        <app-form-field
-          label="DNI"
-          formControlName="dni"
-          type="text"
-          placeholder="Sin puntos ni guiones"
-          [hasError]="hasError('dni')"
-          [errorMessage]="getError('dni')"
-        />
+          <app-form-field
+            label="DNI"
+            formControlName="dni"
+            type="text"
+            placeholder="Sin puntos ni guiones"
+            [maxLength]="9"
+            [hasError]="hasError('dni')"
+            [errorMessage]="getError('dni')"
+          />
 
-        <app-form-field
-          label="Número de teléfono (opcional)"
-          type="tel"
-          formControlName="phone"
-          placeholder="+54 11 1234-5678"
-          [hasError]="hasError('phone')!"
-          [errorMessage]="getError('phone')"
-        />
+          <app-form-field
+            label="Número de teléfono (opcional)"
+            type="tel"
+            formControlName="phone"
+            placeholder="+54 11 1234-5678"
+            [maxLength]="20"
+            [hasError]="hasError('phone')!"
+            [errorMessage]="getError('phone')"
+          />
 
         <!-- selector de barrio -->
 
@@ -84,6 +89,7 @@
             formControlName="password"
             [showPasswordToggle]="true"
             (passwordToggle)="hidePassword = !hidePassword"
+            [maxLength]="50"
             [hasError]="hasError('password')"
             [errorMessage]="getError('password')"
           />
@@ -93,6 +99,7 @@
             formControlName="confirmPassword"
             [showPasswordToggle]="true"
             (passwordToggle)="hidePassword = !hidePassword"
+            [maxLength]="50"
             [hasError]="hasError('confirmPassword')"
             [errorMessage]="
               registerForm.hasError('mismatch') &&

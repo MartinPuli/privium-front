@@ -12,10 +12,11 @@
         formControlName="title"
         [placeholder]="'Ingrese el título'"
         [label]="'Título'"
+        [maxLength]="100"
         [hasError]="
           leftForm.get('title')!.invalid && leftForm.get('title')!.touched
         "
-        [errorMessage]="'Título requerido (min 3)'"
+        [errorMessage]="'Título requerido (3-100)'"
       >
       </app-form-field>
 
@@ -90,11 +91,12 @@
         [rows]="5"
         [label]="'Descripción'"
         [placeholder]="'Contá con detalle tu producto'"
+        [maxLength]="1000"
         [hasError]="
           rightForm.get('description')!.invalid &&
           rightForm.get('description')!.touched
         "
-        [errorMessage]="'Descripción requerida'"
+        [errorMessage]="'Descripción requerida (10-1000)'"
       >
       </app-form-field>
 

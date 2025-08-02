@@ -151,21 +151,28 @@ export class EditPublicationComponent implements OnInit {
 
     /* ▸ Formularios */
     this.leftForm = this.fb.group({
-      title    : [this.listing.title,
-                  [Validators.required, Validators.minLength(3)]],
-      price    : [this.listing.price,
-                  [Validators.required, Validators.min(1)]],
+      title: [
+        this.listing.title,
+        [Validators.required, Validators.minLength(3), Validators.maxLength(100)],
+      ],
+      price: [
+        this.listing.price,
+        [Validators.required, Validators.min(1)],
+      ],
       condition: [this.listing.condition, Validators.required],
-      images   : [this.selectedImages, minImages],
+      images: [this.selectedImages, minImages],
     });
 
     this.rightForm = this.fb.group({
-      description : [this.listing.description, Validators.required],
-      categories  : [[], Validators.minLength(1)],
-      paysCash    : [this.listing.acceptsCash],
-      paysCard    : [this.listing.acceptsCard],
-      paysTransf  : [this.listing.acceptsTransfer],
-      paysBarter  : [this.listing.acceptsBarter],
+      description: [
+        this.listing.description,
+        [Validators.required, Validators.minLength(10), Validators.maxLength(1000)],
+      ],
+      categories: [[], Validators.minLength(1)],
+      paysCash: [this.listing.acceptsCash],
+      paysCard: [this.listing.acceptsCard],
+      paysTransf: [this.listing.acceptsTransfer],
+      paysBarter: [this.listing.acceptsBarter],
     });
 
     this.rightForm.get("categories")!.setValue(
