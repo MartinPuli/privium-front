@@ -9,8 +9,10 @@
 
 .main-content {
   flex: 1;
-  padding-top: 0;
-  padding-bottom: 45px;
+  padding-top: 0.5rem;
+  padding-bottom: 1.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 // Hero Section - Sin padding, imagen al 100%
@@ -250,10 +252,10 @@ app-product-card-small {
 
 // Loading and empty states - menos padding
 .loading-section {
-  padding: 1.5rem 0; // Reducido
+  padding: 1rem 0;
 
   @media (max-width: 768px) {
-    padding: 1.5rem 0;
+    padding: 0.7rem 0;
   }
 
   .loading-container {
@@ -277,6 +279,20 @@ app-product-card-small {
         min-width: 0;
         max-width: 98vw;
       }
+    }
+  }
+
+  .empty-message, .no-products-message, .no-publications-message {
+    font-size: 1.1rem;
+    color: $text-light;
+    text-align: center;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    @media (max-width: 768px) {
+      font-size: 0.98rem;
+    }
+    @media (max-width: 480px) {
+      font-size: 0.89rem;
     }
   }
 
