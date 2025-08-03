@@ -110,13 +110,22 @@ html {
   gap: 1rem;
   padding: 2rem; // Reducido
   color: var(--text-secondary);
+  font-size: 1.1rem;
   
   @media (max-width: 768px) {
     padding: 1.5rem;
   }
+
+  @media (max-width: 600px) {
+    padding: 1.2rem;
+    gap: 0.9rem;
+    font-size: 1rem;
+  }
   
   @media (max-width: 480px) {
-    padding: 1rem;
+    padding: 0.5rem;
+    gap: 0.8rem;
+    font-size: 0.8rem;
   }
   
   mat-icon {
@@ -126,18 +135,9 @@ html {
     opacity: 0.5;
     
     @media (max-width: 480px) {
-      font-size: 36px;
-      width: 36px;
-      height: 36px;
-    }
-  }
-  
-  p {
-    font-size: 1.1rem;
-    text-align: center;
-    
-    @media (max-width: 480px) {
-      font-size: 1rem;
+      font-size: 30px;
+      width: 30px;
+      height: 30px;
     }
   }
 }

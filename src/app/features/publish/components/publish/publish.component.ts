@@ -124,7 +124,11 @@ export class PublishComponent implements OnInit {
     });
 
     this.commercialForm = this.fb.group({
-      price: [null, [Validators.required, Validators.min(1)]],
+      price: [null, [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(99999999)
+      ]],
       acceptsCash: [false],
       acceptsCard: [false],
       acceptsTransfer: [false],
@@ -357,11 +361,12 @@ export class PublishComponent implements OnInit {
 
   /* ---------------- publicar ---------------- */
   publishListing(): void {
-    if (this.detailsForm.invalid || this.commercialForm.invalid) {
-      return;
-    }
-
-    if (this.selectedImages.length === 0) {
+    if (
+      this.detailsForm.invalid ||
+      this.commercialForm.invalid ||
+      this.selectedImages.length === 0 ||
+      !this.isPriceValid()
+    ) {
       return;
     }
 
@@ -404,6 +409,11 @@ export class PublishComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  isPriceValid(): boolean {
+    const price = this.commercialForm.get('price')?.value;
+    return price >= 1 && price <= 99999999;
   }
 
   @HostListener('window:keydown.enter', ['$event'])

@@ -49,7 +49,7 @@
   .card-header{
     display: flex;
     flex-direction: row;
-    align-content: center;
+    align-items: center;
     justify-content: space-between;
   }
 
@@ -57,6 +57,9 @@
     color: $white;
     font-size: 0.7rem;
     font-weight: 400;
+    padding: 2px 8px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
   }
 
   mat-card-content {
@@ -83,6 +86,8 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 100%;
+      line-height: 1.1;
     }
 
     .location {
@@ -95,7 +100,7 @@
   }
 }
 
-@media (max-width: $breakpoint-md) {
+@media (max-width: 900px) {
   .product-card {
     border-width: 3px;
     max-width: 320px;
@@ -103,29 +108,68 @@
     mat-card-content {
       padding: 8px 12px 8px 8px;
       .price {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
       .title {
-        font-size: 0.9rem;
+        font-size: 0.82rem;
       }
       .location {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+      }
+      .condition-badge {
+        font-size: 0.62rem;
+        padding: 1.5px 6px;
       }
     }
   }
 }
 
-@media (max-width: $breakpoint-sm) {
+@media (max-width: 600px) {
   .product-card {
     max-width: 98vw;
     min-width: 120px;
     mat-card-content {
-      padding: 6px 6px 6px 6px;
+      padding: 6px 18px 6px 6px;
       .price {
-        font-size: 1rem;
+        font-size: 0.85rem;
       }
       .title {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
+        max-width: 90vw;
+      }
+      .location {
+        font-size: 0.7rem;
+      }
+      .condition-badge {
+        font-size: 0.55rem;
+        padding: 1px 4px;
+      }
+    }
+    .delete-btn {
+      top: 4px;
+      right: 4px;
+      mat-icon {
+        font-size: 18px;
+      }
+    }
+  }
+}
+@media (max-width: 400px) {
+  .product-card {
+    mat-card-content {
+      padding: 4px 15px 4px 2vw;
+      .title {
+        font-size: 0.68rem;
+      }
+      .price {
+        font-size: 0.7rem;
+      }
+      .location {
+        font-size: 0.6rem;
+      }
+      .condition-badge {
+        font-size: 0.48rem;
+        padding: 0.5px 3px;
       }
     }
   }

@@ -88,11 +88,11 @@ export class ListingService {
       form.append("mainImage", mainImageFile, mainImageFile.name);
     }
 
-    // 3) Imágenes auxiliares numeradas (hasta 4)
-    if (auxFiles && auxFiles.length) {
-      auxFiles.slice(0, 4).forEach((f, idx) => {
+    // 3) Imágenes auxiliares (hasta 4), todas bajo el mismo nombre 'images'
+    if (auxFiles?.length) {
+      auxFiles.slice(0, 4).forEach((f) => {
         if (f) {
-          form.append(`image${idx + 1}`, f, f.name);
+          form.append('images', f, f.name);
         }
       });
     }
