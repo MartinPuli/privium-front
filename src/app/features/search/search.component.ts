@@ -34,6 +34,7 @@ import { ListCategoriesComponent } from "src/app/shared/components/list-categori
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { filter, finalize, Subscription, firstValueFrom } from "rxjs";
 import { AuthService } from "src/app/shared/services/auth.service";
+import { FilterService } from "src/app/shared/services/filter.service";
 
 interface CategorySelection {
   idPath: string;
@@ -96,7 +97,8 @@ export class SearchComponent implements OnInit {
     public categorySrv: CategoryService,
     private countrySrv: CountryService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    private filterSrv: FilterService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -124,19 +126,22 @@ export class SearchComponent implements OnInit {
       request?: Partial<ListListingsRequestDto>;
     };
 
+    const base = { ...this.filterSrv.value };
+    let req: Partial<ListListingsRequestDto>;
+
     if (st.request) {
-      this.request = st.request;
+      req = { ...base, ...st.request };
     } else {
       const qp = this.route.snapshot.queryParamMap;
-      const req: Partial<ListListingsRequestDto> = {};
+      req = { ...base };
       const term = qp.get('searchTerm');
       if (term) req.searchTerm = term;
       const catIds = qp.getAll('categoryIds');
       if (catIds.length) req.categoryIds = catIds;
-      this.request = req;
     }
 
-    this.current = { ...this.request };
+    this.current = { ...req };
+    this.filterSrv.set(this.current);
     this.initCategorySlots();
     this.loadListings();
     window.scrollTo(0, 0); // opcional
@@ -171,6 +176,8 @@ export class SearchComponent implements OnInit {
 
   onClearFilters() {
     this.current = { page: 1, sortOrder: this.sortOrder };
+    this.filterSrv.clear();
+    this.initCategorySlots();
     this.loadListings();
     this.drawer?.close();
   }
@@ -211,6 +218,7 @@ export class SearchComponent implements OnInit {
   /** Carga datos y actualiza chips */
   private loadListings(): void {
     const pageSize = this.pageSize;
+    this.filterSrv.set(this.current);
 
     this.isLoading = true;
     this.cdr.markForCheck(); // ← marca aquí
