@@ -5,7 +5,6 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  HostListener,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from "@angular/router";
@@ -355,13 +354,5 @@ export class SearchComponent implements OnInit {
     this.current.categoryIds = this.categoriesSlots
       .filter((c) => c.idPath)
       .map((c) => c.idPath);
-  }
-
-  @HostListener("window:keydown.enter", ["$event"])
-  onEnterKey(event: KeyboardEvent) {
-    // Evita que cualquier formulario de dentro haga un submit nativo
-    event.preventDefault();
-    // Llama al mismo apply que si viniera del drawer
-    this.onApplyFilters(this.current);
   }
 }

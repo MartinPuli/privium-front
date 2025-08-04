@@ -194,31 +194,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onSearch(): void {
+    const term = this.searchQuery.trim();
     const params: any = {};
-    const saved = { ...this.filterSrv.value };
 
-    if (this.searchQuery.trim()) {
-      params.searchTerm = this.searchQuery.trim();
-      saved.searchTerm = params.searchTerm;
-    } else {
-      delete saved.searchTerm;
-    }
-    if (this.selectedCategoryId) {
-      params.categoryIds = [this.selectedCategoryId];
-      saved.categoryIds = [this.selectedCategoryId];
-    } else if (this.selectedCategoryLabel !== "Todas") {
-      const cat = this.categories.find(
-        (c) => c.name === this.selectedCategoryLabel
-      );
-      if (cat) {
-        params.categoryIds = [cat.id];
-        saved.categoryIds = [cat.id];
-      }
-    } else {
-      delete saved.categoryIds;
+    this.filterSrv.clear();
+    this.selectedCategoryLabel = "Todas";
+    this.selectedCategoryId = null;
+
+    if (term) {
+      params.searchTerm = term;
+      this.filterSrv.set({ searchTerm: term });
     }
 
-    this.filterSrv.set(saved);
     this.router.navigate(["/search"], { queryParams: params });
   }
 
