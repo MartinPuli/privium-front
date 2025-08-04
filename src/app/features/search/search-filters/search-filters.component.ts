@@ -83,6 +83,18 @@ export class SearchFiltersComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private countrySrv: CountryService) {}
 
+  private toInputDate(value?: string | null): string | null {
+    if (!value) return null;
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? null : d.toISOString().split("T")[0];
+  }
+
+  private toIsoDate(value?: string | null): string | undefined {
+    if (!value) return undefined;
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? undefined : d.toISOString();
+  }
+
   ngOnInit() {
     this.buildForm();
     this.loadCountries();
@@ -104,8 +116,8 @@ export class SearchFiltersComponent implements OnInit {
         [Validators.min(1), Validators.max(99999999)],
       ],
       maxDistanceKm: [this.initialFilters.maxDistanceKm ?? null],
-      createdFrom: [this.initialFilters.createdFrom ?? null],
-      createdTo: [this.initialFilters.createdTo ?? null],
+      createdFrom: [this.toInputDate(this.initialFilters.createdFrom)],
+      createdTo: [this.toInputDate(this.initialFilters.createdTo)],
       acceptsCash: [this.initialFilters.acceptsCash ?? false],
       acceptsCard: [this.initialFilters.acceptsCard ?? false],
       acceptsTransfer: [this.initialFilters.acceptsTransfer ?? false],
@@ -116,7 +128,11 @@ export class SearchFiltersComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['initialFilters'] && !changes['initialFilters'].firstChange) {
       // parcho TODOS los controles que queira actualizar
-      this.form.patchValue(this.initialFilters);
+      this.form.patchValue({
+        ...this.initialFilters,
+        createdFrom: this.toInputDate(this.initialFilters.createdFrom),
+        createdTo: this.toInputDate(this.initialFilters.createdTo),
+      });
     }
   }
 
@@ -149,6 +165,8 @@ export class SearchFiltersComponent implements OnInit {
         raw.maxDistanceKm != null ? Number(raw.maxDistanceKm) : undefined,
       minPrice: raw.minPrice != null ? Number(raw.minPrice) : undefined,
       maxPrice: raw.maxPrice != null ? Number(raw.maxPrice) : undefined,
+      createdFrom: this.toIsoDate(raw.createdFrom),
+      createdTo: this.toIsoDate(raw.createdTo),
     };
 
     this.apply.emit(dto);
