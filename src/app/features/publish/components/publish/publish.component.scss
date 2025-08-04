@@ -361,6 +361,13 @@ label.mdc-label {
   border-radius: 6px;
   border: 0;
   border: 0;
+
+  &:disabled {
+    background: #9e9e9e !important;
+    color: #ffffff80 !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 }
 
 .categories-container {
