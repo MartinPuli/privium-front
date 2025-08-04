@@ -238,7 +238,7 @@
             placeholder="0"
             prefixIcon="$"
             formControlName="price"
-            [hasError]="hasError('commercial', 'price')"
+            [hasError]="!!commercialForm.get('price')?.invalid"
             [errorMessage]="getError('commercial', 'price')"
           >
           </app-form-field>
@@ -281,7 +281,7 @@
             color="accent"
             class="publish-button"
             type="submit"
-            [disabled]="isLoading"
+            [disabled]="isLoading || !!commercialForm.get('price')?.invalid"
           >
             <ng-container *ngIf="!isLoading; else loading">
               Publicar
