@@ -8,7 +8,7 @@ import {
   HostListener,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RouterModule, Router } from "@angular/router";
+import { RouterModule, Router, NavigationEnd } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
@@ -35,7 +35,7 @@ import { SelectOption } from "../form-field/form-field.component";
 import { MatSelectModule } from "@angular/material/select";
 import { ListListingsRequestDto } from "../../models/listing.model";
 import { FilterService } from "../../services/filter.service";
-import { Subscription } from "rxjs";
+import { Subscription, filter } from "rxjs";
 
 @Component({
   selector: "app-header",
@@ -118,6 +118,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentUserCountryName = "";
 
   private filterSub?: Subscription;
+  private routerSub?: Subscription;
 
   constructor(
     public authService: AuthService,
@@ -144,14 +145,29 @@ export class HeaderComponent implements OnInit, OnDestroy {
       )!;
     }
 
+    if (this.router.url === "/home") {
+      this.filterSrv.clear();
+      this.resetHeaderFilters();
+    }
+
     this.loadFiltersFromService();
     this.filterSub = this.filterSrv.filters$.subscribe(() =>
       this.loadFiltersFromService()
     );
+
+    this.routerSub = this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe((e) => {
+        if (e.urlAfterRedirects === "/home") {
+          this.resetHeaderFilters();
+          this.filterSrv.clear();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.filterSub?.unsubscribe();
+    this.routerSub?.unsubscribe();
   }
 
   private loadFiltersFromService() {
@@ -188,6 +204,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     };
   }
 
+  private resetHeaderFilters() {
+    this.searchQuery = "";
+    this.selectedCategoryLabel = "Todas";
+    this.selectedCategoryId = null;
+  }
+
   /** Cada vez que abras el menú, cargo filters guardados */
   onFilterMenuOpen() {
     this.loadFiltersFromService();
@@ -196,16 +218,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   onSearch(): void {
     const term = this.searchQuery.trim();
     const params: any = {};
+    const filters: Partial<ListListingsRequestDto> = {};
 
     this.filterSrv.clear();
-    this.selectedCategoryLabel = "Todas";
-    this.selectedCategoryId = null;
 
     if (term) {
       params.searchTerm = term;
-      this.filterSrv.set({ searchTerm: term });
+      filters.searchTerm = term;
     }
 
+    if (this.selectedCategoryId) {
+      params.categoryIds = this.selectedCategoryId;
+      filters.categoryIds = [this.selectedCategoryId];
+    }
+
+    this.filterSrv.set(filters);
     this.router.navigate(["/search"], { queryParams: params });
   }
 
