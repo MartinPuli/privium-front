@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { SEOService } from "../../../../shared/services/seo.service";
 import { ListingService } from "../../../../shared/services/listing.service";
 import { CategoryService } from "../../../../shared/services/category.service";
+import { FilterService } from "../../../../shared/services/filter.service";
 import { ListingResponseDto } from "../../../../shared/models/listing.model";
 import { Category } from "../../../../shared/models/category.model";
 import { HeaderComponent } from "src/app/shared/components/header/header.component";
@@ -52,10 +53,12 @@ export class HomeComponent implements OnInit {
   constructor(
     private seoService: SEOService,
     private listingSrv: ListingService,
-    private categorySrv: CategoryService
+    private categorySrv: CategoryService,
+    private filterSrv: FilterService
   ) {}
 
   ngOnInit() {
+    this.filterSrv.clear();
     this.setupSEO();
     this.loadData();
   }
