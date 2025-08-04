@@ -156,5 +156,6 @@ export class SearchFiltersComponent implements OnInit {
 
   reset() {
     this.form.reset();
+    this.clear.emit();
   }
 }

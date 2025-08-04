@@ -2,6 +2,7 @@ import {
   Component,
   Input,
   OnInit,
+  OnDestroy,
   ElementRef,
   ViewChild,
   HostListener,
@@ -33,7 +34,8 @@ import { ListCategoriesComponent } from "../list-categories/list-categories.comp
 import { SelectOption } from "../form-field/form-field.component";
 import { MatSelectModule } from "@angular/material/select";
 import { ListListingsRequestDto } from "../../models/listing.model";
-import { number } from "zod";
+import { FilterService } from "../../services/filter.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-header",
@@ -61,7 +63,7 @@ import { number } from "zod";
   templateUrl: "./header.component.html",
   styleUrls: ["./header.component.scss"],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   searchQuery = "";
   selectedCategoryLabel = "Todas";
   selectedCategoryId: string | null = null;
@@ -84,7 +86,12 @@ export class HeaderComponent implements OnInit {
     max: null as number | null,
     distance: null as number | null,
     countryId: null as number | null,
-    pay: {} as Record<string, boolean>,
+    pay: {
+      efectivo: false,
+      transferencia: false,
+      tarjeta: false,
+      trueque: false,
+    } as Record<string, boolean>,
     from: null as Date | null,
     to: null as Date | null,
   };
@@ -110,11 +117,14 @@ export class HeaderComponent implements OnInit {
   currentUser: User | null = null;
   currentUserCountryName = "";
 
+  private filterSub?: Subscription;
+
   constructor(
     public authService: AuthService,
     private categorySrv: CategoryService,
     public countrySrv: CountryService,
-    private router: Router
+    private router: Router,
+    private filterSrv: FilterService
   ) {}
 
   ngOnInit(): void {
@@ -133,27 +143,82 @@ export class HeaderComponent implements OnInit {
         this.currentUser!.countryId
       )!;
     }
+
+    this.loadFiltersFromService();
+    this.filterSub = this.filterSrv.filters$.subscribe(() =>
+      this.loadFiltersFromService()
+    );
   }
-  /** Cada vez que abras el menú, reinicio filters */
+
+  ngOnDestroy(): void {
+    this.filterSub?.unsubscribe();
+  }
+
+  private loadFiltersFromService() {
+    const saved = this.filterSrv.value;
+    this.searchQuery = saved.searchTerm ?? "";
+    if (saved.categoryIds && saved.categoryIds.length) {
+      const cat = this.categories.find((c) => c.id === saved.categoryIds![0]);
+      if (cat) {
+        this.selectedCategoryLabel = cat.name;
+        this.selectedCategoryId = cat.id;
+      }
+    }
+
+    this.filters = {
+      ...this.defaultFilters,
+      condition:
+        saved.conditionFilter === 2
+          ? "nuevo"
+          : saved.conditionFilter === 1
+          ? "usado"
+          : "",
+      min: saved.minPrice ?? null,
+      max: saved.maxPrice ?? null,
+      distance: saved.maxDistanceKm ?? null,
+      countryId: saved.countryId ?? null,
+      pay: {
+        efectivo: !!saved.acceptsCash,
+        transferencia: !!saved.acceptsTransfer,
+        tarjeta: !!saved.acceptsCard,
+        trueque: !!saved.acceptsBarter,
+      },
+      from: saved.createdFrom ? new Date(saved.createdFrom) : null,
+      to: saved.createdTo ? new Date(saved.createdTo) : null,
+    };
+  }
+
+  /** Cada vez que abras el menú, cargo filters guardados */
   onFilterMenuOpen() {
-    // clon profundo para no compartir referencias (especialmente filters.pay)
-    this.filters = JSON.parse(JSON.stringify(this.defaultFilters));
+    this.loadFiltersFromService();
   }
 
   onSearch(): void {
     const params: any = {};
+    const saved = { ...this.filterSrv.value };
+
     if (this.searchQuery.trim()) {
       params.searchTerm = this.searchQuery.trim();
+      saved.searchTerm = params.searchTerm;
+    } else {
+      delete saved.searchTerm;
     }
     if (this.selectedCategoryId) {
       params.categoryIds = [this.selectedCategoryId];
+      saved.categoryIds = [this.selectedCategoryId];
     } else if (this.selectedCategoryLabel !== "Todas") {
-      // fallback if only the label is set
       const cat = this.categories.find(
         (c) => c.name === this.selectedCategoryLabel
       );
-      if (cat) params.categoryIds = [cat.id];
+      if (cat) {
+        params.categoryIds = [cat.id];
+        saved.categoryIds = [cat.id];
+      }
+    } else {
+      delete saved.categoryIds;
     }
+
+    this.filterSrv.set(saved);
     this.router.navigate(["/search"], { queryParams: params });
   }
 
@@ -180,11 +245,16 @@ export class HeaderComponent implements OnInit {
   }
 
   applyFilters(): void {
-    // 1) Inicializa el DTO con página y orden
+    // 1) Inicializa el DTO con datos previos, página y orden
     const request: Partial<ListListingsRequestDto> & Record<string, any> = {
+      ...this.filterSrv.value,
       page: 1,
       sortOrder: this.sortOrder,
     };
+
+    // Asegura searchTerm y categoría actual
+    if (this.searchQuery.trim()) request.searchTerm = this.searchQuery.trim();
+    else delete request.searchTerm;
 
     if (this.selectedCategoryId) {
       request.categoryIds = [this.selectedCategoryId];
@@ -230,6 +300,7 @@ export class HeaderComponent implements OnInit {
     if (this.filters.to) request.createdTo = this.filters.to.toISOString();
 
     // 8) Navegar pasando el DTO en el navigation state
+    this.filterSrv.set(request);
     this.router.navigate(["/search"], { state: { request } });
   }
 
