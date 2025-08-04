@@ -85,8 +85,8 @@ export class ProductCardSmallComponent implements OnInit {
 
   async sendDeleteMessage(): Promise<void> {
     if (this.deleteForm.invalid) return;
+    this.isDeleting = true;
     try {
-      this.isDeleting = true;
       await firstValueFrom(
         this.adminSrv.deleteListing({
           listingId: this.product.id,
@@ -103,10 +103,10 @@ export class ProductCardSmallComponent implements OnInit {
         verticalPosition: 'bottom',
       });
 
+      this.deleteOpen = false;
       this.delete.emit(this.product.id);
     } finally {
       this.isDeleting = false;
-      this.deleteOpen = false;
     }
   }
 
