@@ -268,7 +268,6 @@
         <div class="publish-final">
           <button
             mat-stroked-button
-            color="accent"
             type="button"
             [disabled]="isLoading"
             (click)="previousStep()"
@@ -278,7 +277,6 @@
           </button>
           <button
             mat-raised-button
-            color="accent"
             class="publish-button"
             type="submit"
             [disabled]="isLoading || !!commercialForm.get('price')?.invalid"
