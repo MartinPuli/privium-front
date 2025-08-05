@@ -5,6 +5,7 @@ import {
   AbstractControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidatorFn,
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -50,6 +51,13 @@ import { RegistrationDataService } from "src/app/shared/services/registration-da
   styleUrls: ["./register.component.scss", "../../auth-styles.scss"],
 })
 export class RegisterComponent {
+  private notBlank: ValidatorFn = (control: AbstractControl) => {
+    const value = control.value as string;
+    return typeof value === "string" && value.trim().length === 0 && value.length > 0
+      ? { required: true }
+      : null;
+  };
+
   private passwordsMatch = (group: AbstractControl) => {
     const pass = group.get("password")?.value;
     const confirm = group.get("confirmPassword")?.value;
@@ -67,23 +75,39 @@ export class RegisterComponent {
     {
       name: [
         "",
-        [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+        [
+          Validators.required,
+          this.notBlank,
+          Validators.minLength(2),
+          Validators.maxLength(50),
+        ],
       ],
       lastname: [
         "",
-        [Validators.required, Validators.minLength(2), Validators.maxLength(50)],
+        [
+          Validators.required,
+          this.notBlank,
+          Validators.minLength(2),
+          Validators.maxLength(50),
+        ],
       ],
       dni: [
         "",
         [
           Validators.required,
+          this.notBlank,
           Validators.pattern(/^\d{7,9}$/),
           Validators.maxLength(9),
         ],
       ],
       email: [
         "",
-        [Validators.required, Validators.email, Validators.maxLength(100)],
+        [
+          Validators.required,
+          this.notBlank,
+          Validators.email,
+          Validators.maxLength(100),
+        ],
       ],
       phone: ["", [Validators.maxLength(20)]],
       countryId: [null, Validators.required],
@@ -91,12 +115,16 @@ export class RegisterComponent {
         "",
         [
           Validators.required,
+          this.notBlank,
           Validators.minLength(8),
           Validators.maxLength(50),
           Validators.pattern(this.passwordPattern),
         ],
       ],
-      confirmPassword: ["", [Validators.required, Validators.maxLength(50)]],
+      confirmPassword: [
+        "",
+        [Validators.required, this.notBlank, Validators.maxLength(50)],
+      ],
       acceptTerms: [false, Validators.requiredTrue],
     },
     { validators: this.passwordsMatch }

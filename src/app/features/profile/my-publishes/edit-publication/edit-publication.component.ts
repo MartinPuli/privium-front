@@ -70,6 +70,13 @@ export class EditPublicationComponent implements OnInit {
   leftForm!: FormGroup;
   rightForm!: FormGroup;
 
+  private notBlank: ValidatorFn = (control: AbstractControl) => {
+    const value = control.value as string;
+    return typeof value === "string" && value.trim().length === 0 && value.length > 0
+      ? { required: true }
+      : null;
+  };
+
   /* ---------- categorías ----------------------------------- */
   categories: { idPath: string; name: string }[] = [];
   showList: boolean[] = [];
@@ -159,6 +166,7 @@ export class EditPublicationComponent implements OnInit {
         this.listing.title,
         [
           Validators.required,
+          this.notBlank,
           Validators.minLength(3),
           Validators.maxLength(100),
         ],
@@ -173,6 +181,7 @@ export class EditPublicationComponent implements OnInit {
         this.listing.description,
         [
           Validators.required,
+          this.notBlank,
           Validators.minLength(10),
           Validators.maxLength(1000),
         ],

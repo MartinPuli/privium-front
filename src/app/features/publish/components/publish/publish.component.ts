@@ -13,6 +13,7 @@ import {
   Validators,
   ReactiveFormsModule,
   AbstractControl,
+  ValidatorFn,
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -79,6 +80,13 @@ export class PublishComponent implements OnInit {
   detailsForm!: FormGroup;
   commercialForm!: FormGroup;
 
+  private notBlank: ValidatorFn = (control: AbstractControl) => {
+    const value = control.value as string;
+    return typeof value === "string" && value.trim().length === 0 && value.length > 0
+      ? { required: true }
+      : null;
+  };
+
   categories: CategorySelection[] = [];
   showList: boolean[] = [];
 
@@ -109,12 +117,18 @@ export class PublishComponent implements OnInit {
     this.detailsForm = this.fb.group({
       title: [
         "",
-        [Validators.required, Validators.minLength(3), Validators.maxLength(100)],
+        [
+          Validators.required,
+          this.notBlank,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+        ],
       ],
       description: [
         "",
         [
           Validators.required,
+          this.notBlank,
           Validators.minLength(10),
           Validators.maxLength(1000),
         ],
