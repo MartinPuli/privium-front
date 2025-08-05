@@ -347,6 +347,7 @@ export class SearchComponent implements OnInit {
     }
 
     this.patchCategoriesToCurrent();
+    this.loadListings();
   }
 
   private patchCategoriesToCurrent() {
