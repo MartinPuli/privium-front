@@ -24,7 +24,7 @@
     <app-form-field
       type="money"
       label="Precio mínimo"
-      placeholder="0"
+      placeholder="999"
       formControlName="minPrice"
       [hasError]="
         (form.get('minPrice')!.invalid && form.get('minPrice')!.touched) ||
@@ -39,7 +39,7 @@
     <app-form-field
       type="money"
       label="Precio máximo"
-      placeholder="0"
+      placeholder="999"
       formControlName="maxPrice"
       [hasError]="
         (form.get('maxPrice')!.invalid && form.get('maxPrice')!.touched) ||
