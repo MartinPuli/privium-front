@@ -26,7 +26,7 @@ import { MatListModule } from "@angular/material/list";
 import { AuthService } from "../../services/auth.service";
 import { CategoryService } from "../../services/category.service";
 import { CountryService } from "../../services/country.service";
-import { DefaultImageDirective } from '../../directives/default-image.directive';
+import { DefaultImageDirective } from "../../directives/default-image.directive";
 import { User } from "../../models/user.model";
 import { Category } from "../../models/category.model";
 import { Country } from "../../models/country.model";
@@ -69,9 +69,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   selectedCategoryId: string | null = null;
   categories: Category[] = [];
   showCategories = false;
-  @ViewChild('catButton', { read: ElementRef })
+  @ViewChild("catButton", { read: ElementRef })
   catButtonRef!: ElementRef<HTMLElement>;
-  @ViewChild('searchInput', { read: ElementRef })
+  @ViewChild("searchInput", { read: ElementRef })
   searchInputRef!: ElementRef<HTMLInputElement>;
 
   /** Controla la visibilidad del menú en pantallas pequeñas */
@@ -152,11 +152,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.resetHeaderFilters();
     }
 
-    this.loadFiltersFromService();
-    this.filterSub = this.filterSrv.filters$.subscribe(() =>
-      this.loadFiltersFromService()
-    );
-
     this.routerSub = this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e) => {
@@ -172,70 +167,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.routerSub?.unsubscribe();
   }
 
-  private loadFiltersFromService() {
-    const saved = this.filterSrv.value;
-    this.searchQuery = saved.searchTerm ?? "";
-    if (saved.categoryIds && saved.categoryIds.length) {
-      const cat = this.categories.find((c) => c.id === saved.categoryIds![0]);
-      if (cat) {
-        this.selectedCategoryLabel = cat.name;
-        this.selectedCategoryId = cat.id;
-      }
-    }
-
-    this.filters = {
-      ...this.defaultFilters,
-      condition:
-        saved.conditionFilter === 2
-          ? "nuevo"
-          : saved.conditionFilter === 1
-          ? "usado"
-          : "",
-      min: saved.minPrice ?? null,
-      max: saved.maxPrice ?? null,
-      distance: saved.maxDistanceKm ?? null,
-      countryId: saved.countryId ?? null,
-      pay: {
-        efectivo: !!saved.acceptsCash,
-        transferencia: !!saved.acceptsTransfer,
-        tarjeta: !!saved.acceptsCard,
-        trueque: !!saved.acceptsBarter,
-      },
-      from: saved.createdFrom ? new Date(saved.createdFrom) : null,
-      to: saved.createdTo ? new Date(saved.createdTo) : null,
-    };
-  }
-
   private resetHeaderFilters() {
     this.searchQuery = "";
     this.selectedCategoryLabel = "Todas";
     this.selectedCategoryId = null;
-  }
-
-  /** Cada vez que abras el menú, cargo filters guardados */
-  onFilterMenuOpen() {
-    this.loadFiltersFromService();
-  }
-
-  onSearch(): void {
-    const term = this.searchQuery.trim();
-    const params: any = {};
-    const filters: Partial<ListListingsRequestDto> = {};
-
-    this.filterSrv.clear();
-
-    if (term) {
-      params.searchTerm = term;
-      filters.searchTerm = term;
-    }
-
-    if (this.selectedCategoryId) {
-      params.categoryIds = this.selectedCategoryId;
-      filters.categoryIds = [this.selectedCategoryId];
-    }
-
-    this.filterSrv.set(filters);
-    this.router.navigate(["/search"], { queryParams: params });
+    this.filters = { ...this.defaultFilters };
   }
 
   onCategoryButtonClick(): void {
@@ -248,7 +184,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.showCategories = false;
   }
 
-  @HostListener('document:click', ['$event'])
+  @HostListener("document:click", ["$event"])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as Node;
     if (
@@ -260,83 +196,67 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  @HostListener('window:keydown.enter', ['$event'])
-  onEnter(event: KeyboardEvent): void {
-    if (!this.router.url.startsWith('/search')) {
-      return;
-    }
-
-    if (
-      this.searchInputRef &&
-      document.activeElement === this.searchInputRef.nativeElement
-    ) {
-      return;
-    }
-
-    const target = event.target as HTMLElement | null;
-    if (target?.closest('.filters-form') || target?.tagName === 'BUTTON') {
-      return;
-    }
-
-    this.applyFilters();
-  }
-
   applyFilters(): void {
-    const request: Partial<ListListingsRequestDto> & Record<string, any> = {
+    /* 0) Partimos de cero: solo cabecera ---------------------------- */
+    const request: Partial<ListListingsRequestDto> = {
       page: 1,
       sortOrder: this.sortOrder,
     };
 
-    // Asegura searchTerm y categoría actual
-    if (this.searchQuery.trim()) request.searchTerm = this.searchQuery.trim();
-    else delete request.searchTerm;
+    /* 1) Término de búsqueda */
+    const term = this.searchQuery.trim();
+    if (term) request.searchTerm = term;
 
-    if (this.selectedCategoryId) {
+    /* 2) Categoría elegida en el selector de cabecera */
+    console.log(this.selectedCategoryId);
+    if (this.selectedCategoryId)
       request.categoryIds = [this.selectedCategoryId];
-    }
 
-    // 2) Condición
+    /* 3) Condición (nuevo / usado) */
     if (this.filters.condition === "nuevo") request.conditionFilter = 2;
     else if (this.filters.condition === "usado") request.conditionFilter = 1;
 
-    // 3) Precio
+    /* 4) Precio */
     if (this.filters.min != null) request.minPrice = this.filters.min;
     if (this.filters.max != null) request.maxPrice = this.filters.max;
 
-    // 4) Distancia
+    /* 5) Distancia */
     if (this.filters.distance != null)
       request.maxDistanceKm = this.filters.distance;
 
-    // 5) País/Barrio
+    /* 6) País / barrio */
     if (this.filters.countryId != null)
       request.countryId = this.filters.countryId;
 
-    // 6) Medios de pago
-    type PayKey = keyof typeof this.filters.pay;
-    const paymentKeyMap: Record<PayKey, keyof ListListingsRequestDto> = {
+    /* 7) Medios de pago */
+    const paymentKeyMap: Record<string, keyof ListListingsRequestDto> = {
       efectivo: "acceptsCash",
       transferencia: "acceptsTransfer",
       tarjeta: "acceptsCard",
       trueque: "acceptsBarter",
     };
+    Object.entries(this.filters.pay).forEach(([method, enabled]) => {
+      if (enabled) request[paymentKeyMap[method]] = true as any;
+    });
 
-    (Object.entries(this.filters.pay) as [PayKey, boolean][]).forEach(
-      ([method, enabled]) => {
-        if (enabled) {
-          const prop = paymentKeyMap[method];
-          (request as any)[prop] = true;
-        }
-      }
-    );
-
-    // 7) Fechas
+    /* 8) Fechas */
     if (this.filters.from)
       request.createdFrom = this.filters.from.toISOString();
     if (this.filters.to) request.createdTo = this.filters.to.toISOString();
 
+    /* 9) Guardar como nuevos filtros (borramos los anteriores) ------ */
     this.filterSrv.clear();
     this.filterSrv.set(request);
-    this.router.navigate(["/search"], { state: { request } });
+
+    /* 10) Navegar / refrescar --------------------------------------- */
+    if (this.router.url.startsWith("/search")) {
+      this.router.navigate([], { state: { request } });
+    } else {
+      this.router.navigate(["/search"], { state: { request } });
+    }
+
+    /* 11) Limpiar controles visibles del header --------------------- */
+    this.resetHeaderFilters();
   }
 
   capitalize(s: string): string {

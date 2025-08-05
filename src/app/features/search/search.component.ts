@@ -5,9 +5,15 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  HostListener,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ActivatedRoute, NavigationEnd, Router, RouterModule } from "@angular/router";
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterModule,
+} from "@angular/router";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -73,21 +79,18 @@ export class SearchComponent implements OnInit {
   products: ListingResponseDto[] = [];
   page = 1;
   hasMore = false;
-  /**
-   * Cantidad máxima de elementos por página en la búsqueda
-   * Se fija en 100 para obtener hasta ese número de productos
-   */
-  readonly pageSize = 100;
 
   isLoading = false;
 
-  /** DTO activo con filtros paginación y orden */
+  /** Orden */
   sortOrder: "ASC" | "DESC" = "DESC";
 
   /** Datos auxiliares para chips */
   categoriesList: Category[] = [];
   countriesList: Country[] = [];
   selectedFilters: string[] = [];
+
+  usedCategoryIdsHistory: string[][] = []; // historial de búsquedas
 
   constructor(
     private router: Router,
@@ -105,12 +108,12 @@ export class SearchComponent implements OnInit {
       await firstValueFrom(this.categorySrv.loadCategories());
     }
     this.categoriesList = this.categorySrv.getCached();
+    this.countriesList = await firstValueFrom(this.countrySrv.loadCountries());
 
-    // 1) Lectura inicial + carga
+    // 1) primera carga
     this.readStateAndLoad();
 
-    // 2) Cada vez que haya un NavigationEnd (incluso a la misma URL),
-    //    volvemos a leer el state y recargamos
+    // 2) recargar ante NavigationEnd (incluido mismo path)
     this.navSub = this.router.events
       .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe(() => this.readStateAndLoad());
@@ -120,6 +123,9 @@ export class SearchComponent implements OnInit {
     this.navSub.unsubscribe();
   }
 
+  /** ----------------------------------------
+   *  Estado inicial: query-params o state
+   * --------------------------------------- */
   private readStateAndLoad() {
     const st = window.history.state as {
       request?: Partial<ListListingsRequestDto>;
@@ -133,9 +139,9 @@ export class SearchComponent implements OnInit {
     } else {
       const qp = this.route.snapshot.queryParamMap;
       req = { ...base };
-      const term = qp.get('searchTerm');
+      const term = qp.get("searchTerm");
       if (term) req.searchTerm = term;
-      const catIds = qp.getAll('categoryIds');
+      const catIds = qp.getAll("categoryIds");
       if (catIds.length) req.categoryIds = catIds;
     }
 
@@ -143,15 +149,11 @@ export class SearchComponent implements OnInit {
     this.filterSrv.set(this.current);
     this.initCategorySlots();
     this.loadListings();
-    window.scrollTo(0, 0); // opcional
+    window.scrollTo(0, 0);
   }
 
-  /** Aplico filtros desde el drawer */
+  /* ======== filtros desde el drawer ======== */
   onApplyFilters(dto: Partial<ListListingsRequestDto>) {
-    // 1) sincroniza categorías slots → current.categoryIds
-    this.patchCategoriesToCurrent();
-
-    // 2) construye el nuevo DTO
     this.current = {
       ...this.current,
       ...dto,
@@ -160,7 +162,7 @@ export class SearchComponent implements OnInit {
       sortOrder: this.sortOrder,
     };
 
-    // 3) si filtro distancia, inyecta centerCountryId
+    // centerCountryId ▶ solo si hay filtro de distancia
     if (this.current.maxDistanceKm != null) {
       this.current.centerCountryId =
         this.authService.getCurrentCountryId() || undefined;
@@ -168,7 +170,6 @@ export class SearchComponent implements OnInit {
       delete this.current.centerCountryId;
     }
 
-    // 4) dispara búsqueda y cierra drawer
     this.loadListings();
     this.drawer?.close();
   }
@@ -184,21 +185,31 @@ export class SearchComponent implements OnInit {
     this.drawer?.open();
   }
 
+  /* ========== orden ========== */
   setSort(order: "ASC" | "DESC") {
     if (this.sortOrder === order) return;
     this.sortOrder = order;
     this.current.sortOrder = order;
-    this.loadListings();
+    this.sortProductsInMemory(order);
   }
 
-  /** Cambio de orden */
   onSortChange(order: "ASC" | "DESC") {
     this.sortOrder = order;
     this.current.sortOrder = order;
-    this.loadListings();
+    this.sortProductsInMemory(order);
   }
 
-  /** Paginación */
+  private sortProductsInMemory(order: "ASC" | "DESC"): void {
+    if (!this.products.length) return;
+    this.products.sort((a, b) =>
+      order === "ASC"
+        ? (a.price || 0) - (b.price || 0)
+        : (b.price || 0) - (a.price || 0)
+    );
+    this.cdr.markForCheck();
+  }
+
+  /* ========== paginación ========== */
   async next() {
     if (!this.hasMore) return;
     this.current.page = (this.current.page ?? 1) + 1;
@@ -213,38 +224,42 @@ export class SearchComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  /** Carga datos y actualiza chips */
+  /* ========== carga listings ========== */
   private loadListings(): void {
-    const pageSize = this.pageSize;
-    this.filterSrv.set(this.current);
+    // Sincronizar categorías justo antes de llamar al backend
+    this.patchCategoriesToCurrent(false);
+
+    // guardar historial de categorías
+    if (this.current.categoryIds?.length) {
+      this.usedCategoryIdsHistory.push([...this.current.categoryIds]);
+    }
 
     this.isLoading = true;
-    this.cdr.markForCheck(); // ← marca aquí
+    this.cdr.markForCheck();
 
     this.listingSrv
-      .listListings({ ...this.current, pageSize })
+      .listListings({ ...this.current, pageSize: 100 })
       .pipe(
         finalize(() => {
           this.isLoading = false;
-          this.cdr.markForCheck(); // ← y aquí
+          this.cdr.markForCheck();
         })
       )
       .subscribe({
         next: (resp) => {
           this.products = resp.data!;
-          this.hasMore = resp.data!.length === pageSize;
+          this.hasMore = resp.data!.length === 100;
           this.page = this.current.page ?? 1;
           this.updateSelectedFilters();
-          this.cdr.markForCheck(); // ← y también aquí
+          this.cdr.markForCheck();
         },
         error: () => {
-          // …
           this.cdr.markForCheck();
         },
       });
   }
 
-  /** Genera el array de etiquetas de filtro */
+  /* ========== chips de filtros ========== */
   private updateSelectedFilters() {
     const f = this.current;
     const chips: string[] = [];
@@ -254,17 +269,14 @@ export class SearchComponent implements OnInit {
       const c = this.categoriesList.find((x) => x.id === id);
       if (c) chips.push(c.name);
     });
-    if (f.conditionFilter) {
+    if (f.conditionFilter)
       chips.push(f.conditionFilter === 2 ? "Nuevo" : "Usado");
-    }
     if (f.minPrice != null || f.maxPrice != null) {
       const min = f.minPrice != null ? `$${f.minPrice}` : "";
       const max = f.maxPrice != null ? `$${f.maxPrice}` : "";
       chips.push(max ? `${min} a ${max}` : min);
     }
-    if (f.maxDistanceKm) {
-      chips.push(`Menos de ${f.maxDistanceKm}km`);
-    }
+    if (f.maxDistanceKm) chips.push(`Menos de ${f.maxDistanceKm}km`);
     if (f.type) chips.push(f.type);
     if (f.countryId) {
       const ct = this.countriesList.find((x) => x.id === f.countryId);
@@ -289,15 +301,15 @@ export class SearchComponent implements OnInit {
     return p.id;
   }
 
+  /* ========== categorías (slots + dropdowns) ========== */
   categoriesSlots: CategorySelection[] = [];
   showCategoryList: boolean[] = [];
 
   private async initCategorySlots() {
-    // Si viene prefiltrado, lo usamos
     const initial = this.current.categoryIds ?? [];
-    this.categoriesSlots = initial.map((idPath) => {
-      const c = this.categoriesList.find((x) => x.id === idPath);
-      return { idPath, name: c?.name ?? "" };
+    this.categoriesSlots = initial.map((id) => {
+      const c = this.categoriesList.find((x) => x.id === id);
+      return { idPath: id, name: c?.name ?? "" };
     });
     if (this.categoriesSlots.length < 10) {
       this.categoriesSlots.push({ idPath: "", name: "" });
@@ -312,19 +324,17 @@ export class SearchComponent implements OnInit {
   clearCategory(i: number) {
     this.categoriesSlots.splice(i, 1);
     this.showCategoryList.splice(i, 1);
-
     this.categoriesSlots = this.categoriesSlots.filter((c) => c.idPath);
+
     if (this.categoriesSlots.length < 10) {
       this.categoriesSlots.push({ idPath: "", name: "" });
       this.showCategoryList.push(false);
     }
-
     this.patchCategoriesToCurrent();
-    this.loadListings();
   }
 
   onCategorySelected(i: number, sel: CategorySelection) {
-    // evita duplicados
+    // evitar duplicados
     const dup = this.categoriesSlots.some(
       (c, idx) => idx !== i && c.idPath === sel.idPath
     );
@@ -349,9 +359,36 @@ export class SearchComponent implements OnInit {
     this.patchCategoriesToCurrent();
   }
 
-  private patchCategoriesToCurrent() {
-    this.current.categoryIds = this.categoriesSlots
-      .filter((c) => c.idPath)
+  /** Copia las categorías elegidas a `this.current` y guarda la cantidad en navSub */
+  private patchCategoriesToCurrent(pushToStore = true): void {
+    const ids = this.categoriesSlots
+      .filter((c) => !!c.idPath)
       .map((c) => c.idPath);
+
+    this.current.categoryIds = ids.length ? ids : undefined;
+
+    /* ▶ guardar en el servicio de filtros */
+    if (pushToStore) {
+      this.filterSrv.setCategoryIds(this.current.categoryIds);
+    }
+
+    this.updateSelectedFilters();
+    this.cdr.markForCheck();
+  }
+
+  @HostListener("window:keydown.enter", ["$event"])
+  onEnter(event: KeyboardEvent): void {
+    /* 1) Ignorar si el usuario está escribiendo en un input o textarea */
+    const target = event.target as HTMLElement | null;
+    if (
+      target &&
+      (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
+    ) {
+      return;
+    }
+
+    /* 2) Refrescar la búsqueda con los filtros que ya están cargados */
+    this.current.page = 1; // siempre desde la primera página
+    this.loadListings(); // ya sincroniza categorías, etc.
   }
 }

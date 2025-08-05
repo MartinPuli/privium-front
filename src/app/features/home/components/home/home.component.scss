@@ -59,6 +59,10 @@
   }
 }
 
+::ng-deep .mdc-card__media {
+  font-size: 1rem;
+}
+
 app-product-card-small {
   width: 90%;
 }
@@ -98,7 +102,6 @@ app-product-card-small {
   }
 
   @media (max-width: 600px) {
-
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 2.3rem !important;
   }

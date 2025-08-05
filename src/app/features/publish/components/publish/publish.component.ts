@@ -159,6 +159,7 @@ export class PublishComponent implements OnInit {
         c.errors!["maxlength"].requiredLength
       } caracteres`;
     if (c.hasError("min")) return "Debe ser mayor que cero";
+    if (c.hasError("max")) return "El precio debe ser menor o igual a $99.999.999";
     if (c.hasError("pattern")) return "Formato inválido";
     return "";
   }

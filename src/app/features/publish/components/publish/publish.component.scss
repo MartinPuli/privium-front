@@ -1,277 +1,189 @@
 @import "../../../../../shared/styles/variables";
 
+/* ───────────────────── Base layout ───────────────────── */
 .publish-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: $background;
+  background: $background;
 }
 
 .publish-main {
   flex: 1;
   display: flex;
+  flex-direction: column;
   width: 70%;
   margin: 80px auto;
-  flex-direction: column;
-  min-height: 58vh;
-  justify-content: center;
   gap: 60px;
+  min-height: 58vh;
 
   @media (max-width: $breakpoint-lg) {
     width: 80%;
   }
-
   @media (max-width: $breakpoint-md) {
     width: 90%;
     margin: 60px auto;
     gap: 40px;
   }
-
   @media (max-width: $breakpoint-sm) {
     width: 99vw;
     margin: 20px auto;
     gap: 16px;
-    font-size: 0.97rem;
-    .step-header .step-title {
-      font-size: 1.1rem;
+    font-size: .97rem;
+
+    .step-header {
+      .step-title { font-size: 1.1rem; }
+      .step-indicator { font-size: 1rem; }
     }
-    .step-header .step-indicator {
-      font-size: 1rem;
-    }
-    input, textarea, select {
-      font-size: 0.95rem;
-      padding: 8px 6px;
-    }
-    button, .mat-raised-button {
-      font-size: 0.95rem;
-      min-width: 90px;
-      padding: 8px 8px;
-      height: 32px;
-    }
+
+    input, textarea, select { font-size: .95rem; padding: 8px 6px; }
+    button, .mat-raised-button { font-size: .95rem; min-width: 90px; padding: 8px; height: 32px; }
   }
 }
 
+/* ───────────────────── Step header ───────────────────── */
 .step-header {
   margin-bottom: 3rem;
 
   .step-indicator {
     display: block;
+    margin-bottom: 1.2rem;
     font-size: 1.9rem;
     color: $text-light;
-    margin-bottom: 1.2rem;
   }
   .step-title {
+    margin: 0;
     font-size: 2.3rem;
     font-weight: 750;
     color: $primary-navy;
-    margin: 0;
   }
 
   @media (max-width: $breakpoint-md) {
-    .step-indicator {
-      font-size: 1.4rem;
-    }
-
-    .step-title {
-      font-size: 1.8rem;
-    }
+    .step-indicator { font-size: 1.4rem; }
+    .step-title { font-size: 1.8rem; }
   }
-
   @media (max-width: $breakpoint-sm) {
-    .step-indicator {
-      font-size: 1.2rem;
-    }
-
-    .step-title {
-      font-size: 1.5rem;
-    }
+    .step-indicator { font-size: 1.2rem; }
+    .step-title { font-size: 1.5rem; }
   }
 }
 
-.publish-section {
-  width: 100%;
-  margin: 0 auto;
-}
+/* ───────────────────── Utilities / helpers ───────────────────── */
+.w-100 { width: 100%; }
+.price-input { max-width: 300px; }
 
-.price-input {
-  max-width: 300px;
-}
-
+/* ───────────────────── Payment grid ───────────────────── */
 .payment-grid {
   display: grid;
   width: 35%;
-
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 
-  @media (max-width: $breakpoint-md) {
-    width: 100%;
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: $breakpoint-md) { width: 100%; }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
 
   p {
+    margin: 0;
     font-size: 1rem !important;
-    color: $primary-navy !important;
-
     font-weight: 600;
-    margin-bottom: 0px;
+    color: $primary-navy !important;
   }
 }
 
-label.mdc-label {
-  font-size: 1rem !important;
-  color: $primary-navy !important;
-}
+label.mdc-label { font-size: 1rem !important; color: $primary-navy !important; }
 
+/* ───────────────────── Publish final (buttons) ───────────────────── */
 .publish-final {
   display: flex;
   justify-content: flex-end;
-  margin: 2rem 0;
   gap: 1rem;
+  margin: 2rem 0;
 
   .cancel-button {
-    font-size: 1.2rem;
-    color: $primary-navy !important;
-    font-weight: 500;
     width: 150px;
     background: transparent;
-    border: 0px;
+    border: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: $primary-navy !important;
   }
 
   @media (max-width: $breakpoint-md) {
     flex-direction: column;
     align-items: stretch;
-
-    button {
-      width: 100%;
-    }
+    button { width: 100%; }
   }
 }
 
-/* utilidades */
-.w-100 {
-  width: 100%;
-}
-
+/* ───────────────────── Photos upload ───────────────────── */
 .photos-section {
   display: flex;
   flex-direction: column;
-  background-color: #1520471b;
   gap: 1rem;
+  background: #1520471b;
 
-  &.has-images {
-    background-color: transparent;
-  }
+  &.has-images { background: transparent; }
 }
 
 .photo-upload-area {
-  border: 2px dashed $primary-navy;
-  border-radius: 8px;
-  min-height: 150px;
-  text-align: center;
+  display: flex;
   justify-content: center;
   align-items: center;
-  display: flex;
-  transition: border-color 0.3s ease;
+  border: 1px dashed $primary-navy;
+  border-radius: 8px;
+  min-height: 150px;
+  transition: border-color .3s ease;
 
-  @media (max-width: $breakpoint-md) {
-    min-height: 120px;
-  }
+  @media (max-width: $breakpoint-md) { min-height: 120px; }
 
-  &:hover {
-    border-color: $primary-navy;
-  }
+  &:hover { border-color: $primary-navy; }
+  &.has-images { border-style: solid; border-color: green; }
 
-  &.has-images {
-    border-style: solid;
-    border-color: green;
-  }
-
-  .file-input {
-    display: none;
-  }
+  .file-input { display: none; }
 }
 
 .upload-prompt {
-  display: flex;
+  @extend .photo-upload-area;
   flex-direction: column;
-  align-items: center;
-  min-height: 150px;
-  width: 100%;
-  justify-content: center;
-  gap: 0.5rem;
   cursor: pointer;
+  gap: .5rem;
+  width: 100%;
 
   .upload-header {
     display: flex;
-    flex-direction: row;
     align-items: center;
     gap: 1rem;
     height: 30px;
   }
-
   mat-icon {
-    font-size: 30px;
-    width: 30px;
-    height: 30px;
-    color: $primary-navy;
+    width: 30px; height: 30px; font-size: 30px; color: $primary-navy;
   }
-
   p {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 600;
     color: $primary-navy;
   }
-
-  small {
-    font-size: 0.9rem;
-    color: $text-light;
-  }
+  small { font-size: .9rem; color: $text-light; }
 
   @media (max-width: $breakpoint-md) {
-    mat-icon {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-    }
-
-    p {
-      font-size: 1rem;
-    }
-
-    small {
-      font-size: 0.8rem;
-    }
+    mat-icon { width: 24px; height: 24px; font-size: 24px; }
+    p { font-size: 1rem; }
+    small { font-size: .8rem; }
   }
 }
 
+/* ───────────────────── Previews grid ───────────────────── */
 .image-preview-grid {
-  padding: 15px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* siempre 5 columnas iguales */
+  padding: 15px;
   gap: 3rem;
+  grid-template-columns: repeat(5, 1fr);
 
-  @media (max-width: $breakpoint-xl) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @media (max-width: $breakpoint-lg) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: $breakpoint-md) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-  }
-
-  @media (max-width: $breakpoint-sm) {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
+  @media (max-width: $breakpoint-xl) { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: $breakpoint-lg) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: $breakpoint-md) { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  @media (max-width: $breakpoint-sm) { grid-template-columns: 1fr; gap: 1rem; }
 }
 
 .image-preview-item {
@@ -285,110 +197,77 @@ label.mdc-label {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    box-sizing: border-box;
     padding: $spacing-sm;
+    box-sizing: border-box;
   }
 
   .remove-image {
     position: absolute;
-    top: 4px;
-    right: 4px;
+    top: 4px; right: 4px;
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px;
+    border-radius: 50%;
     background: rgba(255, 0, 0, 0.8);
     color: #fff;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    mat-icon {
-      font-size: 18px;
-    }
+    mat-icon { font-size: 18px; }
   }
 }
 
 .add-more-images {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  align-items: center;
+  gap: .5rem;
+  min-height: 120px;
+  cursor: pointer;
   border: 2px dashed $primary-navy;
   border-radius: 8px;
   background: transparent;
-  cursor: pointer;
-  min-height: 120px;
 
-  @media (max-width: $breakpoint-md) {
-    min-height: 100px;
-  }
+  @media (max-width: $breakpoint-md) { min-height: 100px; }
+  &:hover { border-color: $primary-navy; color: $primary-navy; }
 
-  &:hover {
-    border-color: $primary-navy;
-    color: $primary-navy;
-  }
-
-  mat-icon {
-    font-size: 24px;
-  }
-
-  span {
-    font-size: 0.875rem;
-  }
+  mat-icon { font-size: 24px; }
+  span { font-size: .875rem; }
 }
 
-.categories-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.dropdown-wrapper {
-  position: absolute;
-  z-index: 10;
-  margin-top: 0.5rem;
-}
-
-.publish-button {
-  background: #4caf50 !important;
-  color: $white !important;
-  font-weight: 600;
-  font-size: 1.5rem;
-  letter-spacing: 0.5px;
-  padding: 0.5rem 2.5rem;
-  height: 45px;
-  border-radius: 6px;
-  border: 0;
-  border: 0;
-
-  &:disabled {
-    background: #9e9e9e !important;
-    color: #ffffff80 !important;
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-}
-
+/* ───────────────────── Categories dropdown ───────────────────── */
 .categories-container {
   display: flex;
   flex-wrap: wrap;
   gap: .5rem;
 }
 
-/* slot que contiene botón + panel */
-.cat-slot {
-  position: relative;   /* referencia para el desplegable */
-}
+.cat-slot { position: relative; }
 
-/* panel de categorías */
 .dropdown-wrapper {
   position: absolute;
+  top: calc(100% + 4px);
   left: 0;
-  top: calc(100% + 4px);  /* 4 px de separación */
   z-index: 20;
-
-  /* opcional: sombra y ancho fijo igual al panel original */
   width: 260px;
-  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  margin-top: .5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+}
+
+/* ───────────────────── Publish button ───────────────────── */
+.publish-button {
+  height: 45px;
+  padding: .5rem 2.5rem;
+  border: 0;
+  border-radius: 6px;
+  background: #4caf50 !important;
+  color: $white !important;
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: .5px;
+
+  &:disabled {
+    background: #9e9e9e !important;
+    color: #ffffff80 !important;
+    cursor: not-allowed;
+    opacity: .6;
+  }
 }

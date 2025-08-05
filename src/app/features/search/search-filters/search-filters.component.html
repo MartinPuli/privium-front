@@ -27,9 +27,14 @@
       placeholder="0"
       formControlName="minPrice"
       [hasError]="
-        form.get('minPrice')!.invalid && form.get('minPrice')!.touched
+        (form.get('minPrice')!.invalid && form.get('minPrice')!.touched) ||
+        form.get('minPrice')!.hasError('pattern')
       "
-      [errorMessage]="'Entre 1 y 99 999 999'"
+      [errorMessage]="
+        form.get('minPrice')!.hasError('pattern')
+          ? 'Debe ser un número'
+          : 'Entre 1 y 99 999 999'
+      "
     ></app-form-field>
     <app-form-field
       type="money"
@@ -37,9 +42,14 @@
       placeholder="0"
       formControlName="maxPrice"
       [hasError]="
-        form.get('maxPrice')!.invalid && form.get('maxPrice')!.touched
+        (form.get('maxPrice')!.invalid && form.get('maxPrice')!.touched) ||
+        form.get('maxPrice')!.hasError('pattern')
       "
-      [errorMessage]="'Entre 1 y 99 999 999'"
+      [errorMessage]="
+        form.get('maxPrice')!.hasError('pattern')
+          ? 'Debe ser un número'
+          : 'Entre 1 y 99 999 999'
+      "
     ></app-form-field>
   </div>
 

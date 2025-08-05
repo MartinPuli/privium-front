@@ -32,7 +32,7 @@
           placeholder="Buscar artículos"
           [(ngModel)]="searchQuery"
           #searchInput
-          (keyup.enter)="onSearch()"
+          (keyup.enter)="applyFilters()"
           aria-label="Buscar productos en Privium"
         />
       </mat-form-field>
@@ -137,42 +137,36 @@
     <div class="filter-links">
       <button
         mat-button
-        (menuOpened)="onFilterMenuOpen()"
         [matMenuTriggerFor]="condMenu"
       >
         Condición
       </button>
       <button
         mat-button
-        (menuOpened)="onFilterMenuOpen()"
         [matMenuTriggerFor]="priceMenu"
       >
         Precio
       </button>
       <button
         mat-button
-        (menuOpened)="onFilterMenuOpen()"
         [matMenuTriggerFor]="distMenu"
       >
         Distancia
       </button>
       <button
         mat-button
-        (menuOpened)="onFilterMenuOpen()"
         [matMenuTriggerFor]="hoodMenu"
       >
         Barrio
       </button>
       <button
         mat-button
-        (menuOpened)="onFilterMenuOpen()"
         [matMenuTriggerFor]="payMenu"
       >
         Medio de pago
       </button>
       <button
         mat-button
-        (menuOpened)="onFilterMenuOpen()"
         [matMenuTriggerFor]="dateMenu"
       >
         Fecha de publicación

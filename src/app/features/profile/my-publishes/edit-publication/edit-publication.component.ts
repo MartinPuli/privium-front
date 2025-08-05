@@ -78,39 +78,40 @@ export class EditPublicationComponent implements OnInit {
   @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
   selectedImages: { file: File; preview: string }[] = [];
   readonly maxImages = 5;
-  readonly maxSize   = 5 * 1024 * 1024;   // 5 MB
-  readonly minImagesReq = 1;              // mínimo requerido
+  readonly maxSize = 5 * 1024 * 1024; // 5 MB
+  readonly minImagesReq = 1; // mínimo requerido
 
   /* mensaje de error para mostrar debajo de las fotos */
   imageError: string | null = null;
 
   /** cuántas fotos reales hay */
   get filledImages(): number {
-    return this.selectedImages.filter(img => !!img.preview).length;
+    return this.selectedImages.filter((img) => !!img.preview).length;
   }
   /** índice portada */
   get mainIndex(): number {
-    return this.selectedImages.findIndex(img => !!img.preview);
+    return this.selectedImages.findIndex((img) => !!img.preview);
   }
 
   /* ---------- botones del modal ---------------------------- */
   get modalButtons(): ModalButton[] {
     return [
       {
-        label   : "Cancelar",
-        type    : "secondary",
-        action  : () => this.closed.emit(),
+        label: "Cancelar",
+        type: "secondary",
+        action: () => this.closed.emit(),
         disabled: this.saving,
       },
       {
-        label   : "Modificar",
-        type    : "primary",
-        action  : () => this.onSubmit(),
-        disabled: this.saving ||
-                  (this.side === "left"
-                    ? this.leftForm.invalid
-                    : this.rightForm.invalid),
-        loading : this.saving,
+        label: "Modificar",
+        type: "primary",
+        action: () => this.onSubmit(),
+        disabled:
+          this.saving ||
+          (this.side === "left"
+            ? this.leftForm.invalid
+            : this.rightForm.invalid),
+        loading: this.saving,
       },
     ];
   }
@@ -122,8 +123,9 @@ export class EditPublicationComponent implements OnInit {
     /* ▸ Imágenes iniciales (portada + auxiliares) */
     this.selectedImages = [
       { file: new File([], ""), preview: this.listing.mainImage },
-      ...this.fullInfo.auxiliaryImages.map(ai => ({
-        file: new File([], ""), preview: ai.imgUrl,
+      ...this.fullInfo.auxiliaryImages.map((ai) => ({
+        file: new File([], ""),
+        preview: ai.imgUrl,
       })),
     ].slice(0, this.maxImages);
 
@@ -132,20 +134,22 @@ export class EditPublicationComponent implements OnInit {
     }
 
     /* ▸ Categorías */
-    this.categories = this.fullInfo.categories.map(c => ({
+    this.categories = this.fullInfo.categories.map((c) => ({
       idPath: c.categoryId,
-      name  : c.description,
+      name: c.description,
     }));
-    if (this.categories.length < 10 &&
-        (this.categories.length === 0 || this.categories.at(-1)!.idPath !== "")) {
+    if (
+      this.categories.length < 10 &&
+      (this.categories.length === 0 || this.categories.at(-1)!.idPath !== "")
+    ) {
       this.categories.push({ idPath: "", name: "" });
     }
     this.showList = this.categories.map(() => false);
 
     /* ▸ Validador “mínimo N imágenes” */
     const minImages: ValidatorFn = (c: AbstractControl) =>
-      (c.value as { preview: string }[])
-        .filter(i => !!i.preview).length >= this.minImagesReq
+      (c.value as { preview: string }[]).filter((i) => !!i.preview).length >=
+      this.minImagesReq
         ? null
         : { tooFew: true };
 
@@ -153,12 +157,13 @@ export class EditPublicationComponent implements OnInit {
     this.leftForm = this.fb.group({
       title: [
         this.listing.title,
-        [Validators.required, Validators.minLength(3), Validators.maxLength(100)],
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+        ],
       ],
-      price: [
-        this.listing.price,
-        [Validators.required, Validators.min(1)],
-      ],
+      price: [this.listing.price, [Validators.required, Validators.min(1)]],
       condition: [this.listing.condition, Validators.required],
       images: [this.selectedImages, minImages],
     });
@@ -166,7 +171,11 @@ export class EditPublicationComponent implements OnInit {
     this.rightForm = this.fb.group({
       description: [
         this.listing.description,
-        [Validators.required, Validators.minLength(10), Validators.maxLength(1000)],
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(1000),
+        ],
       ],
       categories: [[], Validators.minLength(1)],
       paysCash: [this.listing.acceptsCash],
@@ -175,9 +184,9 @@ export class EditPublicationComponent implements OnInit {
       paysBarter: [this.listing.acceptsBarter],
     });
 
-    this.rightForm.get("categories")!.setValue(
-      this.categories.filter(c => c.idPath).map(c => c.idPath)
-    );
+    this.rightForm
+      .get("categories")!
+      .setValue(this.categories.filter((c) => c.idPath).map((c) => c.idPath));
 
     /* error inicial si aplica */
     if (this.filledImages < this.minImagesReq) {
@@ -203,7 +212,7 @@ export class EditPublicationComponent implements OnInit {
     const files = Array.from(input.files ?? []).slice(0, remaining);
     this.clearImageError();
 
-    files.forEach(file => {
+    files.forEach((file) => {
       if (this.filledImages >= this.maxImages) return;
 
       /* ▸ peso */
@@ -214,18 +223,21 @@ export class EditPublicationComponent implements OnInit {
 
       /* ▸ duplicado: comparar contra todas las previews existentes */
       const reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         const preview = e.target!.result as string;
-        const dup = this.selectedImages.some(im => im.preview === preview);
+        const dup = this.selectedImages.some((im) => im.preview === preview);
         if (dup) {
-          this.setImageError(`La imagen ${file.name} ya fue cargada en esta modificación`);
+          this.setImageError(
+            `La imagen ${file.name} ya fue cargada en esta modificación`
+          );
           return;
         }
 
-        const slot = this.selectedImages.findIndex(im => !im.preview);
-        const img  = { file, preview };
-        slot === -1 ? this.selectedImages.push(img)
-                    : this.selectedImages[slot] = img;
+        const slot = this.selectedImages.findIndex((im) => !im.preview);
+        const img = { file, preview };
+        slot === -1
+          ? this.selectedImages.push(img)
+          : (this.selectedImages[slot] = img);
 
         this.leftForm.get("images")!.updateValueAndValidity();
       };
@@ -255,10 +267,14 @@ export class EditPublicationComponent implements OnInit {
       this.selectedImages.push({ file: new File([], ""), preview: "" });
     }
     if (!this.selectedImages[0].preview) {
-      const next = this.selectedImages.findIndex((im, idx) => idx > 0 && im.preview);
+      const next = this.selectedImages.findIndex(
+        (im, idx) => idx > 0 && im.preview
+      );
       if (next > 0) {
-        [this.selectedImages[0], this.selectedImages[next]] =
-          [this.selectedImages[next], this.selectedImages[0]];
+        [this.selectedImages[0], this.selectedImages[next]] = [
+          this.selectedImages[next],
+          this.selectedImages[0],
+        ];
       }
     }
   }
@@ -266,26 +282,34 @@ export class EditPublicationComponent implements OnInit {
   /* =========================================================
      CATEGORÍAS (métodos sin cambios)
   ==========================================================*/
-  toggleList(i: number) { this.showList[i] = !this.showList[i]; }
+  toggleList(i: number) {
+    this.showList[i] = !this.showList[i];
+  }
   clearCat(i: number) {
     this.categories.splice(i, 1);
     this.showList.splice(i, 1);
-    const reales = this.categories.filter(c => c.idPath);
+    const reales = this.categories.filter((c) => c.idPath);
     this.categories = [...reales, { idPath: "", name: "" }];
-    this.showList  = this.categories.map(() => false);
+    this.showList = this.categories.map(() => false);
     this.patchCats();
   }
   onCategorySelected(i: number, sel: { idPath: string; name: string }) {
-    const dup = this.categories.some((c, idx) => idx !== i && c.idPath === sel.idPath);
+    const dup = this.categories.some(
+      (c, idx) => idx !== i && c.idPath === sel.idPath
+    );
     if (dup) {
       this.categories[i] = { idPath: "", name: "" };
-      this.showList[i]   = false;
+      this.showList[i] = false;
       return;
     }
     this.categories[i] = sel;
-    this.showList[i]   = false;
+    this.showList[i] = false;
 
-    if (i === this.categories.length - 1 && this.categories.length < 10 && sel.idPath) {
+    if (
+      i === this.categories.length - 1 &&
+      this.categories.length < 10 &&
+      sel.idPath
+    ) {
       this.categories.push({ idPath: "", name: "" });
       this.showList.push(false);
     }
@@ -294,7 +318,7 @@ export class EditPublicationComponent implements OnInit {
   private patchCats() {
     this.rightForm
       .get("categories")!
-      .setValue(this.categories.filter(c => c.idPath).map(c => c.idPath));
+      .setValue(this.categories.filter((c) => c.idPath).map((c) => c.idPath));
   }
 
   /* =========================================================
@@ -305,32 +329,38 @@ export class EditPublicationComponent implements OnInit {
 
     const mainPreview = this.selectedImages[0].preview || null;
     const mainImageStr =
-      mainPreview && mainPreview !== this.listing.mainImage ? mainPreview : null;
+      mainPreview && mainPreview !== this.listing.mainImage
+        ? mainPreview
+        : null;
 
     const auxCurrent = this.selectedImages
       .slice(1, this.maxImages)
-      .map(im => im.preview || null);
+      .map((im) => im.preview || null);
 
-    const origAux = this.fullInfo.auxiliaryImages.map(ai => ai.imgUrl ?? null);
+    const origAux = this.fullInfo.auxiliaryImages.map(
+      (ai) => ai.imgUrl ?? null
+    );
     const auxChanged = auxCurrent.some((p, i) => p !== (origAux[i] ?? null));
 
     return {
-      listingId    : this.listing.id,
-      title        : this.leftForm.value.title        ?? this.listing.title,
-      description  : this.rightForm.value.description ?? this.listing.description,
-      price        : this.leftForm.value.price        ?? this.listing.price,
-      condition    : this.leftForm.value.condition    ?? this.listing.condition,
-      brand        : this.listing.brand,
-      mainImage    : mainImageStr,
-      imagesUrl    : auxChanged ? auxCurrent : null,
-      categoriesId : this.rightForm.value.categories?.length
-                      ? this.rightForm.value.categories
-                      : this.fullInfo.categories.map(c => c.categoryId),
-      acceptsCash  : this.rightForm.value.paysCash    ?? this.listing.acceptsCash,
-      acceptsCard  : this.rightForm.value.paysCard    ?? this.listing.acceptsCard,
-      acceptsTransfer: this.rightForm.value.paysTransf ?? this.listing.acceptsTransfer,
-      acceptsBarter: this.rightForm.value.paysBarter  ?? this.listing.acceptsBarter,
-      type         : this.listing.type,
+      listingId: this.listing.id,
+      title: this.leftForm.value.title ?? this.listing.title,
+      description: this.rightForm.value.description ?? this.listing.description,
+      price: this.leftForm.value.price ?? this.listing.price,
+      condition: this.leftForm.value.condition ?? this.listing.condition,
+      brand: this.listing.brand,
+      mainImage: mainImageStr,
+      imagesUrl: auxChanged ? auxCurrent : null,
+      categoriesId: this.rightForm.value.categories?.length
+        ? this.rightForm.value.categories
+        : this.fullInfo.categories.map((c) => c.categoryId),
+      acceptsCash: this.rightForm.value.paysCash ?? this.listing.acceptsCash,
+      acceptsCard: this.rightForm.value.paysCard ?? this.listing.acceptsCard,
+      acceptsTransfer:
+        this.rightForm.value.paysTransf ?? this.listing.acceptsTransfer,
+      acceptsBarter:
+        this.rightForm.value.paysBarter ?? this.listing.acceptsBarter,
+      type: this.listing.type,
     };
   }
 
@@ -342,17 +372,24 @@ export class EditPublicationComponent implements OnInit {
       this.setImageError(`Debes subir al menos ${this.minImagesReq} fotos`);
       return;
     }
-    const dto = this.buildRequest();
-    const mainFile =
-      dto.mainImage !== null ? this.selectedImages[0].file : null;
 
+    const dto = this.buildRequest();
+
+    /* ▶️  Solo adjuntar el archivo si realmente hay
+         un *nombre* y su preview cambió                 */
+    const f0 = this.selectedImages[0].file;
+    const changed = dto.mainImage !== null; // preview cambió
+    const mainFile = changed && f0 && f0.name?.length ? f0 : null;
+
+    /* auxiliares ― misma idea */
     const auxFiles =
       dto.imagesUrl !== null
         ? this.selectedImages
             .slice(1, this.maxImages)
             .map((im, idx) =>
               im.preview &&
-              im.preview !== this.fullInfo.auxiliaryImages[idx]?.imgUrl
+              im.preview !== this.fullInfo.auxiliaryImages[idx]?.imgUrl &&
+              im.file.name?.length
                 ? im.file
                 : null
             )
@@ -368,7 +405,7 @@ export class EditPublicationComponent implements OnInit {
   catSlots!: QueryList<ElementRef<HTMLElement>>;
   @HostListener("document:click", ["$event"])
   clickOut(evt: MouseEvent) {
-    const inside = this.catSlots.some(slot =>
+    const inside = this.catSlots.some((slot) =>
       slot.nativeElement.contains(evt.target as Node)
     );
     if (!inside) this.showList = this.showList.map(() => false);
