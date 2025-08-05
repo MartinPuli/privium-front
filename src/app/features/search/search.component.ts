@@ -80,6 +80,9 @@ export class SearchComponent implements OnInit {
   page = 1;
   hasMore = false;
 
+  readonly rowsPerPage = 5;
+  pageSize = 0;
+
   isLoading = false;
 
   /** Orden */
@@ -110,6 +113,8 @@ export class SearchComponent implements OnInit {
     this.categoriesList = this.categorySrv.getCached();
     this.countriesList = await firstValueFrom(this.countrySrv.loadCountries());
 
+    this.pageSize = this.calculatePageSize();
+
     // 1) primera carga
     this.readStateAndLoad();
 
@@ -121,6 +126,25 @@ export class SearchComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.navSub.unsubscribe();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    const size = this.calculatePageSize();
+    if (size !== this.pageSize) {
+      this.pageSize = size;
+      this.current.page = 1;
+      this.loadListings();
+    }
+  }
+
+  private calculatePageSize(): number {
+    const width = window.innerWidth;
+    let columns = Math.max(1, Math.floor(width / 260));
+    if (width <= 600) {
+      columns = 2;
+    }
+    return Math.min(columns * this.rowsPerPage, 100);
   }
 
   /** ----------------------------------------
@@ -238,7 +262,7 @@ export class SearchComponent implements OnInit {
     this.cdr.markForCheck();
 
     this.listingSrv
-      .listListings({ ...this.current, pageSize: 100 })
+      .listListings({ ...this.current, pageSize: this.pageSize })
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -248,7 +272,9 @@ export class SearchComponent implements OnInit {
       .subscribe({
         next: (resp) => {
           this.products = resp.data!;
-          this.hasMore = resp.data!.length === 100;
+          this.hasMore =
+            resp.data!.length === this.pageSize &&
+            (this.current.page ?? 1) * this.pageSize < 100;
           this.page = this.current.page ?? 1;
           this.updateSelectedFilters();
           this.cdr.markForCheck();
