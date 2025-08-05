@@ -71,6 +71,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showCategories = false;
   @ViewChild('catButton', { read: ElementRef })
   catButtonRef!: ElementRef<HTMLElement>;
+  @ViewChild('searchInput', { read: ElementRef })
+  searchInputRef!: ElementRef<HTMLInputElement>;
 
   /** Controla la visibilidad del menú en pantallas pequeñas */
   isMobileMenuOpen = false;
@@ -258,10 +260,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  @HostListener('window:keydown.enter', ['$event'])
+  onEnter(event: KeyboardEvent): void {
+    if (
+      this.searchInputRef &&
+      document.activeElement === this.searchInputRef.nativeElement
+    ) {
+      return;
+    }
+
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('.filters-form') || target?.tagName === 'BUTTON') {
+      return;
+    }
+
+    this.applyFilters();
+  }
+
   applyFilters(): void {
-    // 1) Inicializa el DTO con datos previos, página y orden
     const request: Partial<ListListingsRequestDto> & Record<string, any> = {
-      ...this.filterSrv.value,
       page: 1,
       sortOrder: this.sortOrder,
     };
@@ -313,7 +330,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       request.createdFrom = this.filters.from.toISOString();
     if (this.filters.to) request.createdTo = this.filters.to.toISOString();
 
-    // 8) Navegar pasando el DTO en el navigation state
+    this.filterSrv.clear();
     this.filterSrv.set(request);
     this.router.navigate(["/search"], { state: { request } });
   }
