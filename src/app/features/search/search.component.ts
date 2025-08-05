@@ -177,7 +177,6 @@ export class SearchComponent implements OnInit {
     this.current = { page: 1, sortOrder: this.sortOrder };
     this.filterSrv.clear();
     this.initCategorySlots();
-    this.loadListings();
     this.drawer?.close();
   }
 
