@@ -262,6 +262,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown.enter', ['$event'])
   onEnter(event: KeyboardEvent): void {
+    if (!this.router.url.startsWith('/search')) {
+      return;
+    }
+
     if (
       this.searchInputRef &&
       document.activeElement === this.searchInputRef.nativeElement
