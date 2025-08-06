@@ -1,7 +1,7 @@
 <div class="header-toolbar">
   <div
     class="header-container"
-    [ngClass]="{ 'header-one-row': !logged || publishing }"
+    [ngClass]="{ 'header-one-row': !logged || publishing || !showCategoryNav }"
   >
     <!-- Logo y ubicación -->
     <div class="header-left">
@@ -105,7 +105,7 @@
 
     <!-- Botón menú móvil -->
     <button
-      *ngIf="logged && !publishing"
+      *ngIf="logged && !publishing && showCategoryNav"
       mat-icon-button
       class="mobile-menu-toggle"
       (click)="toggleMobileMenu()"
@@ -120,7 +120,7 @@
 <div
   class="category-nav"
   aria-label="Navegación de categorías"
-  *ngIf="logged && !publishing"
+  *ngIf="logged && !publishing && showCategoryNav"
   [ngClass]="{ 'mobile-open': isMobileMenuOpen }"
 >
   <div class="nav-container">
