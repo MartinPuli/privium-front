@@ -79,6 +79,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   @Input() logged = true;
   @Input() publishing = false;
+  @Input() showCategoryNav = true;
 
   sortOrder: "ASC" | "DESC" = "DESC";
 
