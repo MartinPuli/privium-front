@@ -171,7 +171,10 @@ export class EditPublicationComponent implements OnInit {
           Validators.maxLength(100),
         ],
       ],
-      price: [this.listing.price, [Validators.required, Validators.min(1)]],
+      price: [
+        this.listing.price,
+        [Validators.required, this.notBlank, Validators.min(1)],
+      ],
       condition: [this.listing.condition, Validators.required],
       images: [this.selectedImages, minImages],
     });
