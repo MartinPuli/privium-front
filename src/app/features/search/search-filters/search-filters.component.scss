@@ -1,6 +1,7 @@
 @import '../../../../shared/styles/variables';
 
 .filters-form {
+  position: relative;
   width: 360px;
   padding: 1.25rem;
   display: flex;
@@ -80,8 +81,18 @@
   }
 
   .actions {
+    position: sticky;
+    bottom: 0;
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
+    padding-top: 0.5rem;
+    background: white;
+  }
+
+  .clear-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
   }
 }
