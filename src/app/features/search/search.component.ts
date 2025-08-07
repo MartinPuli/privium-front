@@ -442,6 +442,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       this.showCategoryList.push(false);
     }
     this.patchCategoriesToCurrent();
+    this.loadListings();
   }
 
   private patchCategoriesToCurrent(pushStore = true): void {
