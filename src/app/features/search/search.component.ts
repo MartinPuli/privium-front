@@ -1,8 +1,11 @@
 import {
   Component,
   OnInit,
+  AfterViewInit,
+  OnDestroy,
   Input,
   ViewChild,
+  ElementRef,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   HostListener,
@@ -19,7 +22,6 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
-
 import {
   ListListingsRequestDto,
   ListingResponseDto,
@@ -29,7 +31,6 @@ import { CategoryService } from "../../shared/services/category.service";
 import { CountryService } from "../../shared/services/country.service";
 import { Category } from "../../shared/models/category.model";
 import { Country } from "../../shared/models/country.model";
-
 import { ProductCardSmallComponent } from "../../shared/components/product-card-small/product-card-small.component";
 import { HeaderComponent } from "../../shared/components/header/header.component";
 import { FooterComponent } from "../../shared/components/footer/footer.component";
@@ -37,7 +38,7 @@ import { SearchFiltersComponent } from "./search-filters/search-filters.componen
 import { ButtonCategoriesComponent } from "src/app/shared/components/button-categories/button-categories.component";
 import { ListCategoriesComponent } from "src/app/shared/components/list-categories/list-categories.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { filter, finalize, Subscription, firstValueFrom } from "rxjs";
+import { filter, finalize, firstValueFrom, Subscription } from "rxjs";
 import { AuthService } from "src/app/shared/services/auth.service";
 import { FilterService } from "src/app/shared/services/filter.service";
 
@@ -69,23 +70,32 @@ interface CategorySelection {
   templateUrl: "./search.component.html",
   styleUrls: ["./search.component.scss"],
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   private navSub!: Subscription;
 
+  /* ---------- Template refs ---------- */
   @ViewChild("drawer") drawer: any;
   @ViewChild("mobileFilters") mobileFilters?: SearchFiltersComponent;
   @ViewChild("desktopFilters") desktopFilters?: SearchFiltersComponent;
+
   @Input() request: Partial<ListListingsRequestDto> = {};
   current: Partial<ListListingsRequestDto> = {};
 
+  /** Caché completa de resultados recibidos (máx 100) */
+  private cache: ListingResponseDto[] = [];
+  /** Slice mostrado en la grilla */
   products: ListingResponseDto[] = [];
+
+  /** Paginación local */
   page = 1;
-  hasMore = false;
+  pageSize = 0;
+  totalPages = 1;
+
+  /** UI flags */
+  isLoading = false;
 
   readonly rowsPerPage = 5;
-  pageSize = 0;
-
-  isLoading = false;
+  readonly MAX_RESULTS = 100;
 
   /** Orden */
   sortOrder: "ASC" | "DESC" = "DESC";
@@ -95,10 +105,10 @@ export class SearchComponent implements OnInit {
   countriesList: Country[] = [];
   selectedFilters: string[] = [];
 
-  readonly MAX_RESULTS = 100;
+  /** Historial para UX */
+  usedCategoryIdsHistory: string[][] = [];
 
-  usedCategoryIdsHistory: string[][] = []; // historial de búsquedas
-
+  /* ================= DI ================= */
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -106,58 +116,76 @@ export class SearchComponent implements OnInit {
     public categorySrv: CategoryService,
     private countrySrv: CountryService,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService,
+    private authSrv: AuthService,
     private filterSrv: FilterService
   ) {}
 
+  /* ================================================================
+   *  LIFECYCLE
+   * ================================================================*/
   async ngOnInit(): Promise<void> {
-    if (!this.categorySrv.getCached().length) {
-      await firstValueFrom(this.categorySrv.loadCategories());
-    }
     this.categoriesList = this.categorySrv.getCached();
-    this.countriesList = await firstValueFrom(this.countrySrv.loadCountries());
+    this.countriesList = this.countrySrv.getCached();
 
+    /* ─── tamaño de página inicial ─── */
     this.pageSize = this.calculatePageSize();
 
-    // 1) primera carga
+    /* ─── primera carga ─── */
     this.readStateAndLoad();
 
-    // 2) recargar ante NavigationEnd (incluido mismo path)
+    /* ─── NavigationEnd recarga ─── */
     this.navSub = this.router.events
       .pipe(filter((e) => e instanceof NavigationEnd))
       .subscribe(() => this.readStateAndLoad());
+
+    this.recalcPages();
+  }
+
+  ngAfterViewInit(): void {
+    /* (nada especial) */
   }
 
   ngOnDestroy(): void {
     this.navSub.unsubscribe();
   }
 
+  /* ================================================================
+   *  ANCHO PANTALLA → RECÁLCULO LOCAL
+   * ================================================================*/
   @HostListener("window:resize")
-  onResize() {
-    const size = this.calculatePageSize();
-    if (size !== this.pageSize) {
-      this.pageSize = size;
-      this.current.page = 1;
-      this.loadListings();
-    }
+  onResize(): void {
+    const newSize = this.calculatePageSize();
+    if (newSize === this.pageSize) return;
+
+    this.pageSize = newSize;
+    /* opcional: mantener página actual si entra en límites */
+    const totalPages = Math.max(
+      1,
+      Math.ceil(this.cache.length / this.pageSize)
+    );
+    if (this.page > totalPages) this.page = totalPages;
+
+    this.materializePage(); // solo re-slice local
+    this.recalcPages();
   }
 
   private calculatePageSize(): number {
     const width =
       window.innerWidth > 900
-        ? window.innerWidth * 0.985 - 48 - 360
+        ? window.innerWidth * 0.985 - 48 - 360 // 48 = padding, 360 = sidebar
         : window.innerWidth * 0.985;
-    // Ancho “card” + gap aproximado
-    let columns = Math.max(1, Math.floor(width / 260));
-    if (width <= 600) columns = 2; // móvil: 2 columnas
 
-    const size = columns * this.rowsPerPage; // <= 5 filas siempre
+    let columns = Math.max(1, Math.floor(width / 260));
+    if (width <= 600) columns = 2; // móvil
+
+    const size = columns * this.rowsPerPage;
     return Math.min(size, this.MAX_RESULTS);
   }
-  /** ----------------------------------------
-   *  Estado inicial: query-params o state
-   * --------------------------------------- */
-  private readStateAndLoad() {
+
+  /* ================================================================
+   *  ESTADO INICIAL DESDE QUERY / STATE
+   * ================================================================*/
+  private readStateAndLoad(): void {
     const st = window.history.state as {
       request?: Partial<ListListingsRequestDto>;
     };
@@ -165,7 +193,7 @@ export class SearchComponent implements OnInit {
     const base = { ...this.filterSrv.value };
     let req: Partial<ListListingsRequestDto>;
 
-    if (st.request) {
+    if (st?.request) {
       req = { ...base, ...st.request };
     } else {
       const qp = this.route.snapshot.queryParamMap;
@@ -176,15 +204,17 @@ export class SearchComponent implements OnInit {
       if (catIds.length) req.categoryIds = catIds;
     }
 
-    this.current = { ...req };
+    this.current = { ...req, page: 1, sortOrder: this.sortOrder };
     this.filterSrv.set(this.current);
     this.initCategorySlots();
     this.loadListings();
     window.scrollTo(0, 0);
   }
 
-  /* ======== filtros desde el drawer ======== */
-  onApplyFilters(dto: Partial<ListListingsRequestDto>) {
+  /* ================================================================
+   *  FILTROS — drawer / sidebar
+   * ================================================================*/
+  onApplyFilters(dto: Partial<ListListingsRequestDto>): void {
     this.current = {
       ...this.current,
       ...dto,
@@ -193,87 +223,98 @@ export class SearchComponent implements OnInit {
       sortOrder: this.sortOrder,
     };
 
-    // centerCountryId ▶ solo si hay filtro de distancia
+    /* distancia */
     if (this.current.maxDistanceKm != null) {
       this.current.centerCountryId =
-        this.authService.getCurrentCountryId() || undefined;
+        this.authSrv.getCurrentCountryId() || undefined;
     } else {
       delete this.current.centerCountryId;
     }
-    // Persistir los filtros aplicados
-    this.filterSrv.set(this.current);
 
+    this.filterSrv.set(this.current);
     this.loadListings();
     this.drawer?.close();
   }
 
-  onClearFilters() {
+  onClearFilters(): void {
     this.current = { page: 1, sortOrder: this.sortOrder };
     this.filterSrv.clear();
     this.initCategorySlots();
     this.drawer?.close();
   }
 
-  openFilters() {
+  openFilters(): void {
     this.drawer?.open();
   }
-  /* ========== orden ========== */
-  setSort(order: "ASC" | "DESC") {
+
+  applyFilters(): void {
+    if (this.drawer?.opened) {
+      this.mobileFilters?.emitFilters();
+    } else {
+      this.desktopFilters?.emitFilters();
+    }
+  }
+
+  /* ================================================================
+   *  ORDEN LOCAL (ya tenés 100 en memoria)
+   * ================================================================*/
+  setSort(order: "ASC" | "DESC"): void {
     if (this.sortOrder === order) return;
     this.sortOrder = order;
     this.current.sortOrder = order;
     this.sortProductsInMemory(order);
   }
 
-  onSortChange(order: "ASC" | "DESC") {
-    this.sortOrder = order;
-    this.current.sortOrder = order;
-    this.sortProductsInMemory(order);
-  }
-
   private sortProductsInMemory(order: "ASC" | "DESC"): void {
-    if (!this.products.length) return;
+    if (!this.cache.length) return;
 
-    const getTime = (p: ListingResponseDto) =>
+    const time = (p: ListingResponseDto) =>
       p.createdAt ? new Date(p.createdAt).getTime() : 0;
 
-    this.products.sort((a, b) =>
-      order === "ASC" ? getTime(a) - getTime(b) : getTime(b) - getTime(a)
+    this.cache.sort((a, b) =>
+      order === "ASC" ? time(a) - time(b) : time(b) - time(a)
     );
-
-    this.cdr.markForCheck();
+    this.materializePage();
   }
 
-  /* ========== paginación ========== */
-  async next() {
-    if (!this.hasMore) return;
-    this.current.page = (this.current.page ?? 1) + 1;
-    await this.loadListings();
+  /* ================================================================
+   *  PAGINACIÓN LOCAL
+   * ================================================================*/
+  next(): void {
+    const totalPages = Math.ceil(this.cache.length / this.pageSize);
+    if (this.page >= totalPages) return;
+    this.page++;
+    this.materializePage();
+    this.recalcPages();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  async prev() {
-    if ((this.current.page ?? 1) <= 1) return;
-    this.current.page!--;
-    await this.loadListings();
+  prev(): void {
+    if (this.page <= 1) return;
+    this.page--;
+    this.materializePage();
+    this.recalcPages();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  /* ========== carga listings ========== */
+  private recalcPages(): void {
+    this.totalPages = Math.max(1, Math.ceil(this.cache.length / this.pageSize));
+  }
+
+  /* ================================================================
+   *  LOAD LISTINGS (always 100)
+   * ================================================================*/
   private loadListings(): void {
-    // Sincronizar categorías justo antes de llamar al backend
+    /* sincronizar categorías justo antes */
     this.patchCategoriesToCurrent(false);
-
-    // guardar historial de categorías
-    if (this.current.categoryIds?.length) {
-      this.usedCategoryIdsHistory.push([...this.current.categoryIds]);
-    }
 
     this.isLoading = true;
     this.cdr.markForCheck();
 
+    const dto = { ...this.current, pageSize: this.MAX_RESULTS }; // siempre 100
+
     this.listingSrv
-      .listListings({ ...this.current, pageSize: this.pageSize })
+      .listListings(dto)
       .pipe(
         finalize(() => {
           this.isLoading = false;
@@ -282,22 +323,32 @@ export class SearchComponent implements OnInit {
       )
       .subscribe({
         next: (resp) => {
-          this.products = resp.data!;
-          this.hasMore =
-            resp.data!.length === this.pageSize &&
-            (this.current.page ?? 1) * this.pageSize < 100;
+          this.cache = resp.data ?? [];
           this.page = this.current.page ?? 1;
+          this.materializePage();
+          this.recalcPages();
           this.updateSelectedFilters();
-          this.cdr.markForCheck();
         },
         error: () => {
+          this.cache = [];
+          this.products = [];
           this.cdr.markForCheck();
         },
       });
   }
 
-  /* ========== chips de filtros ========== */
-  private updateSelectedFilters() {
+  /** recorta cache según página y pageSize */
+  private materializePage(): void {
+    const start = (this.page - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.products = this.cache.slice(start, end);
+    this.cdr.markForCheck();
+  }
+
+  /* ================================================================
+   *  CHIPS
+   * ================================================================*/
+  private updateSelectedFilters(): void {
     const f = this.current;
     const chips: string[] = [];
 
@@ -321,28 +372,27 @@ export class SearchComponent implements OnInit {
     }
     if (f.brandFilter) chips.push(f.brandFilter);
 
-    const pays: Array<[keyof ListListingsRequestDto, string]> = [
-      ["acceptsCash", "Efectivo"],
-      ["acceptsCard", "Tarjeta"],
-      ["acceptsTransfer", "Transferencia"],
-      ["acceptsBarter", "Trueque"],
-    ];
-    pays.forEach(([k, label]) => {
-      if (f[k]) chips.push(label);
+    (
+      [
+        ["acceptsCash", "Efectivo"],
+        ["acceptsCard", "Tarjeta"],
+        ["acceptsTransfer", "Transferencia"],
+        ["acceptsBarter", "Trueque"],
+      ] as Array<[keyof ListListingsRequestDto, string]>
+    ).forEach(([k, lbl]) => {
+      if (f[k]) chips.push(lbl);
     });
 
     this.selectedFilters = chips;
   }
 
-  trackById(_: number, p: ListingResponseDto) {
-    return p.id;
-  }
-
-  /* ========== categorías (slots + dropdowns) ========== */
+  /* ================================================================
+   *  CATEGORÍAS (slots)
+   * ================================================================*/
   categoriesSlots: CategorySelection[] = [];
   showCategoryList: boolean[] = [];
 
-  private async initCategorySlots() {
+  private async initCategorySlots(): Promise<void> {
     const initial = this.current.categoryIds ?? [];
     this.categoriesSlots = initial.map((id) => {
       const c = this.categoriesList.find((x) => x.id === id);
@@ -354,11 +404,11 @@ export class SearchComponent implements OnInit {
     this.showCategoryList = this.categoriesSlots.map(() => false);
   }
 
-  toggleCategoryList(i: number) {
+  toggleCategoryList(i: number): void {
     this.showCategoryList[i] = !this.showCategoryList[i];
   }
 
-  clearCategory(i: number) {
+  clearCategory(i: number): void {
     this.categoriesSlots.splice(i, 1);
     this.showCategoryList.splice(i, 1);
     this.categoriesSlots = this.categoriesSlots.filter((c) => c.idPath);
@@ -370,8 +420,7 @@ export class SearchComponent implements OnInit {
     this.patchCategoriesToCurrent();
   }
 
-  onCategorySelected(i: number, sel: CategorySelection) {
-    // evitar duplicados
+  onCategorySelected(i: number, sel: CategorySelection): void {
     const dup = this.categoriesSlots.some(
       (c, idx) => idx !== i && c.idPath === sel.idPath
     );
@@ -392,41 +441,39 @@ export class SearchComponent implements OnInit {
       this.categoriesSlots.push({ idPath: "", name: "" });
       this.showCategoryList.push(false);
     }
-
     this.patchCategoriesToCurrent();
   }
 
-  /** Copia las categorías elegidas a `this.current` y guarda la cantidad en navSub */
-  private patchCategoriesToCurrent(pushToStore = true): void {
+  private patchCategoriesToCurrent(pushStore = true): void {
     const ids = this.categoriesSlots
       .filter((c) => !!c.idPath)
       .map((c) => c.idPath);
 
     this.current.categoryIds = ids.length ? ids : undefined;
 
-    /* ▶ guardar en el servicio de filtros */
-    if (pushToStore) {
-      this.filterSrv.setCategoryIds(this.current.categoryIds);
-    }
+    if (pushStore) this.filterSrv.setCategoryIds(this.current.categoryIds);
 
     this.updateSelectedFilters();
     this.cdr.markForCheck();
   }
 
+  /* ================================================================
+   *  ENTER refresca
+   * ================================================================*/
   @HostListener("window:keydown.enter", ["$event"])
-  onEnter(event: KeyboardEvent): void {
-    /* 1) Ignorar si el usuario está escribiendo en un input o textarea */
-    const target = event.target as HTMLElement | null;
-    if (
-      target &&
-      (target.tagName === "INPUT" || target.tagName === "TEXTAREA")
-    ) {
-      return;
-    }
-
-    /* 2) Refrescar la búsqueda con los filtros que ya están cargados */
-    this.current.page = 1; // siempre desde la primera página
-    this.loadListings(); // ya sincroniza categorías, etc.
+  onEnter(ev: KeyboardEvent): void {
+    const t = ev.target as HTMLElement;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA")) return;
+    this.page = 1;
+    this.current.page = 1;
+    this.sortOrder = this.current.sortOrder ?? "DESC";
+    this.loadListings();
   }
 
+  /* ================================================================
+   *  TRACK BY
+   * ================================================================*/
+  trackById(_: number, p: ListingResponseDto): string | number {
+    return p.id;
+  }
 }

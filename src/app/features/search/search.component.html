@@ -114,7 +114,7 @@
               <mat-icon>chevron_left</mat-icon> Anterior
             </button>
             <span class="page-indicator">Página {{ page }}</span>
-            <button mat-stroked-button (click)="next()" [disabled]="!hasMore">
+            <button mat-stroked-button (click)="next()" [disabled]="page >= totalPages">
               Siguiente <mat-icon>chevron_right</mat-icon>
             </button>
           </div>

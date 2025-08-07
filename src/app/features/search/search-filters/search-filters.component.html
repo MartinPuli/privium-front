@@ -1,11 +1,26 @@
 <form class="filters-form" [formGroup]="form" (keydown.enter)="emitFilters()">
-  <!-- Buscar -->
-  <app-form-field
-    type="text"
-    label="Buscar artículos"
-    placeholder="¿Qué buscas?"
-    formControlName="searchTerm"
-  ></app-form-field>
+  <!-- Buscar + Acciones -->
+  <div class="search-actions-row">
+    <app-form-field
+      type="text"
+      label="Buscar artículos"
+      placeholder="¿Qué buscas?"
+      formControlName="searchTerm"
+    ></app-form-field>
+    <div class="actions-bar">
+      <button mat-stroked-button class="reset-btn" type="button" (click)="reset()">
+        Limpiar
+      </button>
+      <button
+        mat-flat-button
+        type="button"
+        class="apply-btn"
+        (click)="emitFilters()"
+      >
+        Filtrar
+      </button>
+    </div>
+  </div>
   <hr class="section-divider" />
 
   <!-- Condición -->
@@ -137,19 +152,4 @@
   </div>
 
   <hr class="section-divider" />
-
-  <!-- Acciones -->
-  <div class="actions-bar">
-    <button mat-stroked-button type="button" (click)="reset()">
-      Limpiar
-    </button>
-    <button
-      mat-flat-button
-      type="button"
-      class="apply-btn"
-      (click)="emitFilters()"
-    >
-      Filtrar
-    </button>
-  </div>
 </form>
