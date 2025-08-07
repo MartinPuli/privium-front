@@ -141,7 +141,8 @@ export class PublishComponent implements OnInit {
       price: [null, [
         Validators.required,
         Validators.min(1),
-        Validators.max(99999999)
+        Validators.max(99999999),
+        Validators.pattern(/^\d+$/)
       ]],
       acceptsCash: [false],
       acceptsCard: [false],
