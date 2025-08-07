@@ -195,6 +195,8 @@ export class SearchComponent implements OnInit {
     } else {
       delete this.current.centerCountryId;
     }
+    // Persistir los filtros aplicados
+    this.filterSrv.set(this.current);
 
     this.loadListings();
     this.drawer?.close();
