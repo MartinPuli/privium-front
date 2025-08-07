@@ -153,10 +153,8 @@ export class SearchFiltersComponent implements OnInit {
 
   private loadCountries() {
     const cached = this.countrySrv.getCached();
-    console.log(cached)
     if (cached) {
       this.countryOptions = cached.map((c) => ({ value: c.id, label: c.name }));
-      console.log("a")
     } else {
       this.countrySrv.loadCountries().subscribe((cats) => {
         this.countryOptions = cats.map((c) => ({ value: c.id, label: c.name }));

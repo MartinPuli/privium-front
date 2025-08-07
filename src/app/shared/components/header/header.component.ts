@@ -209,7 +209,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (term) request.searchTerm = term;
 
     /* 2) Categoría elegida en el selector de cabecera */
-    console.log(this.selectedCategoryId);
     if (this.selectedCategoryId)
       request.categoryIds = [this.selectedCategoryId];
 
