@@ -1,4 +1,4 @@
-@import '../../../../shared/styles/variables';
+@import "../../../../shared/styles/variables";
 
 .filters-form {
   position: relative;
@@ -35,7 +35,7 @@
     ::ng-deep .form-input,
     ::ng-deep .form-select,
     ::ng-deep .mat-select-trigger {
-      font-size: 0.9rem !important;     /* más pequeño */
+      font-size: 0.9rem !important; /* más pequeño */
       padding: 0.45rem 0.6rem !important;
     }
 
@@ -92,7 +92,15 @@
 
   .clear-btn {
     position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+    top: 1.25rem;
+    right: 1.25rem;
+    height: 20px;
+  }
+
+  .filter-btn {
+    position: sticky;
+    bottom: 5rem;
+    right: 1.25rem;
+    height: 20px;
   }
 }

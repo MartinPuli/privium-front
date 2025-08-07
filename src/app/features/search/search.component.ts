@@ -93,6 +93,8 @@ export class SearchComponent implements OnInit {
   countriesList: Country[] = [];
   selectedFilters: string[] = [];
 
+  readonly MAX_RESULTS = 100;
+
   usedCategoryIdsHistory: string[][] = []; // historial de búsquedas
 
   constructor(
@@ -128,7 +130,7 @@ export class SearchComponent implements OnInit {
     this.navSub.unsubscribe();
   }
 
-  @HostListener('window:resize')
+  @HostListener("window:resize")
   onResize() {
     const size = this.calculatePageSize();
     if (size !== this.pageSize) {
@@ -139,14 +141,14 @@ export class SearchComponent implements OnInit {
   }
 
   private calculatePageSize(): number {
-    const width = window.innerWidth;
+    const width = window.innerWidth > 900 ? (window.innerWidth * 0.985) - 48 - 360 : window.innerWidth * 0.985;
+    // Ancho “card” + gap aproximado
     let columns = Math.max(1, Math.floor(width / 260));
-    if (width <= 600) {
-      columns = 2;
-    }
-    return Math.min(columns * this.rowsPerPage, 100);
-  }
+    if (width <= 600) columns = 2; // móvil: 2 columnas
 
+    const size = columns * this.rowsPerPage; // <= 5 filas siempre
+    return Math.min(size, this.MAX_RESULTS);
+  }
   /** ----------------------------------------
    *  Estado inicial: query-params o state
    * --------------------------------------- */
@@ -225,11 +227,14 @@ export class SearchComponent implements OnInit {
 
   private sortProductsInMemory(order: "ASC" | "DESC"): void {
     if (!this.products.length) return;
+
+    const getTime = (p: ListingResponseDto) =>
+      p.createdAt ? new Date(p.createdAt).getTime() : 0;
+
     this.products.sort((a, b) =>
-      order === "ASC"
-        ? (a.price || 0) - (b.price || 0)
-        : (b.price || 0) - (a.price || 0)
+      order === "ASC" ? getTime(a) - getTime(b) : getTime(b) - getTime(a)
     );
+
     this.cdr.markForCheck();
   }
 
