@@ -3,5 +3,6 @@ Allow: /
 Disallow: /auth/
 Disallow: /admin/
 Disallow: /api/
+Disallow: /perfil/
 
 Sitemap: https://privium.com/sitemap.xml
