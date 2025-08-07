@@ -73,6 +73,8 @@ export class SearchComponent implements OnInit {
   private navSub!: Subscription;
 
   @ViewChild("drawer") drawer: any;
+  @ViewChild("mobileFilters") mobileFilters?: SearchFiltersComponent;
+  @ViewChild("desktopFilters") desktopFilters?: SearchFiltersComponent;
   @Input() request: Partial<ListListingsRequestDto> = {};
   current: Partial<ListListingsRequestDto> = {};
 
@@ -209,6 +211,14 @@ export class SearchComponent implements OnInit {
 
   openFilters() {
     this.drawer?.open();
+  }
+
+  applyFilters() {
+    if (this.drawer?.opened) {
+      this.mobileFilters?.emitFilters();
+    } else {
+      this.desktopFilters?.emitFilters();
+    }
   }
 
   /* ========== orden ========== */

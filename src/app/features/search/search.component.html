@@ -4,6 +4,7 @@
   <!-- Drawer móvil -->
   <mat-sidenav #drawer mode="over" class="filters-drawer">
     <app-search-filters
+      #mobileFilters
       [initialFilters]="current"
       (apply)="onApplyFilters($event)"
       (clear)="onClearFilters()"
@@ -38,6 +39,7 @@
         <!-- Sidebar desktop -->
         <aside class="filters-sidebar">
           <app-search-filters
+            #desktopFilters
             class="desktop-only"
             [initialFilters]="current"
             (apply)="onApplyFilters($event)"
@@ -119,6 +121,14 @@
         </div>
       </div>
     </main>
+    <button
+      mat-flat-button
+      color="primary"
+      class="sticky-filter-btn"
+      (click)="applyFilters()"
+    >
+      Filtrar
+    </button>
   </mat-sidenav-content>
 </mat-sidenav-container>
 
