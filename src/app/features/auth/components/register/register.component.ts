@@ -215,16 +215,20 @@ export class RegisterComponent {
 
   termsButtons: ModalButton[] = [
     {
-      label: "Cancelar",
-      type: "secondary",
-      action: () => (this.showTermsModal = false),
+      label: "Aceptar",
+      type: "primary",
+      action: () => {
+        this.showTermsModal = false;
+      },
     },
+  ];
+
+  securityButtons: ModalButton[] = [
     {
       label: "Aceptar",
       type: "primary",
       action: () => {
-        this.registerForm.patchValue({ acceptTerms: true });
-        this.showTermsModal = false;
+        this.showSecurityModal = false;
       },
     },
   ];
