@@ -80,20 +80,18 @@
     }
   }
 
-  .actions {
-    position: sticky;
-    bottom: 0;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    padding-top: 0.5rem;
-    background: white;
-  }
+    .actions-bar {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      padding-top: 0.5rem;
+      background: white;
+    }
 
-  .clear-btn {
-    position: absolute;
-    top: 1.25rem;
-    right: 1.25rem;
-    height: 20px;
+    .apply-btn {
+      background-color: $primary-green;
+      color: $white;
+    }
   }
-}

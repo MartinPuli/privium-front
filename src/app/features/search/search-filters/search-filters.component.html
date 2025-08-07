@@ -140,13 +140,16 @@
 
   <!-- Acciones -->
   <div class="actions-bar">
-    <button
-      mat-button
-      type="button"
-      class="clear-btn"
-      (click)="reset()"
-    >
+    <button mat-stroked-button type="button" (click)="reset()">
       Limpiar
+    </button>
+    <button
+      mat-flat-button
+      type="button"
+      class="apply-btn"
+      (click)="emitFilters()"
+    >
+      Filtrar
     </button>
   </div>
 </form>
