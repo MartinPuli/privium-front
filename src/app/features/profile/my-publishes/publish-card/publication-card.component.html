@@ -23,7 +23,7 @@
             class="edit"
             *ngIf="loadingSide !== 'left'"
             (click)="openEdit('left')"
-            >edit</mat-icon
+            >info</mat-icon
           >
           <mat-spinner *ngIf="loadingSide === 'left'" diameter="20"></mat-spinner>
         </div>
@@ -54,7 +54,7 @@
         class="edit"
         *ngIf="loadingSide !== 'right'"
         (click)="openEdit('right')"
-        >edit</mat-icon
+        >info</mat-icon
       >
       <mat-spinner *ngIf="loadingSide === 'right'" diameter="20"></mat-spinner>
     </div>

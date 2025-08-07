@@ -104,7 +104,7 @@ export class EditPublicationComponent implements OnInit {
   get modalButtons(): ModalButton[] {
     return [
       {
-        label: "Cancelar",
+        label: "Cerrar",
         type: "secondary",
         action: () => this.closed.emit(),
         disabled: this.saving,
