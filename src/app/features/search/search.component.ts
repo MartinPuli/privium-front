@@ -6,6 +6,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   HostListener,
+  ElementRef,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
@@ -130,6 +131,7 @@ export class SearchComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.navSub.unsubscribe();
+    this.stickIO?.disconnect();
   }
 
   @HostListener("window:resize")
@@ -143,7 +145,10 @@ export class SearchComponent implements OnInit {
   }
 
   private calculatePageSize(): number {
-    const width = window.innerWidth > 900 ? (window.innerWidth * 0.985) - 48 - 360 : window.innerWidth * 0.985;
+    const width =
+      window.innerWidth > 900
+        ? window.innerWidth * 0.985 - 48 - 360
+        : window.innerWidth * 0.985;
     // Ancho “card” + gap aproximado
     let columns = Math.max(1, Math.floor(width / 260));
     if (width <= 600) columns = 2; // móvil: 2 columnas
@@ -433,5 +438,32 @@ export class SearchComponent implements OnInit {
     /* 2) Refrescar la búsqueda con los filtros que ya están cargados */
     this.current.page = 1; // siempre desde la primera página
     this.loadListings(); // ya sincroniza categorías, etc.
+  }
+
+  @ViewChild("stickTrigger", { static: false })
+  stickTrigger!: ElementRef<HTMLDivElement>;
+
+  isFixed = false; // bindeo a la clase .is-fixed
+  private stickIO?: IntersectionObserver;
+
+  /* -------- AfterViewInit: activar IntersectionObserver ------ */
+  ngAfterViewInit(): void {
+    if ("IntersectionObserver" in window) {
+      this.stickIO = new IntersectionObserver(
+        ([entry]) => {
+          this.isFixed = entry.isIntersecting;
+          this.cdr.markForCheck();
+        },
+        {
+          root: null, // viewport
+          threshold: 0,
+          // rootMargin opcional: "0px 0px -80px 0px" (activa 80 px antes)
+        }
+      );
+      // podría llegar a renderizar después (ngIf), reintento simple
+      const observe = () =>
+        this.stickIO!.observe(this.stickTrigger.nativeElement);
+      this.stickTrigger ? observe() : setTimeout(observe); // fallback si aún no existe
+    }
   }
 }
