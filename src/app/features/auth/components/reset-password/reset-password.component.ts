@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
   AbstractControl,
   ValidationErrors,
+  ValidatorFn,
 } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
@@ -57,12 +58,32 @@ export class ResetPasswordComponent implements OnInit {
     return pass === conf ? null : { mismatch: true };
   };
 
+  private notBlank: ValidatorFn = (control: AbstractControl) => {
+    const value = control.value as string;
+    return typeof value === "string" && value.trim().length === 0 && value.length > 0
+      ? { required: true }
+      : null;
+  };
 
   /* ------------------------- formulario ------------------------- */
   passwordForm: FormGroup = this.fb.group(
     {
-      password: ["", [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ["", Validators.required],
+      password: [
+        "",
+        [
+          Validators.required,
+          this.notBlank,
+          Validators.minLength(8),
+          Validators.maxLength(50),
+          Validators.pattern(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/
+          ),
+        ],
+      ],
+      confirmPassword: [
+        "",
+        [Validators.required, this.notBlank, Validators.maxLength(50)],
+      ],
     },
     { validators: this.passwordsMatch }
   );
@@ -145,7 +166,7 @@ export class ResetPasswordComponent implements OnInit {
       this.isLoading = false;
     }
   }
-  
+
   /* ------------------- helpers de UI ------------------- */
   private setSuccess(t: string, s: string, d: string) {
     this.status = 1;
