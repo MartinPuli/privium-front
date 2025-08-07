@@ -8,6 +8,7 @@ import {
 import { CommonModule } from "@angular/common";
 import { Router, RouterModule } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { AbstractControl } from "@angular/forms";
 
 import { AuthService } from "src/app/shared/services/auth.service";
 import {
@@ -41,6 +42,30 @@ export class ForgotPasswordComponent {
   emailForm: FormGroup = this.fb.group({
     email: ["", [Validators.required, Validators.email]],
   });
+
+  private passwordsMatch = (group: AbstractControl) => {
+    const pass = group.get("password")?.value;
+    const confirm = group.get("confirmPassword")?.value;
+    return pass === confirm ? null : { mismatch: true };
+  };
+
+  newPasswordForm: FormGroup = this.fb.group(
+    {
+      password: [
+        "",
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.maxLength(50),
+          Validators.pattern(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/
+          ),
+        ],
+      ],
+      confirmPassword: ["", [Validators.required, Validators.maxLength(50)]],
+    },
+    { validators: this.passwordsMatch }
+  );
 
   isLoading = false;
   success = false;

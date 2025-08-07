@@ -91,10 +91,10 @@ export class ResidenceVerificationComponent implements OnInit {
 
   /** Descarga el archivo base-64 de la prueba */
   downloadProof(proof: ResidenceProofDto): void {
-    if (!proof.proofImageB64) return;
+    if (!proof.proofImage) return;
 
     /* 1) Convertir base-64 a Blob */
-    const byteString = atob(proof.proofImageB64);
+    const byteString = atob(proof.proofImage);
     const bytes = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++) {
       bytes[i] = byteString.charCodeAt(i);
