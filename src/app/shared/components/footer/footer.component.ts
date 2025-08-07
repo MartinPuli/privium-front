@@ -52,6 +52,7 @@ export class FooterComponent {
   contactOpen = false;
   deleteOpen = false;
   termsOpen = false;
+  securityOpen = false;
   contactLoading = false;
   deleteLoading = false;
 
@@ -110,6 +111,10 @@ export class FooterComponent {
     this.termsOpen = true;
   }
 
+  openSecurity(): void {
+    this.securityOpen = true;
+  }
+
   openDelete(): void {
     this.deleteOpen = true;
   }
@@ -142,6 +147,10 @@ export class FooterComponent {
 
   readonly termsButtons: ModalButton[] = [
     { label: 'Cerrar', type: 'primary', action: () => (this.termsOpen = false) },
+  ];
+
+  readonly securityButtons: ModalButton[] = [
+    { label: 'Cerrar', type: 'primary', action: () => (this.securityOpen = false) },
   ];
 
   private async sendContact(): Promise<void> {

@@ -40,7 +40,7 @@
             <li><a role="button" (click)="goToPublish()">Publicar</a></li>
             <li><a role="button" (click)="openContact()">Contacto</a></li>
             <li><a role="button" (click)="openTerms()">Terminos y condiciones</a></li>
-            <li><a>Politica de seguridad</a></li>
+            <li><a role="button" (click)="openSecurity()">Politica de seguridad</a></li>
             <li><a role="button" (click)="openDelete()">Borrar cuenta</a></li>
           </ul>
         </nav>
@@ -99,5 +99,17 @@
 >
   <p>
     Aquí irán los términos y condiciones del servicio.
+  </p>
+</app-default-modal>
+
+<!-- Terms Modal -->
+<app-default-modal
+  *ngIf="securityOpen"
+  title="Política de Seguridad"
+  [buttons]="securityButtons"
+  (close)="securityOpen = false"
+>
+  <p>
+    Aquí irá la política de seguridad del servicio.
   </p>
 </app-default-modal>

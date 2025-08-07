@@ -137,6 +137,7 @@ export class RegisterComponent {
   hidePassword = true;
   countryOptions: SelectOption[] = [];
   showTermsModal = false;
+  showSecurityModal = false;
   showPrivacyModal = false;
 
   /* -----------------------------------------------------------
@@ -264,6 +265,10 @@ export class RegisterComponent {
 
   openTerms(): void {
     this.showTermsModal = true;
+  }
+
+  openSecurity(): void {
+    this.showSecurityModal = true;
   }
 
   private label(f: string) {

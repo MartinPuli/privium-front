@@ -125,7 +125,9 @@
             Términos y condiciones
           </a>
           y el
-          <a routerLink="/privacy" class="link-primary">Aviso de Privacidad</a>.
+          <a href=#
+            (click)="openSecurity(); $event.preventDefault()"
+            class="link-primary">Política de Seguridad</a>.
         </app-form-field>
       </form>
     </app-auth-card>
@@ -139,6 +141,80 @@
   title="Términos y Condiciones"
   [buttons]="termsButtons"
   (close)="showTermsModal = false"
+>
+  <!-- Aquí inyecta el contenido de tus términos: -->
+  <p class="terms">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce nec eros
+    elementum, scelerisque mauris sit amet, venenatis purus. Integer ut lectus
+    nec arcu fermentum aliquet quis non arcu. Phasellus nec libero vel lorem
+    pulvinar fermentum sit amet nec purus. Curabitur ut turpis vitae dui
+    efficitur euismod. Quisque quis consequat mi. Proin dictum justo vitae
+    elementum convallis. Vivamus suscipit, libero vitae commodo blandit, nunc
+    sapien aliquet mauris, non finibus est dolor nec risus. Nullam aliquet magna
+    ut tortor efficitur, quis pharetra sem ultricies. Mauris sodales mollis
+    sapien, a cursus lorem elementum sed. Vestibulum ante ipsum primis in
+    faucibus orci luctus et ultrices posuere cubilia curae; Pellentesque
+    habitant morbi tristique senectus et netus et malesuada fames ac turpis
+    egestas. Aenean at volutpat turpis. Donec sodales enim a dolor elementum, ac
+    aliquet nisl blandit. Suspendisse potenti. Vivamus ullamcorper, ante sed
+    suscipit ultricies, purus dui hendrerit quam, vitae aliquet dui odio non
+    nisl. Pellentesque habitant morbi tristique senectus et netus et malesuada
+    fames ac turpis egestas. Nam in sapien nec ipsum cursus fringilla id quis
+    velit. Aliquam commodo pretium mi, nec feugiat turpis cursus id. Duis
+    ultricies felis ut purus viverra, vitae scelerisque mi aliquet. Etiam dictum
+    lectus nec mauris placerat, nec condimentum nunc egestas. Vivamus tempor
+    purus eget sapien luctus, at hendrerit metus vestibulum. Integer feugiat
+    nulla id erat fermentum, nec facilisis risus cursus. Cras ac odio non justo
+    faucibus hendrerit. In vitae eros sit amet elit faucibus pellentesque. Nulla
+    facilisi. Nulla convallis, leo eu sagittis volutpat, dui eros hendrerit
+    augue, vel fringilla sapien velit vitae lorem. Phasellus porta urna eu mi
+    volutpat, vitae interdum justo consequat. Sed luctus leo vitae mattis
+    vehicula. Nulla in lobortis risus. Sed sit amet venenatis sapien, nec
+    feugiat tellus. Suspendisse luctus, quam at tristique venenatis, urna nunc
+    faucibus ex, eu dignissim lorem neque nec arcu. Vestibulum vulputate commodo
+    augue, in mollis urna vehicula ac. Duis sed eros eu nibh tristique viverra.
+    Mauris venenatis semper purus, a auctor metus sodales quis. Praesent et
+    tellus bibendum, consectetur erat sed, tincidunt nisl. Cras ultricies tellus
+    a lacus porta, non varius lectus commodo. Aliquam erat volutpat. Vestibulum
+    dolor risus, venenatis sed rutrum vitae, consectetur eget arcu. Integer
+    efficitur orci a purus pulvinar, vel vulputate turpis mattis. Nulla sit amet
+    viverra lorem. Nulla facilisi. Morbi vitae euismod orci. Etiam euismod dolor
+    in orci fermentum, vitae hendrerit nisl vulputate. Nunc sit amet suscipit
+    tortor, nec malesuada nunc. Duis sit amet faucibus mauris. Ut sit amet felis
+    nec nisl malesuada euismod. Vestibulum ante ipsum primis in faucibus orci
+    luctus et ultrices posuere cubilia curae; Vestibulum in est vitae turpis
+    aliquet tincidunt. Pellentesque vitae sodales ipsum. Duis non lectus vitae
+    ex fermentum convallis. Nam id nunc in ante fringilla pellentesque. Ut quis
+    odio elit. Vestibulum feugiat placerat neque nec vehicula. Sed ac libero nec
+    risus tempor euismod. Donec pulvinar magna ac odio scelerisque, a
+    consectetur libero lobortis. Morbi at tellus porttitor, scelerisque augue
+    nec, placerat nibh. Fusce sagittis dignissim mi, a aliquet tellus tincidunt
+    nec. Pellentesque habitant morbi tristique senectus et netus et malesuada
+    fames ac turpis egestas. Aenean tristique, justo ac lacinia vulputate, odio
+    nunc eleifend lectus, sit amet feugiat purus arcu nec purus. Donec commodo
+    aliquet sem, eget malesuada orci. Integer ac mi at mauris pretium lacinia in
+    sit amet orci. Suspendisse potenti. Nam consectetur dolor vitae est euismod
+    euismod. Proin blandit massa nec nunc bibendum, nec gravida nibh venenatis.
+    Vestibulum tincidunt sem sed massa elementum, in semper tellus pharetra.
+    Phasellus ac mauris nec lorem consequat vestibulum. Sed euismod, justo a
+    tristique convallis, lectus elit aliquet tortor, vitae hendrerit risus elit
+    id mi. Quisque vulputate purus sit amet sodales gravida. Curabitur euismod
+    nibh et mi fermentum, sit amet lacinia orci auctor. Fusce vel enim
+    vulputate, cursus elit quis, dignissim elit. Aenean laoreet, ipsum nec
+    ullamcorper elementum, libero nunc elementum nisl, sit amet tincidunt mi
+    eros sit amet risus. Vestibulum ante ipsum primis in faucibus orci luctus et
+    ultrices posuere cubilia curae; Maecenas suscipit ipsum ac augue tristique,
+    vitae feugiat risus vestibulum. Pellentesque habitant morbi tristique
+    senectus et netus et malesuada fames ac turpis egestas. Donec sit amet dolor
+    sit amet mauris dapibus aliquet nec sed turpis.
+  </p>
+</app-default-modal>
+
+<app-default-modal
+  *ngIf="showSecurityModal"
+  title="Política de Seguridad"
+  [buttons]="termsButtons"
+  (close)="showSecurityModal = false"
 >
   <!-- Aquí inyecta el contenido de tus términos: -->
   <p class="terms">
