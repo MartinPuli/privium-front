@@ -74,7 +74,7 @@
         [hasError]="
           leftForm.get('price')!.invalid && leftForm.get('price')!.touched
         "
-        [errorMessage]="'Precio requerido (> 0)'"
+        [errorMessage]="getPriceError()"
         class="price-field"
       >
       </app-form-field>

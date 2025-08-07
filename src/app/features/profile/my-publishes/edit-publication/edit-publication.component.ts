@@ -123,6 +123,21 @@ export class EditPublicationComponent implements OnInit {
     ];
   }
 
+  getPriceError(): string {
+    const c = this.leftForm.get('price');
+    if (!c) return '';
+    if (c.hasError('required') || c.hasError('min')) {
+      return 'Precio requerido (> 0)';
+    }
+    if (c.hasError('max')) {
+      return 'El precio debe ser menor o igual a $99.999.999';
+    }
+    if (c.hasError('pattern')) {
+      return 'Formato inválido';
+    }
+    return '';
+  }
+
   /* ---------- ctor / init ---------------------------------- */
   constructor(private fb: FormBuilder) {}
 
@@ -173,7 +188,13 @@ export class EditPublicationComponent implements OnInit {
       ],
       price: [
         this.listing.price,
-        [Validators.required, this.notBlank, Validators.min(1)],
+        [
+          Validators.required,
+          this.notBlank,
+          Validators.min(1),
+          Validators.max(99999999),
+          Validators.pattern(/^\d+$/),
+        ],
       ],
       condition: [this.listing.condition, Validators.required],
       images: [this.selectedImages, minImages],
