@@ -329,29 +329,35 @@
   <div class="menu-body" (click)="$event.stopPropagation()">
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Desde</mat-label>
-      <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="filters.from" />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="pickerFrom"
-      ></mat-datepicker-toggle>
+      <input
+        matInput
+        [matDatepicker]="pickerFrom"
+        [(ngModel)]="filters.from"
+        #fromDate="ngModel"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerFrom"></mat-datepicker-toggle>
       <mat-datepicker #pickerFrom></mat-datepicker>
+      <mat-error *ngIf="fromDate.invalid">Fecha inválida</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Hasta</mat-label>
-      <input matInput [matDatepicker]="pickerTo" [(ngModel)]="filters.to" />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="pickerTo"
-      ></mat-datepicker-toggle>
+      <input
+        matInput
+        [matDatepicker]="pickerTo"
+        [(ngModel)]="filters.to"
+        #toDate="ngModel"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerTo"></mat-datepicker-toggle>
       <mat-datepicker #pickerTo></mat-datepicker>
+      <mat-error *ngIf="toDate.invalid">Fecha inválida</mat-error>
     </mat-form-field>
 
     <button
-      class="apply-button"
+      class="apply-button w-100"
       mat-stroked-button
       color="primary"
-      class="w-100"
+      [disabled]="fromDate.invalid || toDate.invalid"
       mat-menu-close
       (click)="applyFilters()"
     >

@@ -113,12 +113,16 @@
       label="Desde"
       placeholder="dd/mm/aaaa"
       formControlName="createdFrom"
+      [hasError]="form.get('createdFrom')!.hasError('invalidDate') && form.get('createdFrom')!.touched"
+      errorMessage="Fecha inválida"
     ></app-form-field>
     <app-form-field
       type="date"
       label="Hasta"
       placeholder="dd/mm/aaaa"
       formControlName="createdTo"
+      [hasError]="form.get('createdTo')!.hasError('invalidDate') && form.get('createdTo')!.touched"
+      errorMessage="Fecha inválida"
     ></app-form-field>
   </div>
 

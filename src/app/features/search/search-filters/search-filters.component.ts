@@ -11,6 +11,8 @@ import { CommonModule } from "@angular/common";
 import {
   FormBuilder,
   FormGroup,
+  AbstractControl,
+  ValidationErrors,
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
@@ -83,6 +85,13 @@ export class SearchFiltersComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private countrySrv: CountryService) {}
 
+  private dateValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) return null;
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? { invalidDate: true } : null;
+  }
+
   private toInputDate(value?: string | null): string | null {
     if (!value) return null;
     const d = new Date(value);
@@ -116,8 +125,14 @@ export class SearchFiltersComponent implements OnInit {
         [Validators.min(1), Validators.pattern(/^\d+$/), Validators.max(99999999)],
       ],
       maxDistanceKm: [this.initialFilters.maxDistanceKm ?? null],
-      createdFrom: [this.toInputDate(this.initialFilters.createdFrom)],
-      createdTo: [this.toInputDate(this.initialFilters.createdTo)],
+      createdFrom: [
+        this.toInputDate(this.initialFilters.createdFrom),
+        this.dateValidator,
+      ],
+      createdTo: [
+        this.toInputDate(this.initialFilters.createdTo),
+        this.dateValidator,
+      ],
       acceptsCash: [this.initialFilters.acceptsCash ?? false],
       acceptsCard: [this.initialFilters.acceptsCard ?? false],
       acceptsTransfer: [this.initialFilters.acceptsTransfer ?? false],
