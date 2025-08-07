@@ -149,33 +149,3 @@
   }
 }
 
-.sticky-filter-btn {
-  position: static; /* ya no es fixed por defecto */
-  margin: 24px auto; /* margen en flujo normal */
-  /* ↓ resto de estilos sin cambios (color, tamaño, etc.) */
-  left: auto;
-  bottom: auto;
-  transform: none;
-}
-
-/* --- Variante fija cuando el sentinela entra en viewport --- */
-.sticky-filter-btn.is-fixed {
-  position: fixed;
-  left: 50%;
-  bottom: 32px;
-  transform: translateX(-50%);
-  margin: 0;
-  z-index: 1000;
-}
-
-/* Mobile tweaks (mantener lo que ya tenías) */
-@media (max-width: 600px) {
-  .sticky-filter-btn.is-fixed {
-    bottom: 16px;
-  }
-}
-
-/* (opcional) evita que el botón tape contenido cuando está fijo */
-.search-main {
-  padding-bottom: 88px; /* altura aprox. del botón */
-}
