@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
   FormBuilder,
   Validators,
@@ -34,6 +34,7 @@ import {
   ModalButton,
 } from "src/app/shared/components/default-modal/default-modal.component";
 import { RegistrationDataService } from "src/app/shared/services/registration-data.service";
+import { SEOService } from "src/app/shared/services/seo.service";
 
 @Component({
   selector: "app-register",
@@ -50,7 +51,7 @@ import { RegistrationDataService } from "src/app/shared/services/registration-da
   templateUrl: "./register.component.html",
   styleUrls: ["./register.component.scss", "../../auth-styles.scss"],
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   private notBlank: ValidatorFn = (control: AbstractControl) => {
     const value = control.value as string;
     return typeof value === "string" && value.trim().length === 0 && value.length > 0
@@ -170,13 +171,16 @@ export class RegisterComponent {
     private regData: RegistrationDataService,
     private countryService: CountryService,
     private router: Router,
-    private sb: MatSnackBar
+    private sb: MatSnackBar,
+    private seoService: SEOService
   ) {
     /* carga de barrios */
     this.loadCountries();
   }
 
   ngOnInit(): void {
+    this.setupSEO();
+
     const saved = this.regData.getRegistrationData();
     if (saved) {
       this.registerForm.patchValue(saved);
@@ -188,6 +192,18 @@ export class RegisterComponent {
         ...prev, // conserva lo que ya estaba (incluido proof…)
         ...val, // actualiza sólo los campos del registerForm
       });
+    });
+  }
+
+  private setupSEO(): void {
+    this.seoService.updateSEO({
+      title: "Crear cuenta",
+      description:
+        "Registrate en Privium y accedé al marketplace exclusivo de tu barrio.",
+      keywords:
+        "registrarse, crear cuenta, privium, marketplace, barrios cerrados",
+      url: "https://privium.com/auth/register",
+      type: "website",
     });
   }
 
