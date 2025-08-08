@@ -53,17 +53,29 @@ export class ListCategoriesComponent implements OnInit, OnChanges {
   private loadChildren(): void {
     if (this.parentId) {
       const prefix = this.parentId + ">";
-      this.categories = this.categoryService
-        .getByPrefix(prefix)
-        .sort((a, b) => a.name.localeCompare(b.name));
+      this.categories = this.sortCategories(
+        this.categoryService.getByPrefix(prefix)
+      );
       return;
     }
 
     // Nivel raíz: mostrar primeras categorías de todos los tipos
-    this.categories = this.categoryService
-      .getCached()
-      .filter((c) => c.id.split(">").length === 2)
-      .sort((a, b) => a.name.localeCompare(b.name));
+    this.categories = this.sortCategories(
+      this.categoryService
+        .getCached()
+        .filter((c) => c.id.split(">").length === 2)
+    );
+  }
+
+  /** Ordena las categorías alfabéticamente pero deja al final las que comienzan con "Otros" */
+  private sortCategories(list: CategoryResponseDto[]): CategoryResponseDto[] {
+    return list.sort((a, b) => {
+      const aIsOther = a.name.toLowerCase().startsWith("otros");
+      const bIsOther = b.name.toLowerCase().startsWith("otros");
+      if (aIsOther && !bIsOther) return 1;
+      if (!aIsOther && bIsOther) return -1;
+      return a.name.localeCompare(b.name);
+    });
   }
 
   /** ¿Esta categoría tiene hijos según el flag? */
