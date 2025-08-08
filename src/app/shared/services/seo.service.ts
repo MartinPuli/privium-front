@@ -11,6 +11,8 @@ export interface SEOData {
   author?: string
   publishedTime?: string
   modifiedTime?: string
+  robots?: string
+  canonical?: string
 }
 
 @Injectable({
@@ -66,6 +68,14 @@ export class SEOService {
       this.updateMetaTag("og:title", `${data.title} | Privium`, "property")
       this.updateMetaTag("twitter:title", `${data.title} | Privium`)
     }
+
+    if (data.robots) {
+      this.updateMetaTag("robots", data.robots)
+    }
+
+    if (data.canonical) {
+      this.updateCanonicalLink(data.canonical)
+    }
   }
 
   private updateMetaTag(name: string, content: string, attribute = "name"): void {
@@ -89,5 +99,17 @@ export class SEOService {
   removeStructuredData(): void {
     const scripts = document.querySelectorAll('script[type="application/ld+json"]')
     scripts.forEach((script) => script.remove())
+  }
+
+  private updateCanonicalLink(url: string): void {
+    let link = document.querySelector("link[rel='canonical']")
+    if (link) {
+      link.setAttribute("href", url)
+    } else {
+      link = document.createElement("link")
+      link.setAttribute("rel", "canonical")
+      link.setAttribute("href", url)
+      document.head.appendChild(link)
+    }
   }
 }

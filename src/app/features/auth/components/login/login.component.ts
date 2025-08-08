@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormBuilder, Validators, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
@@ -15,6 +15,7 @@ import { LoginRequest } from "src/app/shared/models/user.model";
 import { HeaderComponent } from "src/app/shared/components/header/header.component";
 import { FooterComponent } from "src/app/shared/components/footer/footer.component";
 import { ResultSnackbarComponent } from "src/app/shared/components/result-snackbar/result.snackbar.component";
+import { SEOService } from "src/app/shared/services/seo.service";
 
 @Component({
   selector: "app-login",
@@ -30,7 +31,7 @@ import { ResultSnackbarComponent } from "src/app/shared/components/result-snackb
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss", "../../auth-styles.scss"],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   /** Bandera global de carga / spinner */
   isLoading = false;
 
@@ -73,8 +74,22 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private seoService: SEOService
   ) {}
+
+  ngOnInit(): void {
+    this.seoService.updateSEO({
+      title: "Iniciar sesión",
+      description:
+        "Accede a tu cuenta de Privium para comprar y vender en tu barrio cerrado.",
+      keywords: "login, iniciar sesión, privium, acceso, cuenta",
+      url: "https://privium.com/auth/login",
+      type: "website",
+      robots: "noindex, follow",
+      canonical: "https://privium.com/auth/login",
+    });
+  }
 
   /* ------------------------------------------------------------------ */
   /*  ENVÍO DEL FORMULARIO                                              */
