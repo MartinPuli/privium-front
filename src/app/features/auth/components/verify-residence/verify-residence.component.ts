@@ -46,8 +46,7 @@ import { ResultSnackbarComponent } from "src/app/shared/components/result-snackb
 })
 export class VerifyResidenceComponent implements OnInit {
   verificationForm: FormGroup = this.fb.group({
-    // puede ser File o string (base64)
-    fileProof: [null, [this.fileOrBase64Validator(20 * 1024 * 1024)]],
+    fileProof: [null, [this.fileValidator(20 * 1024 * 1024)]],
     textProof: [""],
   });
 
@@ -68,7 +67,7 @@ export class VerifyResidenceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Carga inicial del draft completo (incluye proofMessage y proofImageBase64)
+    // Carga inicial del draft completo (incluye proofMessage y proofDocument)
     const data = this.regData.getRegistrationData();
     if (!data) {
       this.router.navigate(["/auth/register"]);
@@ -82,8 +81,8 @@ export class VerifyResidenceComponent implements OnInit {
     }
 
     // Parchea el file guardado
-    if (data.proofImageBase64) {
-      this.verificationForm.patchValue({ fileProof: data.proofImageBase64 });
+    if (data.proofDocument) {
+      this.verificationForm.patchValue({ fileProof: data.proofDocument });
     }
 
     // Cada cambio en el form actualiza el draft en el servicio
@@ -92,7 +91,7 @@ export class VerifyResidenceComponent implements OnInit {
       this.regData.setRegistrationData({
         ...draft,
         proofMessage: txt,
-        proofImageBase64: draft.proofImageBase64,
+        proofDocument: draft.proofDocument,
       });
     });
   }
@@ -124,26 +123,15 @@ export class VerifyResidenceComponent implements OnInit {
     },
   ];
 
-  onFileSelected(file: File) {
+  onFileSelected(file: File | null) {
     this.selectedImageFile = file;
     this.verificationForm.patchValue({ fileProof: file });
     this.verificationForm.get("fileProof")!.updateValueAndValidity();
-
-    if (file) {
-      this.fileToBase64(file).then((base64) => {
-        const draft = this.regData.getRegistrationData()!;
-        this.regData.setRegistrationData({
-          ...draft,
-          proofImageBase64: base64,
-        });
-      });
-    } else {
-      const draft = this.regData.getRegistrationData()!;
-      this.regData.setRegistrationData({
-        ...draft,
-        proofImageBase64: undefined,
-      });
-    }
+    const draft = this.regData.getRegistrationData()!;
+    this.regData.setRegistrationData({
+      ...draft,
+      proofDocument: file || undefined,
+    });
   }
 
   goBack(): void {
@@ -155,25 +143,33 @@ export class VerifyResidenceComponent implements OnInit {
     this.isLoading = true;
 
     try {
-      // 1) Tomar el base64 viejo o el nuevo File
-      let imageBase64 =
-        this.regData.getRegistrationData()?.proofImageBase64 ?? "";
-      if (this.selectedImageFile) {
-        imageBase64 = await this.fileToBase64(this.selectedImageFile);
-      }
+      // 1) Tomar el File guardado o el recién seleccionado
+      const file =
+        this.selectedImageFile ||
+        this.regData.getRegistrationData()?.proofDocument;
 
       // 2) Construir payload
-      const payload = {
+      const payload: RegisterRequest = {
         ...this.userData,
         proofMessage: this.verificationForm.value.textProof || "",
-        proofImageBase64: imageBase64,
+        proofDocument: file ?? undefined,
       };
 
       // 3) Guardar el draft antes de llamar al API
-      this.regData.setRegistrationData({ ...this.userData, ...payload });
+      this.regData.setRegistrationData(payload);
 
-      // 4) Disparar el POST y esperar la respuesta
-      await firstValueFrom(this.authService.register(payload));
+      // 4) Construir FormData y disparar el POST
+      const formData = new FormData();
+      Object.entries(payload).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (value instanceof File) {
+            formData.append(key, value);
+          } else {
+            formData.append(key, String(value));
+          }
+        }
+      });
+      await firstValueFrom(this.authService.register(formData));
 
       // 5) Mostrar snackbar de éxito
       this.snackBar.openFromComponent(ResultSnackbarComponent, {
@@ -200,18 +196,6 @@ export class VerifyResidenceComponent implements OnInit {
     }
   }
 
-  private fileToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const result = reader.result as string;
-        resolve(result.split(",")[1]);
-      };
-      reader.onerror = reject;
-    });
-  }
-
   getError(field: string): string {
     const ctrl = this.verificationForm.get(field);
     if (ctrl?.hasError("required")) {
@@ -226,23 +210,15 @@ export class VerifyResidenceComponent implements OnInit {
     return "";
   }
 
-  private fileOrBase64Validator(maxBytes: number): ValidatorFn {
+  private fileValidator(maxBytes: number): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const val = control.value;
-
-      // a) si es File -> chequeo tamaño
       if (val instanceof File) {
         return val.size > maxBytes
           ? { maxFileSize: { required: maxBytes, actual: val.size } }
           : null;
       }
-
-      // b) si es string base64 -> doy OK
-      if (typeof val === "string" && val.length) {
-        return null;
-      }
-
-      // c) vacío -> dejo que otros (required) decidan
+      // vacío -> dejo que otros (required) decidan
       return null;
     };
   }
