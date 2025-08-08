@@ -49,7 +49,7 @@
             <button
               mat-stroked-button
               color="primary"
-              *ngIf="p.proofImage"
+              *ngIf="p.proofDocUrl"
               (click)="downloadProof(p)"
             >
               <mat-icon>download</mat-icon>
@@ -65,8 +65,18 @@
               [disabled]="!!decisionLoading"
               (click)="handleDecision(p, true)"
             >
-              <mat-spinner *ngIf="decisionLoading?.id === p.id && decisionLoading?.approved" diameter="20"></mat-spinner>
-              <span *ngIf="!(decisionLoading?.id === p.id && decisionLoading?.approved)">Aprobar</span>
+              <mat-spinner
+                *ngIf="
+                  decisionLoading?.id === p.id && decisionLoading?.approved
+                "
+                diameter="20"
+              ></mat-spinner>
+              <span
+                *ngIf="
+                  !(decisionLoading?.id === p.id && decisionLoading?.approved)
+                "
+                >Aprobar</span
+              >
             </button>
             <button
               mat-raised-button
@@ -74,8 +84,18 @@
               [disabled]="!!decisionLoading"
               (click)="handleDecision(p, false)"
             >
-              <mat-spinner *ngIf="decisionLoading?.id === p.id && !decisionLoading?.approved" diameter="20"></mat-spinner>
-              <span *ngIf="!(decisionLoading?.id === p.id && !decisionLoading?.approved)">Rechazar</span>
+              <mat-spinner
+                *ngIf="
+                  decisionLoading?.id === p.id && !decisionLoading?.approved
+                "
+                diameter="20"
+              ></mat-spinner>
+              <span
+                *ngIf="
+                  !(decisionLoading?.id === p.id && !decisionLoading?.approved)
+                "
+                >Rechazar</span
+              >
             </button>
           </div>
         </div>

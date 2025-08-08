@@ -90,24 +90,10 @@ export class ResidenceVerificationComponent implements OnInit {
   }
 
   /** Descarga el archivo base-64 de la prueba */
-  downloadProof(proof: ResidenceProofDto): void {
-    if (!proof.proofImage) return;
-
-    /* 1) Convertir base-64 a Blob */
-    const byteString = atob(proof.proofImage);
-    const bytes = new Uint8Array(byteString.length);
-    for (let i = 0; i < byteString.length; i++) {
-      bytes[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([bytes], { type: "application/octet-stream" });
-
-    /* 2) Crear URL temporal y disparar descarga */
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `residence-proof-${proof.id}.jpg`;
-    link.click();
-    URL.revokeObjectURL(url);
+  downloadProof(proof: ResidenceProofDto, event?: MouseEvent): void {
+    event?.stopPropagation();
+    if (!proof.proofDocUrl) return;
+    window.open(proof.proofDocUrl, "_blank");
   }
 
   /* ------------------------- aprobar / rechazar ---------------------- */

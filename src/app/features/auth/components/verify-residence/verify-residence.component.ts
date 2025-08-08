@@ -146,35 +146,45 @@ export class VerifyResidenceComponent implements OnInit {
       // 1) Tomar el File guardado o el recién seleccionado
       const file =
         this.selectedImageFile ||
-        this.regData.getRegistrationData()?.proofDocument;
+        this.regData.getRegistrationData()?.proofDocument ||
+        null;
 
-      // 2) Construir payload
-      const payload: RegisterRequest = {
+      // 2) Armar el DTO SIN el File
+      const dto: RegisterRequest = {
         ...this.userData,
         proofMessage: this.verificationForm.value.textProof || "",
-        proofDocument: file ?? undefined,
+        // OJO: NO metas el File dentro del DTO JSON
+        proofDocument: undefined as any,
       };
 
-      // 3) Guardar el draft antes de llamar al API
-      this.regData.setRegistrationData(payload);
-
-      // 4) Construir FormData y disparar el POST
-      const formData = new FormData();
-      Object.entries(payload).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          if (value instanceof File) {
-            formData.append(key, value);
-          } else {
-            formData.append(key, String(value));
-          }
-        }
+      // 3) Guardar draft antes de llamar al API
+      this.regData.setRegistrationData({
+        ...dto,
+        proofDocument: file ?? undefined,
       });
+
+      // 4) Construir el FormData con las PARTES correctas
+      const formData = new FormData();
+
+      // Parte JSON llamada "request"
+      formData.append(
+        "request",
+        new Blob([JSON.stringify(dto)], { type: "application/json" })
+      );
+
+      // Parte archivo llamada "document" (si hay)
+      if (file instanceof File) {
+        formData.append("document", file, file.name);
+      }
+
+      // 5) POST (no seteés Content-Type manualmente)
       await firstValueFrom(this.authService.register(formData));
 
-      // 5) Mostrar snackbar de éxito
+      // 6) Snackbar éxito
       this.snackBar.openFromComponent(ResultSnackbarComponent, {
         data: {
-          message: "Registro completado! Revisa tu email para verificar tu cuenta.",
+          message:
+            "Registro completado! Revisa tu email para verificar tu cuenta.",
           status: "success",
         },
         duration: 5000,
@@ -183,14 +193,12 @@ export class VerifyResidenceComponent implements OnInit {
         verticalPosition: "bottom",
       });
 
-      // 6) Limpiar formulario (sin emitir valueChanges) y servicio
+      // 7) Limpiar
       this.verificationForm.reset(undefined, { emitEvent: false });
       this.regData.clear();
-
-      // 7) Navegar al siguiente paso
       this.router.navigate(["/auth/login"]);
-    } catch (error) {
-      // aquí podrías setear showGeneralError = true si quieres alertar al usuario
+    } catch (err) {
+      this.showGeneralError = true;
     } finally {
       this.isLoading = false;
     }

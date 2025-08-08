@@ -2,7 +2,7 @@ export interface ResidenceProof {
   id: number;
   userId: number;
   proofMessage: string | null;
-  proofImage: string | null;
+  proofDocUrl: string | null;
   createdAt: string; 
 }
 
