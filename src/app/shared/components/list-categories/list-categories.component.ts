@@ -51,9 +51,18 @@ export class ListCategoriesComponent implements OnInit, OnChanges {
 
   /** Carga desde el backend sólo los hijos de parentId */
   private loadChildren(): void {
-    const prefix = this.parentId ? this.parentId + ">" : "";
+    if (this.parentId) {
+      const prefix = this.parentId + ">";
+      this.categories = this.categoryService
+        .getByPrefix(prefix)
+        .sort((a, b) => a.name.localeCompare(b.name));
+      return;
+    }
+
+    // Nivel raíz: mostrar primeras categorías de todos los tipos
     this.categories = this.categoryService
-      .getByPrefix(prefix)
+      .getCached()
+      .filter((c) => c.id.split(">").length === 2)
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 

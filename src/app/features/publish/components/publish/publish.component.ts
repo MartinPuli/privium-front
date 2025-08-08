@@ -76,6 +76,21 @@ export class PublishComponent implements OnInit {
   type: 'PRODUCTO' | 'VEHICULO' | 'INMUEBLE' | 'MUEBLE' | 'SERVICIO' | null = null;
   skipCondition = false;
 
+  private readonly typePrefixes: Record<
+    'PRODUCTO' | 'VEHICULO' | 'MUEBLE' | 'INMUEBLE' | 'SERVICIO',
+    string
+  > = {
+    PRODUCTO: '1',
+    VEHICULO: '2',
+    MUEBLE: '3',
+    INMUEBLE: '4',
+    SERVICIO: '5',
+  };
+
+  get typePrefix(): string | null {
+    return this.type ? this.typePrefixes[this.type] : null;
+  }
+
   /* ---------------- formularios ---------------- */
   detailsForm!: FormGroup;
   commercialForm!: FormGroup;
@@ -110,6 +125,7 @@ export class PublishComponent implements OnInit {
     if (this.skipCondition) {
       this.detailsForm.get('condition')?.setValue(2);
     }
+    this.resetCategories();
     this.nextStep();
   }
 

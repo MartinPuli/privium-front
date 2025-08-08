@@ -123,8 +123,8 @@
                 <!-- evita cierre -->
                 <app-list-categories
                   (categorySelected)="onCategorySelected(i, $event)"
-                >
-                </app-list-categories>
+                  [parentId]="typePrefix"
+                ></app-list-categories>
               </div>
             </div>
           </div>

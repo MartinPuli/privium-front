@@ -80,6 +80,20 @@ export class EditPublicationComponent implements OnInit {
   /* ---------- categorías ----------------------------------- */
   categories: { idPath: string; name: string }[] = [];
   showList: boolean[] = [];
+  private readonly typePrefixes: Record<
+    'PRODUCTO' | 'VEHICULO' | 'MUEBLE' | 'INMUEBLE' | 'SERVICIO',
+    string
+  > = {
+    PRODUCTO: '1',
+    VEHICULO: '2',
+    MUEBLE: '3',
+    INMUEBLE: '4',
+    SERVICIO: '5',
+  };
+
+  get typePrefix(): string {
+    return this.typePrefixes[this.listing.type as keyof typeof this.typePrefixes];
+  }
 
   /* ---------- imágenes ------------------------------------- */
   @ViewChild("fileInput") fileInput!: ElementRef<HTMLInputElement>;
