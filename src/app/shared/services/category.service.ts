@@ -6,7 +6,7 @@ import {
   Category,
 } from "../models/category.model";
 import { ResponseDataDto } from "../models/responses.model";
-import { BehaviorSubject, map, Observable, tap } from "rxjs";
+import { BehaviorSubject, map, Observable, tap, of } from "rxjs";
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -15,39 +15,75 @@ import { environment } from '../../../environments/environment';
 export class CategoryService {
   private baseBackendUrl: string;
   private getCategoriesUrl: string;
+  private readonly STORAGE_KEY = "categories";
+  private categoriesSubject = new BehaviorSubject<Category[]>([]);
+  categories$ = this.categoriesSubject.asObservable();
 
   constructor(private http: HttpClient) {
     this.baseBackendUrl = `${environment.apiBaseUrl}/categories/`;
     this.getCategoriesUrl = this.baseBackendUrl + "getCategories";
+    try {
+      const raw = localStorage.getItem(this.STORAGE_KEY);
+      if (raw) {
+        this.categoriesSubject.next(JSON.parse(raw));
+      }
+    } catch {
+      // ignore storage errors
+    }
   }
 
   getCategories(
     rootId?: string,
     leafId?: string
   ): Observable<ResponseDataDto<Category[]>> {
-    const request: CategoryRequestDto = {
-      rootId,
-      leafId,
-    };
+    if (!rootId && !leafId) {
+      const cached = this.getCached();
+      if (cached.length) {
+        return of({ data: cached } as ResponseDataDto<CategoryResponseDto[]>);
+      }
+    }
 
-    return this.http.post<ResponseDataDto<CategoryResponseDto[]>>(
-      this.getCategoriesUrl,
-      request
-    );
+    const request: CategoryRequestDto = { rootId, leafId };
+
+    return this.http
+      .post<ResponseDataDto<CategoryResponseDto[]>>(this.getCategoriesUrl, request)
+      .pipe(
+        tap((res) => {
+          if (!rootId && !leafId) {
+            const list = res.data ?? [];
+            this.categoriesSubject.next(list);
+            try {
+              localStorage.setItem(this.STORAGE_KEY, JSON.stringify(list));
+            } catch {
+              // ignore
+            }
+          }
+        })
+      );
   }
 
-  private categoriesSubject = new BehaviorSubject<Category[]>([]);
-  categories$ = this.categoriesSubject.asObservable();
-
   loadCategories(rootId?: string, leafId?: string): Observable<Category[]> {
+    if (!rootId && !leafId) {
+      const cached = this.getCached();
+      if (cached.length) {
+        return of(cached);
+      }
+    }
+
     return this.http
-      .post<ResponseDataDto<Category[]>>(this.getCategoriesUrl, {
-        rootId,
-        leafId,
-      })
+      .post<ResponseDataDto<Category[]>>(this.getCategoriesUrl, { rootId, leafId })
       .pipe(
         map((r) => r.data ?? []),
-        tap((list) => this.categoriesSubject.next(list))
+        tap((list) => {
+          this.categoriesSubject.next(list);
+          if (!rootId && !leafId) {
+            try {
+              localStorage.setItem(this.STORAGE_KEY, JSON.stringify(list));
+            } catch {
+              // ignore storage errors
+            }
+          }
+        })
       );
   }
 
