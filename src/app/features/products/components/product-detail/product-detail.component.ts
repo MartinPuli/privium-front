@@ -1,6 +1,12 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { CommonModule } from "@angular/common";
+import {
+  Title,
+  Meta,
+  DomSanitizer,
+  SafeHtml,
+} from "@angular/platform-browser";
 
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -9,7 +15,7 @@ import { MatBadgeModule } from "@angular/material/badge";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 import { forkJoin, from, of, Subscription } from "rxjs";
-import { switchMap, tap, finalize, map } from "rxjs/operators";
+import { switchMap, tap, map } from "rxjs/operators";
 
 import { ListingService } from "src/app/shared/services/listing.service";
 import {
@@ -63,6 +69,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   relatedProducts: ListingResponseDto[] = [];
 
+  productJsonLd: SafeHtml | null = null;
+
   /* helper de ejemplo */
   additionalInfo = {
     relatedSearch: "Muebles antiguos",
@@ -77,7 +85,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private listingService: ListingService,
     private profileService: ProfileService,
     private authService: AuthService,
-    private countryService: CountryService
+    private countryService: CountryService,
+    private title: Title,
+    private meta: Meta,
+    private sanitizer: DomSanitizer
   ) {}
 
   /* ════════════════════════════════════════════════════════════════
@@ -128,6 +139,41 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           result.listing!.countryId
         );
         this.isFavorite = false;
+
+        this.title.setTitle(`${this.product.title} | Privium`);
+        this.meta.updateTag({
+          name: "description",
+          content: this.product.description,
+        });
+        this.meta.updateTag({
+          property: "og:title",
+          content: this.product.title,
+        });
+        this.meta.updateTag({
+          property: "og:description",
+          content: this.product.description,
+        });
+        if (this.product.mainImage) {
+          this.meta.updateTag({
+            property: "og:image",
+            content: this.product.mainImage,
+          });
+        }
+        this.productJsonLd = this.sanitizer.bypassSecurityTrustHtml(
+          JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: this.product.title,
+            image: this.getAllImages(),
+            description: this.product.description,
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "ARS",
+              price: this.product.price,
+              availability: "https://schema.org/InStock",
+            },
+          })
+        );
 
         /* vendedor */
         from(this.profileService.getUser(result.listing!.userId))
