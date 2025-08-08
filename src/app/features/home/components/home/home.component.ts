@@ -190,14 +190,28 @@ export class HomeComponent implements OnInit {
   }
 
   private setupSEO(): void {
+    const description =
+      "Descubre productos únicos en tu barrio cerrado. Marketplace exclusivo y seguro para tu comunidad.";
+    const url = "https://privium.com/home";
+
     this.seoService.updateSEO({
       title: "Inicio",
-      description:
-        "Descubre productos únicos en tu barrio cerrado. Marketplace exclusivo y seguro para tu comunidad.",
+      description,
       keywords:
         "marketplace, barrios cerrados, productos, compra, venta, privium, campos de alvarez",
-      url: "https://privium.com/home",
+      url,
       type: "website",
+      image: "https://privium.com/assets/images/og-image.jpg",
+      author: "Privium",
+      canonical: url,
+    });
+
+    this.seoService.addStructuredData({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Inicio | Privium",
+      url,
+      description,
     });
   }
 }
