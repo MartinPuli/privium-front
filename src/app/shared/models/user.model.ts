@@ -37,7 +37,7 @@ export interface UserRequestDto {
   countryId?: number
   // Para prueba de residencia
   proofMessage?: string
-  proofImageBase64?: string
+  proofDocument?: File
   // Para verificación de email/proof
   token?: string
   approved?: boolean
@@ -63,6 +63,6 @@ export interface RegisterRequest {
   phone: string
   countryId: number
   proofMessage?: string
-  proofImageBase64?: string
+  proofDocument?: File
 }
 
