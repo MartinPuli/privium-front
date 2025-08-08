@@ -4,6 +4,11 @@
 
   <!-- ▸ Cuerpo principal -->
   <main class="main-content" *ngIf="!isLoading && product">
+    <script
+      *ngIf="productJsonLd"
+      type="application/ld+json"
+      [innerHTML]="productJsonLd"
+    ></script>
     <!-- ═══════════ Breadcrumb ═══════════ -->
     <div class="breadcrumb-container">
       <div class="container">
