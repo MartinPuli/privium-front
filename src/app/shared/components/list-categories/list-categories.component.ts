@@ -52,7 +52,9 @@ export class ListCategoriesComponent implements OnInit, OnChanges {
   /** Carga desde el backend sólo los hijos de parentId */
   private loadChildren(): void {
     const prefix = this.parentId ? this.parentId + ">" : "";
-    this.categories = this.categoryService.getByPrefix(prefix);
+    this.categories = this.categoryService
+      .getByPrefix(prefix)
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   /** ¿Esta categoría tiene hijos según el flag? */
