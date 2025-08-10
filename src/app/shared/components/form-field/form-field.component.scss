@@ -589,11 +589,12 @@
   }
 
   .remove-file-btn {
-    width: 44px;
-    height: 44px;
+    width: 30px;
+    transform: translateX(-2.5px);
+    height: 30px;
 
     mat-icon {
-      font-size: 28px;
+      font-size: 18px;
       margin-right: 0;
     }
   }
