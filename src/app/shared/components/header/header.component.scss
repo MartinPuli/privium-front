@@ -191,7 +191,7 @@ $container-w: 86%; // igual que el footer
 
 // Botón de menú para móviles - OCULTO
 .mobile-menu-toggle {
-  display: none !important; // Siempre oculto
+  display: none; // Oculto en escritorio, visible en móvil
 }
 
 .user-info {
