@@ -1,10 +1,10 @@
 // main.ts
 import { bootstrapApplication } from "@angular/platform-browser";
-import { provideRouter, withRouterConfig } from "@angular/router";
+import { provideRouter, withRouterConfig, withPreloading, PreloadAllModules } from "@angular/router";
 import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
-import { importProvidersFrom, LOCALE_ID } from "@angular/core";
-import { BrowserModule, Title, Meta } from "@angular/platform-browser";
+import { importProvidersFrom, LOCALE_ID, provideZoneChangeDetection } from "@angular/core";
+import { Title, Meta, provideClientHydration } from "@angular/platform-browser";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MAT_DATE_LOCALE } from "@angular/material/core";
 import { registerLocaleData } from "@angular/common";
@@ -20,14 +20,21 @@ registerLocaleData(localeEsAr);
 bootstrapApplication(AppComponent, {
   providers: [
     // 1) **Única** llamada a provideRouter con reload
-    provideRouter(routes, withRouterConfig({ onSameUrlNavigation: "reload" })),
+    provideRouter(routes, withRouterConfig({ onSameUrlNavigation: "reload" }), withPreloading(PreloadAllModules)),
+    // Preload lazy modules after initial load
+    // with enabled default preloading strategy
+    // Angular v17+: configure in provideRouter as a feature
+    
+
+    provideClientHydration(),
+    provideZoneChangeDetection({ eventCoalescing: true }),
 
     // 2) HTTP client + interceptors
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
 
     // 3) Animaciones y módulos clásicos
     provideAnimationsAsync(),
-    importProvidersFrom(BrowserModule, MatSnackBarModule),
+    importProvidersFrom(MatSnackBarModule),
 
     // 4) Servicios de título/meta
     Title,
