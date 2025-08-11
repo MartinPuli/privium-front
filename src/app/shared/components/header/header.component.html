@@ -1,7 +1,7 @@
 <div class="header-toolbar">
   <div
     class="header-container"
-    [ngClass]="{ 'header-one-row': !logged || publishing || !showCategoryNav }"
+    [ngClass]="{ 'header-one-row': !logged || publishing || !showCategoryNav, 'not-logged': !logged }"
   >
     <!-- Logo y ubicación -->
     <div class="header-left">
@@ -23,7 +23,6 @@
     <div
       class="search-container"
       *ngIf="logged && !publishing"
-      [ngClass]="{ 'mobile-open': isMobileMenuOpen }"
     >
       <mat-form-field appearance="outline" class="search-field">
         <mat-icon matPrefix aria-hidden="true">search</mat-icon>
@@ -37,10 +36,12 @@
         />
       </mat-form-field>
 
+      <!-- Botón categorías: sólo desktop (se oculta <=768px) -->
       <div
-        class="category-button"
+        class="category-button hide-on-md"
         #catButton
-        (click)="$event.stopPropagation()"
+  (click)="$event.stopPropagation()"
+  (keydown)="$event.stopPropagation()"
       >
         <button
           mat-button
@@ -103,27 +104,26 @@
       </mat-menu>
     </div>
 
-    <!-- Botón menú móvil -->
-    <button
-      *ngIf="logged && !publishing && showCategoryNav"
-      mat-icon-button
-      class="mobile-menu-toggle"
-      (click)="toggleMobileMenu()"
-      aria-label="Menú de navegación"
-    >
-      <mat-icon>{{ isMobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
-    </button>
   </div>
 </div>
+
+<!-- Submenú: lista de categorías (panel auto en función del contenido) -->
+<mat-menu #categoriesMenu="matMenu" class="categories-menu-panel" [overlapTrigger]="false">
+  <app-list-categories
+    (categorySelected)="onMobileCategorySelect($event)"
+    [orientation]="'left'"
+  ></app-list-categories>
+  
+</mat-menu>
 
 <!-- Navegación de categorías -->
 <div
   class="category-nav"
   aria-label="Navegación de categorías"
   *ngIf="logged && !publishing && showCategoryNav"
-  [ngClass]="{ 'mobile-open': isMobileMenuOpen }"
 >
-  <div class="nav-container">
+  <!-- Desktop (>=900px): combinado como ahora -->
+  <div class="nav-container desktop-only">
     <!-- Ubicación del usuario -->
     <div class="location-info">
       <mat-icon aria-hidden="true">location_on</mat-icon>
@@ -135,42 +135,12 @@
 
     <!-- Filtros rápidos -->
     <div class="filter-links">
-      <button
-        mat-button
-        [matMenuTriggerFor]="condMenu"
-      >
-        Condición
-      </button>
-      <button
-        mat-button
-        [matMenuTriggerFor]="priceMenu"
-      >
-        Precio
-      </button>
-      <button
-        mat-button
-        [matMenuTriggerFor]="distMenu"
-      >
-        Distancia
-      </button>
-      <button
-        mat-button
-        [matMenuTriggerFor]="hoodMenu"
-      >
-        Barrio
-      </button>
-      <button
-        mat-button
-        [matMenuTriggerFor]="payMenu"
-      >
-        Medio de pago
-      </button>
-      <button
-        mat-button
-        [matMenuTriggerFor]="dateMenu"
-      >
-        Fecha de publicación
-      </button>
+      <button mat-button [matMenuTriggerFor]="condMenu">Condición</button>
+      <button mat-button [matMenuTriggerFor]="priceMenu">Precio</button>
+      <button mat-button [matMenuTriggerFor]="distMenu">Distancia</button>
+      <button mat-button [matMenuTriggerFor]="hoodMenu">Barrio</button>
+      <button mat-button [matMenuTriggerFor]="payMenu">Medio de pago</button>
+      <button mat-button [matMenuTriggerFor]="dateMenu">Fecha de publicación</button>
     </div>
 
     <!-- Botón Publicar -->
@@ -181,14 +151,58 @@
       (click)="goToPublish()"
       aria-label="Publicar un nuevo producto"
     >
-      PUBLICAR
+  <span class="label-text">PUBLICAR</span>
+  <span class="label-plus" aria-hidden="true">+</span>
     </button>
+  </div>
+
+  <!-- Mobile/Tablet (<900px): 2da barra (ubicación + publicar) y 3ra barra con nav-links scrollables -->
+  <div class="nav-container-2col mobile-only">
+    <div class="secondary-bar">
+      <!-- Botón filtros para abrir/cerrar nav-links -->
+      <button
+        mat-icon-button
+        class="filters-toggle"
+        (click)="toggleLinksBar()"
+        [attr.aria-expanded]="isLinksOpen"
+        aria-label="Mostrar u ocultar filtros rápidos"
+      >
+        <mat-icon>tune</mat-icon>
+      </button>
+      <div class="location-info">
+        <mat-icon aria-hidden="true">location_on</mat-icon>
+        <span class="location-text">
+          <p>Estás en</p>
+          <h2>{{ this.currentUserCountryName }}</h2>
+        </span>
+      </div>
+      <button
+        mat-raised-button
+        color="accent"
+        class="publish-button"
+        (click)="goToPublish()"
+        aria-label="Publicar un nuevo producto"
+      >
+  <span class="label-text">PUBLICAR</span>
+  <span class="label-plus" aria-hidden="true">+</span>
+      </button>
+    </div>
+
+    <div class="nav-links-bar" *ngIf="!isLinksOpen">
+      <button mat-button style="flex-shrink: 0; "  [matMenuTriggerFor]="categoriesMenu">Categorías</button>
+      <button mat-button style="flex-shrink: 0; " [matMenuTriggerFor]="condMenu">Condición</button>
+      <button mat-button style="flex-shrink: 0; " [matMenuTriggerFor]="priceMenu">Precio</button>
+      <button mat-button style="flex-shrink: 0; " [matMenuTriggerFor]="distMenu">Distancia</button>
+      <button mat-button style="flex-shrink: 0; " [matMenuTriggerFor]="hoodMenu">Barrio</button>
+      <button mat-button style="flex-shrink: 0; " [matMenuTriggerFor]="payMenu">Medio de pago</button>
+      <button mat-button style="flex-shrink: 0; " [matMenuTriggerFor]="dateMenu">Fecha de publicación</button>
+    </div>
   </div>
 </div>
 
 <!-- ════════ 1. Condición ════════ -->
 <mat-menu #condMenu="matMenu" class="filter-menu">
-  <div class="menu-body" (click)="$event.stopPropagation()">
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-radio-group [(ngModel)]="filters.condition" class="d-block">
       <mat-radio-button value="">Todas</mat-radio-button><br />
       <mat-radio-button value="nuevo">Nuevo</mat-radio-button><br />
@@ -211,7 +225,7 @@
 
 <!-- ════════ 2. Precio ════════ -->
 <mat-menu #priceMenu="matMenu" class="filter-menu">
-  <div class="menu-body" (click)="$event.stopPropagation()">
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Precio mínimo</mat-label>
       <input
@@ -254,7 +268,7 @@
 
 <!-- ════════ 3. Distancia ════════ -->
 <mat-menu #distMenu="matMenu" class="filter-menu">
-  <div class="menu-body" (click)="$event.stopPropagation()">
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-radio-group [(ngModel)]="filters.distance" class="d-block">
       <mat-radio-button [value]="10">Menos de 10 km</mat-radio-button><br />
       <mat-radio-button [value]="15">Menos de 15 km</mat-radio-button><br />
@@ -277,7 +291,7 @@
 
 <!-- ════════ 4. Barrio privado ════════ -->
 <mat-menu #hoodMenu="matMenu" class="filter-menu">
-  <form #f="ngForm" class="menu-body" (click)="$event.stopPropagation()">
+  <form #f="ngForm" class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Barrio privado</mat-label>
       <mat-select [(ngModel)]="filters.countryId" name="countryId">
@@ -302,7 +316,7 @@
 
 <!-- ════════ 5. Medio de pago ════════ -->
 <mat-menu #payMenu="matMenu" class="filter-menu">
-  <div class="menu-body" (click)="$event.stopPropagation()">
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-checkbox
       *ngFor="let mp of mediosPago"
       [(ngModel)]="filters.pay[mp.value]"
@@ -326,7 +340,7 @@
 
 <!-- ════════ 6. Fecha de publicación ════════ -->
 <mat-menu #dateMenu="matMenu" class="filter-menu">
-  <div class="menu-body" (click)="$event.stopPropagation()">
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Desde</mat-label>
       <input

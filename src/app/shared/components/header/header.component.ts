@@ -29,7 +29,6 @@ import { CountryService } from "../../services/country.service";
 import { DefaultImageDirective } from "../../directives/default-image.directive";
 import { User } from "../../models/user.model";
 import { Category } from "../../models/category.model";
-import { Country } from "../../models/country.model";
 import { ListCategoriesComponent } from "../list-categories/list-categories.component";
 import { SelectOption } from "../form-field/form-field.component";
 import { MatSelectModule } from "@angular/material/select";
@@ -76,6 +75,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   /** Controla la visibilidad del menú en pantallas pequeñas */
   isMobileMenuOpen = false;
+  /** Controla la visibilidad de la 3ra barra (nav-links) en <900px */
+  isLinksOpen = true;
 
   @Input() logged = true;
   @Input() publishing = false;
@@ -120,15 +121,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   currentUserCountryName = "";
 
-  private filterSub?: Subscription;
+  private readonly filterSub?: Subscription;
   private routerSub?: Subscription;
 
   constructor(
     public authService: AuthService,
-    private categorySrv: CategoryService,
+  private readonly categorySrv: CategoryService,
     public countrySrv: CountryService,
-    private router: Router,
-    private filterSrv: FilterService
+  private readonly router: Router,
+  private readonly filterSrv: FilterService
   ) {}
 
   ngOnInit(): void {
@@ -183,6 +184,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.selectedCategoryLabel = sel.name;
     this.selectedCategoryId = sel.idPath;
     this.showCategories = false;
+  }
+
+  // Selección de categoría desde el menú hamburguesa (móvil)
+  onMobileCategorySelect(sel: { idPath: string; name: string }): void {
+    this.selectedCategoryLabel = sel.name;
+    this.selectedCategoryId = sel.idPath;
+    this.applyFilters(); // aplica junto con los filtros actuales del header
   }
 
   @HostListener("document:click", ["$event"])
@@ -274,5 +282,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   /** Abre o cierra el menú móvil */
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  /** Abre/cierra la barra de nav-links (segunda barra, icono filtros) */
+  toggleLinksBar(): void {
+    this.isLinksOpen = !this.isLinksOpen;
   }
 }

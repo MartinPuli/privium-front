@@ -1,17 +1,17 @@
 @import "../../../../shared/styles/variables";
 
-$btn-h: 38px;
-$btn-w: 165px;
+$btn-h: 34px;
+$btn-w: 148px;
 
 .cat-btn {
-  padding: 0 15px;
+  padding: 0 12px;
   width: $btn-w;
   height: $btn-h;
   border-radius: 6px; /* “más cuadrados”   */
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   font-size: 0.875rem;
   border: none;
   cursor: pointer;
@@ -51,6 +51,7 @@ $btn-w: 165px;
 /* texto con corte elíptico si es largo */
 .cat-label {
   flex: 1 1 auto;
+  min-width: 0; /* necesario para elipsis dentro de flex */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -66,4 +67,41 @@ $btn-w: 165px;
 .cat-btn:not(:disabled):hover {
   /* tu color de hover anterior */
   background: rgba($primary-navy, 0.8);
+}
+
+/* ---------- Responsive (celu/tablet más chico) ---------- */
+@media (max-width: 900px) {
+  .cat-btn {
+  width: 140px;
+  height: 32px;
+  padding: 0 10px;
+  gap: 6px;
+    font-size: 0.85rem;
+    mat-icon { font-size: 19px; }
+  }
+  .cat-btn--empty mat-icon { font-size: 22px; }
+}
+
+@media (max-width: 768px) {
+  .cat-btn {
+  width: 130px;
+  height: 30px;
+  padding: 0 8px;
+    gap: 6px;
+    font-size: 0.82rem;
+    mat-icon { font-size: 18px; }
+  }
+  .cat-btn--empty mat-icon { font-size: 21px; }
+}
+
+@media (max-width: 480px) {
+  .cat-btn {
+  width: 118px;
+  height: 28px;
+  padding: 0 6px;
+    gap: 6px;
+    font-size: 0.8rem;
+    mat-icon { font-size: 18px; }
+  }
+  .cat-btn--empty mat-icon { font-size: 20px; }
 }

@@ -2,7 +2,7 @@
 
 <mat-sidenav-container class="search-container">
   <!-- Drawer móvil -->
-  <mat-sidenav #drawer mode="over" class="filters-drawer">
+  <mat-sidenav #drawer mode="over" class="filters-drawer" (openedChange)="onDrawerOpenedChange($event)">
     <app-search-filters
       #mobileFilters
       [initialFilters]="current"
@@ -26,8 +26,30 @@
         </button>
         <mat-icon>search</mat-icon>
         <h1>
-          Búsqueda<b *ngIf="current.searchTerm">: "{{ current.searchTerm }}"</b>
+          Búsqueda<b class="search-term" *ngIf="current.searchTerm">: "{{ current.searchTerm }}"</b>
         </h1>
+
+        <!-- Sort móvil (<=600px) -->
+        <div class="sort-control sort-control-mobile">
+          <button
+            mat-button
+            class="sort-btn"
+            (click)="setSort('DESC')"
+            *ngIf="sortOrder === 'ASC'"
+          >
+            <mat-icon>arrow_downward</mat-icon>
+            Más reciente
+          </button>
+          <button
+            mat-button
+            class="sort-btn"
+            (click)="setSort('ASC')"
+            *ngIf="sortOrder === 'DESC'"
+          >
+            <mat-icon>arrow_upward</mat-icon>
+            Más antiguo
+          </button>
+        </div>
       </div>
 
       <!-- Spinner central -->
@@ -58,7 +80,7 @@
               >
                 <app-button-categories
                   [categoryName]="slot.name"
-                  (toggle)="toggleCategoryList(i)"
+                  (toggle)="toggleCategoryList(i, $event)"
                   (clear)="clearCategory(i)"
                 ></app-button-categories>
 
@@ -66,10 +88,11 @@
                   *ngIf="showCategoryList[i]"
                   class="dropdown-wrapper"
                   (click)="$event.stopPropagation()"
+                  (keydown)="$event.stopPropagation()"
                 >
                   <app-list-categories
                     class="list-categories"
-                    orientation="left"
+                    [orientation]="slotOrientations[i] || 'right'"
                     (categorySelected)="onCategorySelected(i, $event)"
                   ></app-list-categories>
                 </div>
@@ -78,6 +101,7 @@
             <div class="sort-control">
               <button
                 mat-button
+                class="sort-btn"
                 (click)="setSort('DESC')"
                 *ngIf="sortOrder === 'ASC'"
               >
@@ -86,6 +110,7 @@
               </button>
               <button
                 mat-button
+                class="sort-btn"
                 (click)="setSort('ASC')"
                 *ngIf="sortOrder === 'DESC'"
               >

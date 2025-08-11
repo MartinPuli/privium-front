@@ -5,7 +5,7 @@
     class="cat-btn cat-btn--empty"
     type="button"
     [disabled]="disabled"
-    (click)="toggle.emit(); $event.stopPropagation()">
+  (click)="toggle.emit($event); $event.stopPropagation()">
     <mat-icon>add</mat-icon>
   </button>
 
@@ -15,7 +15,9 @@
     class="cat-btn cat-btn--filled"
     type="button"
     [disabled]="disabled"
-    (click)="clear.emit(); $event.stopPropagation()">
+    [matTooltip]="categoryName || ''"
+    matTooltipPosition="below"
+  (click)="clear.emit(); $event.stopPropagation()">
     <span class="cat-label">{{ categoryName }}</span>
     <mat-icon class="cat-close">close</mat-icon>
   </button>

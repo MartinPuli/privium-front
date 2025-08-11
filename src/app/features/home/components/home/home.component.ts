@@ -11,7 +11,6 @@ import { ListingService } from "../../../../shared/services/listing.service";
 import { CategoryService } from "../../../../shared/services/category.service";
 import { FilterService } from "../../../../shared/services/filter.service";
 import { ListingResponseDto } from "../../../../shared/models/listing.model";
-import { Category } from "../../../../shared/models/category.model";
 import { HeaderComponent } from "src/app/shared/components/header/header.component";
 import { FooterComponent } from "src/app/shared/components/footer/footer.component";
 import { ProductCardSmallComponent } from "src/app/shared/components/product-card-small/product-card-small.component";
@@ -51,10 +50,10 @@ export class HomeComponent implements OnInit {
   isLoading = true;
 
   constructor(
-    private seoService: SEOService,
-    private listingSrv: ListingService,
-    private categorySrv: CategoryService,
-    private filterSrv: FilterService
+    private readonly seoService: SEOService,
+    private readonly listingSrv: ListingService,
+    private readonly categorySrv: CategoryService,
+    private readonly filterSrv: FilterService
   ) {}
 
   ngOnInit() {
@@ -78,7 +77,7 @@ export class HomeComponent implements OnInit {
   private async loadNeighborhoodProducts(page = 1) {
     const { products, hasMore } = await this.listingSrv.getNeighborhoodProducts(
       page,
-      3,
+      3, // 3 productos para la primera sección (nearby)
       10
     );
     this.neighborhoodProducts = products;
@@ -92,7 +91,7 @@ export class HomeComponent implements OnInit {
     const nextPage = this.neighborhoodPage + 1;
     const { products, hasMore } = await this.listingSrv.getNeighborhoodProducts(
       nextPage,
-      3,
+      3, // 3 productos para la primera sección
       10
     );
 

@@ -102,11 +102,12 @@ $container-w: 86%;
 @media (max-width: $bp-md) {
   .footer-container {
     width: 100%;
-    padding: 2rem 1rem 1rem;
+  padding: 1.25rem 1rem 1rem; // bajar top padding en mobile
   }
 
   .footer-content {
-    gap: 1.5rem;
+  gap: 3rem; // subir separación entre secciones en mobile
+  padding: 2rem 1rem 0 1rem; // bajar top padding respecto a desktop (antes 5rem)
   }
 
   .footer-container a,

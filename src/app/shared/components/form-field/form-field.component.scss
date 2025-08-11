@@ -227,8 +227,8 @@
   }
 
   .ff-checkbox-label {
-    font-size: 0.95rem;
-    line-height: 0.95rem;
+    font-size: 1.1rem;
+    line-height: 1.1rem;
   }
 
   .link-primary {
@@ -381,122 +381,11 @@
 }
 
 /* ===========================
-   Media queries (al final)
+   Media queries (ordenadas)
    =========================== */
-
-/* Mejora responsive del input file */
-.file-name {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
 /* <= 900px */
 @media (max-width: 900px) {
-  .form-label {
-    font-size: 0.95rem;
-  }
-
-  .form-input,
-  .form-textarea,
-  .form-select {
-    font-size: 0.95rem !important;
-    padding: 10px !important;
-    border-radius: 10px !important;
-  }
-
-  .input-wrapper .prefix-icon {
-    left: 14px !important;
-    font-size: 20px !important;
-    top: 12px !important;
-  }
-
-  .input-wrapper .suffix-icon,
-  .input-wrapper .password-toggle {
-    right: 10px !important;
-    font-size: 18px !important;
-  }
-
-  .select-wrapper .dropdown-icon {
-    right: 10px !important;
-    font-size: 20px !important;
-    width: 20px !important;
-    height: 20px !important;
-  }
-
-  .form-checkbox {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  .checkbox-label,
-  .ff-checkbox-label {
-    font-size: 0.95rem !important;
-  }
-
-  .file-wrapper {
-    height: 220px;
-    padding: 18px;
-  }
-}
-
-/* <= 768px */
-@media (max-width: 768px) {
-  .form-input,
-  .form-textarea,
-  .form-select {
-    font-size: 1rem !important;
-    padding: 16px !important;
-  }
-
-  .input-wrapper .prefix-icon {
-    left: 12px !important;
-  }
-
-  .password-toggle {
-    width: 40px;
-    height: 40px;
-    .mat-icon {
-      height: 20px !important;
-      width: 20px !important;
-      font-size: 20px !important;
-    }
-  }
-
-  .input-wrapper .suffix-icon,
-  .input-wrapper .password-toggle {
-    right: 12px !important;
-  }
-
-  .select-wrapper .dropdown-icon {
-    right: 12px !important;
-    font-size: 18px !important;
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  .file-wrapper {
-    min-height: 200px;
-    height: auto;
-    padding: 18px;
-
-    .file-label mat-icon {
-      font-size: 40px !important;
-    }
-
-    .file-label span {
-      font-size: 1.05rem !important;
-    }
-
-    small {
-      font-size: 0.9rem !important;
-    }
-  }
-}
-
-/* <= 600px — más grande en móviles */
-@media (max-width: 600px) {
   .form-label {
     font-size: 1.2rem !important;
     line-height: 1.25;
@@ -530,6 +419,7 @@
   .password-toggle {
     width: 40px;
     height: 40px;
+
     .mat-icon {
       height: 20px !important;
       width: 20px !important;
@@ -545,13 +435,33 @@
   }
 
   .form-checkbox {
-    width: 22px !important;
-    height: 22px !important;
+    width: 30px !important;
+    height: 30px !important;
   }
 
   .checkbox-label,
   .ff-checkbox-label {
-    font-size: 1rem !important;
+    font-size: 1.1rem !important;
+    line-height: 1.1rem !important;
+  }
+
+  .ff-checkbox-wrapper {
+    gap: 14px !important;
+    align-items: center;
+
+    input[type="checkbox"] {
+      /* Aumenta tamaño visual y área táctil */
+      width: 28px !important;
+      height: 28px !important;
+      transform: scale(1.25);
+      transform-origin: left center;
+      accent-color: $primary-navy;
+    }
+
+    .ff-checkbox-label {
+      font-size: 1.05rem !important;
+      line-height: 1.25 !important;
+    }
   }
 
   .form-group {
@@ -562,7 +472,57 @@
     font-size: 0.95rem;
     margin-top: 2px;
   }
+  
+  .file-wrapper {
+    height: 220px;
+    padding: 18px;
+  }
+}
 
+/* <= 768px */
+@media (max-width: 768px) {
+  .file-wrapper {
+    min-height: 200px;
+    height: auto;
+    padding: 18px;
+
+    .file-label mat-icon {
+      width: 30px;
+      height: 30px;
+      font-size: 30px !important;
+    }
+
+    .file-label span {
+      font-size: 1.05rem !important;
+    }
+
+    small {
+      font-size: 0.9rem !important;
+    }
+  }
+
+  .remove-file-btn {
+    width: 42px;
+    transform: translateX(-2.4px);
+    height: 42px;
+
+    mat-icon {
+      font-size: 27px;
+      margin-right: 0;
+    }
+  }
+}
+
+/* Mejora responsive del input file (helper general) */
+.file-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* <= 600px — más grande en móviles */
+@media (max-width: 600px) {
   .file-wrapper {
     min-height: 180px;
     height: auto;
@@ -590,11 +550,11 @@
 
   .remove-file-btn {
     width: 30px;
-    transform: translateX(-2.5px);
+    transform: translateX(-5.8px) !important;
     height: 30px;
 
     mat-icon {
-      font-size: 18px;
+      font-size: 25px;
       margin-right: 0;
     }
   }

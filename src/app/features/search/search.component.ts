@@ -5,7 +5,6 @@ import {
   OnDestroy,
   Input,
   ViewChild,
-  ElementRef,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   HostListener,
@@ -38,7 +37,7 @@ import { SearchFiltersComponent } from "./search-filters/search-filters.componen
 import { ButtonCategoriesComponent } from "src/app/shared/components/button-categories/button-categories.component";
 import { ListCategoriesComponent } from "src/app/shared/components/list-categories/list-categories.component";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { filter, finalize, firstValueFrom, Subscription } from "rxjs";
+import { filter, finalize, Subscription } from "rxjs";
 import { AuthService } from "src/app/shared/services/auth.service";
 import { FilterService } from "src/app/shared/services/filter.service";
 
@@ -110,20 +109,20 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /* ================= DI ================= */
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private listingSrv: ListingService,
-    public categorySrv: CategoryService,
-    private countrySrv: CountryService,
-    private cdr: ChangeDetectorRef,
-    private authSrv: AuthService,
-    private filterSrv: FilterService
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly listingSrv: ListingService,
+    public readonly categorySrv: CategoryService,
+    private readonly countrySrv: CountryService,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly authSrv: AuthService,
+    private readonly filterSrv: FilterService
   ) {}
 
   /* ================================================================
    *  LIFECYCLE
    * ================================================================*/
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.categoriesList = this.categorySrv.getCached();
     this.countriesList = this.countrySrv.getCached();
 
@@ -302,6 +301,18 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /* ================================================================
+   *  DRAWER OPEN → bloquear scroll del fondo en móvil
+   * ================================================================*/
+  onDrawerOpenedChange(opened: boolean): void {
+    const body = document.body;
+    if (opened) {
+      body.classList.add('no-scroll');
+    } else {
+      body.classList.remove('no-scroll');
+    }
+  }
+
+  /* ================================================================
    *  LOAD LISTINGS (always 100)
    * ================================================================*/
   private loadListings(): void {
@@ -349,41 +360,54 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
    *  CHIPS
    * ================================================================*/
   private updateSelectedFilters(): void {
-    const f = this.current;
-    const chips: string[] = [];
+    this.selectedFilters = this.buildChips(this.current);
+  }
 
+  private buildChips(f: Partial<ListListingsRequestDto>): string[] {
+    const chips: string[] = [];
     if (f.searchTerm) chips.push(`"${f.searchTerm}"`);
-    (f.categoryIds || []).forEach((id) => {
-      const c = this.categoriesList.find((x) => x.id === id);
-      if (c) chips.push(c.name);
-    });
-    if (f.conditionFilter)
-      chips.push(f.conditionFilter === 2 ? "Nuevo" : "Usado");
-    if (f.minPrice != null || f.maxPrice != null) {
-      const min = f.minPrice != null ? `$${f.minPrice}` : "";
-      const max = f.maxPrice != null ? `$${f.maxPrice}` : "";
-      chips.push(max ? `${min} a ${max}` : min);
-    }
+    this.getCategoryNames(f.categoryIds).forEach((n) => chips.push(n));
+    if (f.conditionFilter != null) chips.push(f.conditionFilter === 2 ? "Nuevo" : "Usado");
+    const price = this.formatPriceRange(f);
+    if (price) chips.push(price);
     if (f.maxDistanceKm) chips.push(`Menos de ${f.maxDistanceKm}km`);
     if (f.type) chips.push(f.type);
-    if (f.countryId) {
-      const ct = this.countriesList.find((x) => x.id === f.countryId);
-      if (ct) chips.push(ct.name);
-    }
+    const country = this.getCountryName(f.countryId);
+    if (country) chips.push(country);
     if (f.brandFilter) chips.push(f.brandFilter);
+    this.getPaymentChips(f).forEach((p) => chips.push(p));
+    return chips;
+  }
 
-    (
-      [
-        ["acceptsCash", "Efectivo"],
-        ["acceptsCard", "Tarjeta"],
-        ["acceptsTransfer", "Transferencia"],
-        ["acceptsBarter", "Trueque"],
-      ] as Array<[keyof ListListingsRequestDto, string]>
-    ).forEach(([k, lbl]) => {
-      if (f[k]) chips.push(lbl);
-    });
+  private getCategoryNames(ids?: string[]): string[] {
+    if (!ids?.length) return [];
+    return ids
+      .map((id) => this.categoriesList.find((x) => x.id === id)?.name)
+      .filter((n): n is string => !!n);
+  }
 
-    this.selectedFilters = chips;
+  private formatPriceRange(f: Partial<ListListingsRequestDto>): string | undefined {
+    const hasMin = f.minPrice != null;
+    const hasMax = f.maxPrice != null;
+    if (!hasMin && !hasMax) return undefined;
+    const min = hasMin ? `$${f.minPrice}` : "";
+    const max = hasMax ? `$${f.maxPrice}` : "";
+    return max ? `${min} a ${max}` : min;
+  }
+
+  private getCountryName(id?: number): string | undefined {
+    if (!id) return undefined;
+    return this.countriesList.find((x) => x.id === id)?.name;
+  }
+
+  private getPaymentChips(f: Partial<ListListingsRequestDto>): string[] {
+    const entries: Array<[keyof ListListingsRequestDto, string]> = [
+      ["acceptsCash", "Efectivo"],
+      ["acceptsCard", "Tarjeta"],
+      ["acceptsTransfer", "Transferencia"],
+      ["acceptsBarter", "Trueque"],
+    ];
+    return entries.filter(([k]) => !!f[k]).map(([, lbl]) => lbl);
   }
 
   /* ================================================================
@@ -391,6 +415,7 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
    * ================================================================*/
   categoriesSlots: CategorySelection[] = [];
   showCategoryList: boolean[] = [];
+  slotOrientations: ("left" | "right")[] = [];
 
   private async initCategorySlots(): Promise<void> {
     const initial = this.current.categoryIds ?? [];
@@ -402,20 +427,28 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       this.categoriesSlots.push({ idPath: "", name: "" });
     }
     this.showCategoryList = this.categoriesSlots.map(() => false);
+    this.slotOrientations = this.categoriesSlots.map(() => "right");
   }
 
-  toggleCategoryList(i: number): void {
+  toggleCategoryList(i: number, ev?: MouseEvent): void {
     this.showCategoryList[i] = !this.showCategoryList[i];
+    if (ev) {
+      const mid = window.innerWidth / 2;
+      const x = ev.clientX;
+      this.slotOrientations[i] = x >= mid ? "left" : "right";
+    }
   }
 
   clearCategory(i: number): void {
     this.categoriesSlots.splice(i, 1);
     this.showCategoryList.splice(i, 1);
+    this.slotOrientations.splice(i, 1);
     this.categoriesSlots = this.categoriesSlots.filter((c) => c.idPath);
 
     if (this.categoriesSlots.length < 10) {
       this.categoriesSlots.push({ idPath: "", name: "" });
       this.showCategoryList.push(false);
+      this.slotOrientations.push("right");
     }
     this.patchCategoriesToCurrent();
   }
@@ -439,7 +472,8 @@ export class SearchComponent implements OnInit, AfterViewInit, OnDestroy {
       sel.idPath
     ) {
       this.categoriesSlots.push({ idPath: "", name: "" });
-      this.showCategoryList.push(false);
+  this.showCategoryList.push(false);
+  this.slotOrientations.push("right");
     }
     this.patchCategoriesToCurrent();
   }

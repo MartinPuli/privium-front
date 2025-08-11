@@ -11,8 +11,15 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba($primary-navy, 0.1);
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     width: 100%;
+  height: 100vh; /* llena el alto del drawer */
+  max-height: 100vh;
+    border: none; /* el contenedor ya hace de panel */
+    border-radius: 0;
+    box-shadow: none;
+  overflow-y: auto; /* scrollea el contenido dentro */
+  padding: 1rem 1rem 2rem; /* margen interior agradable */
   }
 
   .section-divider {

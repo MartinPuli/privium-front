@@ -6,6 +6,9 @@
       label="Buscar artículos"
       placeholder="¿Qué buscas?"
       formControlName="searchTerm"
+  [maxLength]="30"
+  [hasError]="form.get('searchTerm')!.hasError('maxlength') && form.get('searchTerm')!.touched"
+  errorMessage="Máximo 30 caracteres"
     ></app-form-field>
     <div class="actions-bar">
       <button mat-stroked-button class="reset-btn" type="button" (click)="reset()">

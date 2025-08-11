@@ -4,7 +4,6 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  OnChanges,
   SimpleChanges,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -83,7 +82,7 @@ export class SearchFiltersComponent implements OnInit {
 
   countryOptions: SelectOption[] = [];
 
-  constructor(private fb: FormBuilder, private countrySrv: CountryService) {}
+  constructor(private readonly fb: FormBuilder, private readonly countrySrv: CountryService) {}
 
   private dateValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
@@ -111,7 +110,7 @@ export class SearchFiltersComponent implements OnInit {
 
   private buildForm() {
     this.form = this.fb.group({
-      searchTerm: [this.initialFilters.searchTerm ?? ""],
+  searchTerm: [this.initialFilters.searchTerm ?? "", [Validators.maxLength(30)]],
       type: [this.initialFilters.type ?? ""],
       countryId: [this.initialFilters.countryId ?? null],
       brandFilter: [this.initialFilters.brandFilter ?? ""],

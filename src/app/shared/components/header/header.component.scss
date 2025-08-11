@@ -1,9 +1,8 @@
 @import "../../../../shared/styles/variables";
 
-// ────────────────────────────────────────────
-// Helpers & variables
-// ────────────────────────────────────────────
-$bp-md: 768px;
+/* ────────────────────────────────────────────
+   Helpers & variables
+   ──────────────────────────────────────────── */
 $container-w: 86%; // igual que el footer
 
 @mixin flex($dir, $justify: space-between, $align: center) {
@@ -18,20 +17,12 @@ $container-w: 86%; // igual que el footer
   background: $white;
   border-radius: $radius;
   height: 40px;
-  .mdc-notched-outline {
-    border: none;
-  }
+  .mdc-notched-outline { border: none; }
 }
 
-@mixin mq($max) {
-  @media (max-width: $max) {
-    @content;
-  }
-}
-
-// ────────────────────────────────────────────
-// Header Toolbar
-// ────────────────────────────────────────────
+/* ────────────────────────────────────────────
+   Header Toolbar
+   ──────────────────────────────────────────── */
 .header-toolbar {
   background: $primary-navy;
   color: $white;
@@ -49,85 +40,123 @@ $container-w: 86%; // igual que el footer
   gap: 2rem;
   box-sizing: border-box;
 
-  @include mq($bp-md) {
+  @media (max-width: 768px) {
     flex-wrap: wrap;
     gap: 0.5rem;
     padding: 0.5rem;
     width: 100%;
     align-items: center;
   }
-
-  @media (max-width: 480px) {
-    padding: 0.3rem;
-    gap: 0.3rem;
-    flex-wrap: wrap;
-  }
 }
 
-.header-one-row {
-  padding: 1.6rem 1rem !important;
-}
+.header-one-row { padding: 1.6rem 1rem !important; }
 
 .logo-image {
   height: 50px;
   width: auto;
+
+  @media (max-width: 768px) {
+    height: 36px; width: auto;
+  }
+  @media (max-width: 480px) {
+    height: 30px; width: auto;
+  }
 }
 
-// ────────────────────────────────────────────
-// Search (input + menú hamburguesa adosado)
-// ────────────────────────────────────────────
+/* <= 600px: mostrar solo el isotipo, salvo cuando NO está logueado mostramos el nombre */
+@media (max-width: 600px) {
+  .header-left { display: flex; align-items: center; }
+
+  /* En móviles, cuando está logueado, ocultar cualquier texto junto al logo */
+  .header-left .logo-link > :not(img) { display: none !important; }
+
+  /* Recorte del logo: mostrar solo el isotipo en móviles */
+  .logo-link {
+    display: inline-block;
+    width: 32px; /* recorta a solo el icono */
+    overflow: hidden; /* oculta el texto del logo dentro de la imagen */
+    line-height: 0; /* evita espacio extra */
+  }
+
+  /* Por defecto ocultamos cualquier texto al lado del logo */
+  .logo-text,
+  .logo-name,
+  .logo-wordmark,
+  .brand-text,
+  .brand-name,
+  .logo-image + span,
+  .logo-image + .logo-title {
+    display: none !important;
+  }
+
+  /* Cuando no está logueado, permitimos mostrar el nombre */
+  .header-container.not-logged {
+    .logo-image + .logo-title {
+      display: inline-block !important;
+      color: $white;
+      font-weight: 700;
+      margin-left: 8px;
+      font-size: 1rem;
+    }
+  }
+
+  .logo-image { height: 32px; width: auto; }
+}
+
+/* También recortar a <768px para tablets chicas */
+@media (max-width: 768px) and (min-width: 601px) {
+  .logo-link {
+    display: inline-block;
+    width: 36px; /* un poco más ancho por mayor alto */
+    overflow: hidden;
+    line-height: 0;
+  }
+  .logo-image { height: 36px; width: auto; }
+}
+
+/* ────────────────────────────────────────────
+   Search
+   ──────────────────────────────────────────── */
 .search-container {
   @include flex(row, center);
   flex: 1 1 auto;
-
-  padding: 0px 2rem;
+  padding: 0 2rem;
   width: 100%;
-  gap: 0; // un solo pill
+  gap: 0;
 
-  @include mq($bp-md) {
+  @media (max-width: 768px) {
     width: 100%;
     padding: 0 0.5rem;
-    flex: 1 1 100%; // Ocupa toda la fila en móvil
-    order: 3; // Se coloca en la segunda fila
+    flex: 1 1 100%;
+    order: 3;
   }
-
   @media (max-width: 480px) {
     padding: 0 0.2rem;
     margin-top: 0.3rem;
   }
 
   ::ng-deep {
-    .mat-mdc-form-field-bottom-align {
-      height: 0px;
-    }
-
-    .mdc-notched-outline__leading {
-      border: 0;
-    }
+    .mat-mdc-form-field-bottom-align { height: 0px; }
+    .mdc-notched-outline__leading { border: 0; }
   }
-  // campo texto
+
   .search-field {
     flex: 1 1 auto;
 
     ::ng-deep {
       .mat-mdc-form-field-flex,
-      .mat-mdc-text-field-wrapper {
-        @include pill(25px 0 0 25px); // radios izquierda
-      }
+      .mat-mdc-text-field-wrapper { @include pill(25px 0 0 25px); }
+
       .mat-mdc-form-field-infix {
         padding: 0.5rem 1rem;
         min-height: auto;
       }
-      .mat-mdc-input-element {
-        color: var(--text-primary);
-      }
-      .mat-icon {
-        color: var(--text-secondary);
-      }
+
+      .mat-mdc-input-element { color: var(--text-primary); }
+      .mat-icon { color: var(--text-secondary); }
     }
   }
 
-  // botón de categorías
   .category-button {
     position: relative;
     display: flex;
@@ -144,9 +173,7 @@ $container-w: 86%; // igual que el footer
       border-left: none;
       padding: 0 1rem;
 
-      .down-arrow {
-        font-size: 1.2rem;
-      }
+      .down-arrow { font-size: 1.2rem; }
     }
 
     .categories-dropdown {
@@ -158,18 +185,36 @@ $container-w: 86%; // igual que el footer
   }
 }
 
-// ────────────────────────────────────────────
-// Header actions
-// ────────────────────────────────────────────
+/* Ensure Material internal elements get styled regardless of encapsulation */
+:host ::ng-deep .search-field .mat-mdc-text-field-wrapper,
+:host ::ng-deep .search-field .mat-mdc-form-field-flex { @include pill(25px 0 0 25px); }
+:host ::ng-deep .search-field .mat-mdc-form-field-infix { padding: 0.5rem 1rem; min-height: auto; }
+:host ::ng-deep .search-field .mat-mdc-input-element { color: var(--text-primary); }
+:host ::ng-deep .search-field .mat-icon { color: var(--text-secondary); }
+:host ::ng-deep .mat-mdc-form-field-bottom-align { height: 0px; }
+:host ::ng-deep .mdc-notched-outline__leading { border: 0; }
+
+/* Under 900px, split layout and hide category button next to search */
+.desktop-only { display: block; }
+.mobile-only { display: none; }
+
+@media (max-width: 900px) {
+  .desktop-only { display: none !important; }
+  .mobile-only  { display: block !important; }
+  .search-container .category-button { display: none !important; }
+}
+
+/* ────────────────────────────────────────────
+   Header actions
+   ──────────────────────────────────────────── */
 .header-actions {
-  @include mq($bp-md) {
-    order: 2; // Se coloca después del logo en móvil
-  }
+  @media (max-width: 768px) { order: 2; }
 
   .action-button {
     height: 66px;
     width: 66px;
     color: $white;
+
     mat-icon {
       font-size: 44px;
       height: 44px;
@@ -177,51 +222,37 @@ $container-w: 86%; // igual que el footer
       transform: 0 !important;
     }
 
-    @include mq($bp-md) {
-      height: 40px;
-      width: 40px;
-      mat-icon {
-        font-size: 24px;
-        height: 24px;
-        width: 24px;
-      }
+    @media (max-width: 768px) {
+      height: 40px; width: 40px;
+      mat-icon { font-size: 28px; height: 28px; width: 28px; }
     }
   }
 }
 
-// Botón de menú para móviles - OCULTO
-.mobile-menu-toggle {
-  display: none !important; // Siempre oculto
-}
+/* removed hamburger menu styles */
 
 .user-info {
   padding: 1rem;
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--border-color);
-  .user-name {
-    font-weight: 600;
-  }
-  .user-email {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-  }
+
+  .user-name { font-weight: 600; }
+  .user-email { font-size: 0.875rem; color: var(--text-secondary); }
 }
 
-// ────────────────────────────────────────────
-// Category navigation bar
-// ────────────────────────────────────────────
+/* ────────────────────────────────────────────
+   Category navigation bar
+   ──────────────────────────────────────────── */
 .category-nav {
   background: $primary-navy;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
+}
 
-  // Siempre visible, solo ajustamos tamaños
-  @include mq($bp-md) {
-    // Removemos las reglas de ocultar/mostrar
-  }
-}.nav-container {
+.nav-container {
   @include flex(row);
   width: $container-w;
   margin: 0 auto;
@@ -229,13 +260,14 @@ $container-w: 86%; // igual que el footer
   box-sizing: border-box;
   gap: 1.5rem;
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 
-  @include mq($bp-md) {
+  @media (max-width: 768px) {
     width: 100%;
     gap: 0.8rem;
     padding: 0.5rem;
-    flex-wrap: nowrap; // Mantiene en fila para scroll horizontal
+    flex-wrap: nowrap;
   }
 
   @media (max-width: 480px) {
@@ -244,30 +276,101 @@ $container-w: 86%; // igual que el footer
   }
 }
 
+/* Versión en 2 barras para <900px */
+.nav-container-2col {
+  width: $container-w;
+  margin: 0 auto;
+  padding: 0.8rem 1rem 0.9rem 1rem;
+  box-sizing: border-box;
+  display: none;
+
+  @media (max-width: 900px) {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 0.75rem 0.8rem 0.75rem;
+  }
+
+  .secondary-bar {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+
+    .publish-button { flex: 0 0 auto;  } /* push to the right */
+
+    .filters-toggle {
+      color: $white;
+      flex: 0 0 auto;
+      margin-right: 0.25rem;
+
+      mat-icon { font-size: 24px; }
+    }
+  }
+
+  .nav-links-bar {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    padding: 0.4rem 0.2rem;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+
+    &::-webkit-scrollbar { height: 6px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 4px;
+    }
+
+    button {
+      color: $white;
+      padding: 0.5rem 0.8rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      border-radius: 4px;
+
+      &:hover,
+      &.active { background-color: rgba(255, 255, 255, 0.1); }
+
+      @media (max-width: 480px) {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.5rem;
+      }
+    }
+  }
+}
+.nav-links-bar.hidden { display: none; }
+
+/* Ajuste anti-shrink de botones en barra de filtros (pedido previo) */
+::ng-deep .filter-links .mdc-button { flex: 0 0 auto; white-space: nowrap; flex-shrink: 0 !important;}
+
 .location-info {
-  @include flex(row);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   gap: 0.8rem;
   color: $white;
-  min-width: max-content; // Evita que se comprima demasiado
+  min-width: max-content;
 
-  @include mq($bp-md) {
-    gap: 0.5rem;
-    order: 1; // Aparece primero en móvil
-  }
-
-  @media (max-width: 480px) {
-    gap: 0.3rem;
-  }
+  @media (max-width: 768px) { gap: 0.5rem; }
+  @media (max-width: 480px) { gap: 0.3rem; }
 
   mat-icon {
     font-size: 1.9rem;
     height: 30px;
     width: 28px;
 
-    @include mq($bp-md) {
-      font-size: 1.5rem;
-      height: 24px;
-      width: 22px;
+    @media (max-width: 768px) {
+      font-size: 1.5rem; height: 24px; width: 22px;
     }
   }
 
@@ -275,33 +378,27 @@ $container-w: 86%; // igual que el footer
     display: flex;
     flex-direction: column;
     line-height: 0.8rem;
+    white-space: nowrap;
 
-    @include mq($bp-md) {
-      line-height: 0.7rem;
-    }
+    @media (max-width: 768px) { line-height: 0.7rem; }
 
     p {
       margin: 0;
       font-size: 0.9rem;
       opacity: 0.8;
 
-      @include mq($bp-md) {
-        font-size: 0.75rem;
-      }
+      @media (max-width: 768px) { font-size: 0.75rem; }
+      @media (max-width: 900px) { display: none; }
     }
 
     h2 {
       margin: 0;
       font-size: 1.32em;
       font-weight: 600;
+      white-space: nowrap;
 
-      @include mq($bp-md) {
-        font-size: 1.1em;
-      }
-
-      @media (max-width: 480px) {
-        font-size: 1em;
-      }
+      @media (max-width: 1200px) { font-size: 1rem; }
+      @media (max-width: 400px) { font-size: 0.8rem; }
     }
   }
 }
@@ -309,18 +406,25 @@ $container-w: 86%; // igual que el footer
 .filter-links {
   @include flex(row, center);
   flex: 1;
-  justify-content: center; // Centramos los nav-links
+  justify-content: center;
   gap: 1.5rem;
   padding: 0 0.5rem;
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+
+  &::-webkit-scrollbar { height: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.35);
+    border-radius: 4px;
   }
 
-  @include mq($bp-md) {
-    justify-content: flex-start; // En móvil, alineamos a la izquierda para scrolling
+  @media (max-width: 900px) {
+    justify-content: flex-start;
     gap: 0.5rem;
     padding: 0 0.2rem;
     font-size: 0.95rem;
@@ -340,6 +444,7 @@ $container-w: 86%; // igual que el footer
     transition: color 0.3s;
     white-space: nowrap;
     border-radius: 4px;
+    flex-shrink: 0 !important;
 
     &:hover,
     &.active {
@@ -347,77 +452,66 @@ $container-w: 86%; // igual que el footer
       background-color: rgba(255, 255, 255, 0.1);
     }
 
-    @include mq($bp-md) {
-      font-size: 0.92rem;
-      padding: 0.4rem 0.6rem;
-    }
-
-    @media (max-width: 480px) {
-      font-size: 0.85rem;
-      padding: 0.3rem 0.4rem;
-    }
+    @media (max-width: 768px) { font-size: 0.92rem; padding: 0.4rem 0.6rem; }
+    @media (max-width: 480px) { font-size: 0.85rem; padding: 0.3rem 0.4rem; }
   }
 }
 
-/* ───────── Tarjeta del menú ───────── */
+/* MatMenu de Categorías: que el panel se adapte al tamaño del list-categories */
+::ng-deep .categories-menu-panel .mat-mdc-menu-panel {
+  max-width: none !important;
+  height: auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0px !important;
+  box-shadow: none;
+  width: 100% !important;
+}
+
+/* (publish-button block already defined earlier in file) */
+::ng-deep .filter-menu .mdc-button { margin-top: 15px; }
+
 ::ng-deep .filter-menu.mat-mdc-menu-panel {
-  background: $background-secondary !important;
-  border: 2px solid $primary-navy;
-  border-radius: $border-radius-md;
-  box-shadow: $shadow-md;
-  padding: 0; /* quita margen interno que añade Material */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $background-secondary !important;
+  border: 2px solid $primary-navy !important; /* borde y fondo de la “tarjeta” */
+  border-radius: $border-radius-md !important;
+  box-shadow: $shadow-md !important;
 }
 
 ::ng-deep .filter-menu .menu-body {
   padding: 1rem 1.25rem;
+  border-bottom: 0; /* para que el borde quede solo en la “caja” */
   border-radius: $border-radius-md $border-radius-md 0 0;
 }
 
-::ng-deep .filter-menu .mdc-button {
-  margin-top: 15px;
-}
-
 .filter-menu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  // borde y fondo de la “tarjeta”
-  border: 2px solid $primary-navy !important;
-  border-radius: $border-radius-md !important;
-  box-shadow: $shadow-md !important;
-  .menu-body {
-    padding: 1rem 1.25rem;
-    border-bottom: 0; // para que el borde quede solo en la “caja”
-    border-radius: $border-radius-md $border-radius-md 0 0;
-  }
-
   /* radios & checkboxes más visibles */
   mat-radio-button,
   mat-checkbox {
     margin: 0.35rem 0 1rem 0;
-    .mdc-form-field {
-      width: 100%;
-    }
+
+    .mdc-form-field { width: 100%; }
+
     .mdc-radio__outer-circle,
-    .mdc-checkbox__background {
-      border-width: 2px; // círculo/cuadrado más grueso
-    }
+    .mdc-checkbox__background { border-width: 2px; } // círculo/cuadrado más grueso
   }
 
   /* campos numéricos / datepicker compactos */
   mat-form-field {
     width: 100%;
     margin-bottom: 0.75rem;
-    ::ng-deep .mat-mdc-form-field-infix {
-      padding: 0.4rem 1rem;
-    }
+
+    ::ng-deep .mat-mdc-form-field-infix { padding: 0.4rem 1rem; }
   }
 }
 
-// ────────────────────────────────────────────
-// Mobile tweaks
-// ────────────────────────────────────────────
-@include mq($bp-md) {
+/* ────────────────────────────────────────────
+   Mobile tweaks (SIN MENÚ HAMBURGUESA)
+   ──────────────────────────────────────────── */
+@media (max-width: 768px) {
   .header-container {
     flex-direction: row;
     align-items: center;
@@ -427,36 +521,24 @@ $container-w: 86%; // igual que el footer
     width: 100vw;
     box-sizing: border-box;
   }
-  .logo-image {
-    height: 28px;
-    margin-bottom: 0;
-    margin-right: 0.3rem;
-  }
-  .header-left {
-    display: flex;
-    align-items: center;
-    margin-right: 0.2rem;
-  }
+
+  .logo-image { height: 28px; margin-bottom: 0; margin-right: 0.3rem; }
+  .header-left { display: flex; align-items: center; margin-right: 0.2rem; }
+
   .header-actions {
     display: flex;
     align-items: center;
     gap: 0.2rem;
     margin-right: 0.2rem;
+
     .action-button {
-      height: 32px;
-      width: 32px;
-      mat-icon {
-        font-size: 22px;
-        height: 22px;
-        width: 22px;
-      }
+      height: 32px; width: 32px;
+      mat-icon { font-size: 22px; height: 22px; width: 22px; }
     }
   }
-  .mobile-menu-toggle {
-    display: block;
-    color: $white;
-    margin-right: 0.2rem;
-  }
+
+  .mobile-menu-toggle { display: block; margin-right: 0.2rem; }
+
   .search-container {
     display: flex;
     flex: 1 1 auto;
@@ -467,72 +549,45 @@ $container-w: 86%; // igual que el footer
     margin: 0;
     padding: 0 0.1rem;
     gap: 0.2rem;
-    .search-field ::ng-deep .mat-mdc-form-field-infix {
-      padding: 0.2rem 0.3rem;
-      font-size: 0.85rem;
+
+    /* En móvil, ocultamos el botón de categorías junto al buscador */
+    .category-button { display: none !important; }
+
+    /* Buscador más delgado en móviles */
+    .search-field {
+      ::ng-deep .mat-mdc-form-field-flex,
+      ::ng-deep .mat-mdc-text-field-wrapper { @include pill(18px); height: 34px; }
+
+      ::ng-deep .mat-mdc-form-field-infix { padding: 0.15rem 0.5rem; min-height: 0; }
+      ::ng-deep .mat-mdc-input-element { font-size: 0.9rem; }
+      ::ng-deep .mat-icon { font-size: 18px; }
     }
+  }
+
+  @media (max-width: 480px) {
+    .header-container .search-container { margin-top: 0.3rem; }
+
+    .logo-image { height: 32px; width: auto; }
+
+    /* Aún más delgado en pantallas muy pequeñas */
+    .search-field {
+      ::ng-deep .mat-mdc-text-field-wrapper { height: 30px; }
+      ::ng-deep .mat-mdc-form-field-infix { padding: 0.1rem 0.45rem; }
+      ::ng-deep .mat-mdc-input-element { font-size: 0.85rem; }
+    }
+
     .category-button,
     .category-toggle {
-      height: 24px;
-      font-size: 0.85rem;
-      padding: 0 0.3rem;
-    }
-  }
-
-// ────────────────────────────────────────────
-// Mobile Responsive Behavior - SIN MENÚ HAMBURGUESA
-// ────────────────────────────────────────────
-@media (max-width: 480px) {
-  .header-container {
-    .search-container {
-      margin-top: 0.3rem;
-    }
-  }
-  
-  .logo-image {
-    height: 32px;
-  }
-
-  // Hacer campos de búsqueda más pequeños
-  .search-field ::ng-deep .mat-mdc-form-field-infix {
-    padding: 0.3rem 0.5rem;
-    font-size: 0.85rem;
-  }
-  
-  .category-button, .category-toggle {
-    height: 28px;
-    font-size: 0.8rem;
-    padding: 0 0.5rem;
-  }
-}  ::ng-deep .filter-menu {
-    // Reducimos padding-left en radios y checkboxes
-    mat-radio-button,
-    mat-checkbox {
-      margin: 0.25rem 0; // menor separación vertical
-      margin-left: -10px;
-      .mdc-form-field {
-        margin-left: 0; // quita margen extra
-      }
-    }
-
-    // Botón Aplicar más compacto
-    .apply-btn.small {
-      font-size: 0.875rem; // un poco más pequeño
-      padding: 0.25rem 0.5rem; // menos padding
-      height: auto; // que crezca según contenido
-      min-width: 64px; // ancho mínimo razonable
-    }
-  }
-
-  /* Si quieres afinar sólo el mat-select dentro del menú */
-  ::ng-deep .filter-menu .mat-form-field {
-    margin-bottom: 0.5rem; // menos separación debajo
-    ::ng-deep .mat-mdc-form-field-infix {
-      padding: 0.4rem 0.6rem; // input/select más compacto
+      height: 28px;
+      font-size: 0.8rem;
+      padding: 0 0.5rem;
     }
   }
 }
 
+/* ────────────────────────────────────────────
+   Publish button
+   ──────────────────────────────────────────── */
 .publish-button {
   background: #4caf50 !important;
   color: $white !important;
@@ -546,6 +601,12 @@ $container-w: 86%; // igual que el footer
   min-width: max-content;
   transition: all 0.3s ease;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  .label-plus { display: none; }
+  .label-text { display: inline; }
 
   &:hover {
     background: #45a049 !important;
@@ -553,11 +614,11 @@ $container-w: 86%; // igual que el footer
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
-  @include mq($bp-md) {
+  @media (max-width: 768px) {
     font-size: 0.85rem;
     padding: 0 1.2rem;
     height: 32px;
-    border-radius: 16px;
+    border-radius: 16px;;
   }
 
   @media (max-width: 480px) {
@@ -565,5 +626,35 @@ $container-w: 86%; // igual que el footer
     padding: 0 0.8rem;
     height: 28px;
     border-radius: 14px;
+  }
+
+  /* Mostrar "+" en lugar de "PUBLICAR" a <=468px */
+  @media (max-width: 468px) {
+    .label-text { display: none; }
+    .label-plus { display: inline; font-size: 1rem; font-weight: 800; }
+    padding: 0 0.8rem; /* más compacto para el símbolo */
+    min-width: 32px;
+  }
+}
+
+/* ────────────────────────────────────────────
+   Ajustes solicitados (sin alterar estilos base)
+   ──────────────────────────────────────────── */
+
+/* 1) Más espacio entre items del category-nav (solo desktop) */
+@media (min-width: 901px) {
+  .category-nav .nav-container { gap: 2rem; }      /* location | filtros | publicar */
+  .category-nav .filter-links { gap: 2.25rem; }     /* entre los botones de filtros */
+}
+
+/* 2) Desde 1200px hacia abajo, reducir padding L/R de header y nav */
+@media (max-width: 1200px) {
+  .header-container,
+  .nav-container,
+  .nav-container-2col {
+    /* se va achicando con el viewport: nunca menos de 0.5rem ni más de 1rem */
+    padding-left:  clamp(0.5rem, 2vw, 1rem);
+    padding-right: clamp(0.5rem, 2vw, 1rem);
+    min-width: 95%;
   }
 }

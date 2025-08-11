@@ -14,18 +14,39 @@
 }
 
 .main-content {
-  padding: 2rem 12%;
+  padding: 2rem 2rem;
   min-height: 77vh;
+  max-width: 1300px;
+  margin: 0 auto;
+  @media (max-width: 1200px) {
+    padding: 1.5rem 5%;
+  }
+  @media (max-width: 900px) {
+  padding: 1.25rem 5%;
+  }
+  @media (max-width: 768px) {
+    padding: 1rem 5%;
+  }
+  @media (max-width: 480px) {
+    padding: 0.75rem 1rem;
+  }
 }
 
 /* 2· BREADCRUMB
    ------------------------------------------------------------------- */
 .breadcrumb-container {
   background: transparent;
-  padding: 8px 0;
+  padding: 8px;
+  margin: 0 auto;
+  transform: translateX(-1rem);
+  @media (max-width: 768px) {
+    padding: 8px;
+    transform: translateX(-0.5rem);
+  }
 
-  .container {
-    margin: 0 auto;
+  .container{
+    padding: 0 !important;
+    margin: 0 !important;
   }
 }
 
@@ -40,10 +61,11 @@
 
 .breadcrumb {
   font-size: 1.5rem;
+  font-weight: 600;
   color: $primary-navy;
 
   .breadcrumb-link {
-    font-weight: 700;
+    font-weight: 600;
     text-decoration: none;
 
     &:hover {
@@ -60,15 +82,43 @@
    ===================================================================== */
 
 /* Wrapper */
+
+.card-container{
+  padding: 0;
+  margin: auto;
+  @media (max-width: 1200px) {
+    padding: 0;
+  }
+  @media (max-width: 900px) {
+    padding: 0;
+  }
+  @media (max-width: 768px) {
+    padding: 0;
+  } 
+}
 .product-card {
-  width: 90%;
+  width: 100%;
+  max-width: 100%;
   margin: 30px auto 40px;
-  padding: 3.2rem 6%;
+  padding: 3rem;
   background: $background-secondary;
   border: 2px solid $primary-navy;
-  box-shadow: 0px 10px 12px rgba(0, 0, 0, 0.539);
-  border-radius: $border-radius-lg;
   box-shadow: $shadow-md;
+  border-radius: $border-radius-lg;
+  @media (max-width: 1200px) {
+    padding: 2.5rem;
+  }
+  @media (max-width: 900px) {
+    padding: 2rem;
+  }
+  @media (max-width: 768px) {
+    margin: 20px 0 28px;
+    padding: 1.5rem;
+  }
+  @media (max-width: 680px) {
+    padding: 1.5rem;
+    margin: 20px 0 28px;
+  }
 }
 
 /* Grid (flex) */
@@ -76,25 +126,28 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 3rem;
+  @media (max-width: 1024px) {
+    gap: 2rem;
+  }
+  @media (max-width: 680px) {
+    gap: 1.5rem;
+  }
 }
 
-.product-card.no-thumbnails {
-  width: 80%;
+/* Image section container for responsive layout */
+.image-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  flex: 1;
+  min-width: 0;
+  @media (max-width: 1024px) {
+    gap: 1rem;
+  }
 }
 
-.product-card.no-thumbnails .product-layout {
-  /* 1fr (imagen) · 1fr (info) */
-  flex-direction: row;
-}
-
-.product-card.no-thumbnails .main-image-container {
-  width: 60%; /* alinea con la info */
-  height: auto;
-}
-
-.product-card.no-thumbnails .product-info {
-  width: 40%;
-}
+/* No-thumbnails: usar exactamente el mismo estilo base que con miniaturas */
 
 /* Miniaturas -------------------------------------------------------- */
 .image-thumbnails {
@@ -131,67 +184,79 @@
 /* Imagen principal -------------------------------------------------- */
 .main-image-container {
   position: relative;
-  width: 400px; /* un poco más ancha */
+  width: 100%;
+  max-width: 450px;
   height: 320px;
-  box-shadow: 0px 6px 9px rgba(0, 0, 0, 0.539);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
   border: 2px solid $primary-navy;
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
+  
+  @media (max-width: 1024px) {
+    max-width: 380px;
+    height: 280px;
+  }
 
   .main-image {
-    width: 400px; /* un poco más ancha */
-    height: 320px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 }
-
-.main-image-container.full{
-  width: 400px !important; /* un poco más ancha */
-  height: 320px !important;
-}
+/* .main-image-container.full eliminado para unificar estilos con/sin miniaturas */
 
 /* Columna info ------------------------------------------------------ */
 .product-info {
   display: flex;
   flex-direction: column;
-  height: 300px;
-  margin: auto 0;
-  justify-content: space-between;
+  justify-content: flex-start;
   color: $primary-navy;
-  width: 35%;
+  flex: 1;
+  min-width: 300px;
+  max-width: 450px;
+  gap: 1.5rem;
 
   .product-info-top {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.25rem;
     color: $primary-navy;
   }
 
   .condition-badge {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 600;
+    padding: 6px 16px;
+    background: rgba($primary-navy, 0.1);
+    color: $primary-navy;
+    border-radius: 20px;
+    align-self: flex-start;
   }
   .product-price {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
+    margin: 0.5rem 0;
   }
   .product-title {
-    font-size: 1.45rem;
+    font-size: 1.5rem;
     font-weight: 600;
     text-transform: uppercase;
-    line-height: 1;
+    line-height: 1.2;
+    word-break: break-word;
+    margin: 0.5rem 0;
   }
   .product-location {
     font-size: 1.1rem;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    color: $text-dark;
   }
   .product-date {
     font-size: 1rem;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     color: $text-light;
   }
 }
@@ -240,10 +305,15 @@
 
 .seller-section,
 .product-section {
-  width: 90%;
+  width: 100%;
+  max-width: 1300px;
   margin: 0 auto 50px;
-  p, span{
-    word-break: break-all;
+  padding: 0 0;
+  @media (max-width: 768px) {
+    padding: 0 0;
+  }
+  p {
+    word-break: break-word; /* mejorado de break-all */
   }
 }
 
@@ -270,27 +340,48 @@
     .seller-details {
       display: flex;
       flex-direction: row;
-      gap: 8px;
+      align-items: center;
+      gap: 25px;
+      width: 100%;
     }
     .seller-icon {
       font-size: 24px;
       color: $primary-navy;
     }
     .seller-label {
-      font-size: 0.875rem;
+      font-size: 0.95rem;
       color: $text-light;
-      font-weight: 500;
+      font-weight: 700; /* key en bold */
+      word-break: normal;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 50px;
     }
     .seller-value {
       font-size: 1rem;
       color: $text-dark;
-      font-weight: 600;
+      font-weight: 700;
+      overflow-wrap: anywhere; /* evita cortes feos de emails y textos largos */
+      word-break: break-word;
     }
 
     & + .seller-item {
       border-top: 1px solid #e0e0e0;
       padding-top: 12px;
     }
+  }
+}
+
+/* Ajustes responsivos para seller-details */
+@media (max-width: 600px) {
+  .seller-info-card .seller-details {
+    gap: 10px;
+  }
+}
+@media (max-width: 400px) {
+  .seller-info-card .seller-details {
+    gap: 10px;
   }
 }
 
@@ -316,19 +407,28 @@
    BLOQUE C · PRODUCTOS RELACIONADOS
    ===================================================================== */
 .related-products-section {
-  width: 90%;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto 32px;
+  padding: 0 0;
+  @media (max-width: 768px) {
+    padding: 0 0;
+  }
 }
 
 .related-products-grid {
   display: grid;
   gap: 24px;
   justify-content: center;
+  /* Responsive grid: 2 columns mobile, 3 between 600-900px, 4 for 900px+ */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  grid-template-columns: repeat(auto-fill, minmax(max(22%, 240px), 1fr));
+  @media (min-width: 600px) and (max-width: 900px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   app-product-card-small {
@@ -399,51 +499,261 @@
    ===================================================================== */
 @media (max-width: 1024px) {
   .main-image-container {
-    width: 340px;
-    height: 255px;
+    max-width: 380px;
+    height: 280px;
   }
-  .product-actions .contact-btn {
-    width: 240px;
+  .product-info {
+    min-width: 280px;
+    max-width: 400px;
+    
+    .product-price {
+      font-size: 2rem;
+    }
+    .product-title {
+      font-size: 1.35rem;
+    }
   }
   .image-thumbnails {
-    gap: 10px;
+    gap: 12px;
 
     .thumbnail-btn {
-      width: 84px;
-      height: 62px;
+      width: 90px;
+      height: 68px;
     }
   }
 }
 
-@media (max-width: 680px) {
+/* Mobile responsive design for product card */
+@media (max-width: 800px) {
   .product-layout {
     flex-direction: column;
-    gap: 32px;
+    gap: 1.5rem;
+    align-items: stretch;
   }
-  .image-thumbnails {
-    flex-direction: row;
+  
+  .product-info {
+    min-width: auto;
+    max-width: none;
+    width: 100%;
+  }
+  
+  .image-section {
+    width: 100%;
     justify-content: center;
   }
+  
   .main-image-container {
-    width: 100%;
-    height: auto;
-  }
-  .product-card {
-    padding: 24px;
-  }
-  .product-actions .contact-btn {
-    width: 100%;
+    max-width: 500px;
+    height: 300px;
+    margin: 0 auto;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 680px) {
+  .product-card {
+    padding: 1.5rem;
+    margin: 15px auto 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .product-layout {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  /* Image section with thumbnails below main image */
+  .image-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
   .main-image-container {
-    height: 300px;
+    width: 100%;
+    max-width: none;
+    height: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    
+    .main-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
-  .product-price {
-    font-size: 1.75rem;
+
+  /* Thumbnails below main image on mobile */
+  .image-thumbnails {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 10px;
+    
+    .thumbnail-btn {
+      width: 60px;
+      height: 45px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      border: 1.5px solid transparent;
+      
+      &.active {
+        border-color: $primary-navy;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+    }
   }
-  .product-title {
-    font-size: 1.125rem;
+
+  /* Product info section */
+  .product-info {
+    width: 100%;
+    min-width: auto;
+    max-width: none;
+    gap: 16px;
+    padding: 0 0.5rem;
+    
+    .product-info-top {
+      gap: 14px;
+    }
+    
+    .condition-badge {
+      font-size: 0.9rem;
+      padding: 4px 12px;
+      border-radius: 16px;
+      align-self: flex-start;
+      font-weight: 600;
+    }
+    
+    .product-price {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: $primary-navy;
+      margin: 8px 0;
+    }
+    
+    .product-title {
+      font-size: 1.15rem;
+      line-height: 1.2;
+      margin: 8px 0;
+      font-weight: 700;
+    }
+    
+    .product-location {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+    
+    .product-date {
+      font-size: 0.85rem;
+      color: $text-light;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+  /* Payment methods on mobile */
+  .payment-methods {
+    margin-top: 12px;
+    
+    .payment-chips {
+      gap: 6px;
+      
+      .payment-chip {
+        padding: 4px 10px;
+        font-size: 0.8rem;
+        border-radius: 12px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  /* Special handling for no-thumbnails case */
+  /* No diferencias con/sin miniaturas en mobile */
+}
+
+/* Extra small mobile adjustments */
+@media (max-width: 480px) {
+  .product-card {
+    padding: 1.25rem;
+    margin: 10px auto 20px;
+    border-radius: 10px;
+  }
+
+  .main-image-container {
+    height: 220px;
+    border-radius: 6px;
+  }
+
+  .product-info {
+    padding: 0 0.25rem;
+    
+    .product-price {
+      font-size: 1.6rem;
+    }
+    
+    .product-title {
+      font-size: 1.05rem;
+      line-height: 1.15;
+    }
+    
+    .product-location {
+      font-size: 0.9rem;
+    }
+    
+    .product-date {
+      font-size: 0.8rem;
+    }
+    
+    .condition-badge {
+      font-size: 0.85rem;
+      padding: 3px 10px;
+    }
+  }
+
+  .image-thumbnails .thumbnail-btn {
+    width: 50px;
+    height: 38px;
+    border-radius: 4px;
+  }
+
+  .payment-chips .payment-chip {
+    padding: 3px 8px;
+    font-size: 0.75rem;
+    border-radius: 10px;
+  }
+
+  /* No thumbnails case for extra small screens */
+  /* Sin diferencias: usar alturas base */
+}
+
+/* Breadcrumb responsiveness */
+@media (max-width: 900px) {
+  .breadcrumb {
+    font-size: 1.5rem;
+  }
+}
+@media (max-width: 600px) {
+  .breadcrumb {
+    font-size: 1.5rem;
   }
 }

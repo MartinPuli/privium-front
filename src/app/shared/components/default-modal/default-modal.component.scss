@@ -15,36 +15,17 @@
   position: fixed;
   top: 50%;
   left: 50%;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  max-width: 70vw;
+  max-height: 80vh;
   transform: translate(-50%, -50%);
   background-color: $background-secondary !important;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  max-width: 70vw;
-  max-height: 80vh;
-  z-index: 1001;
-  display: flex;
-  flex-direction: column;
   /* evitamos que el scroll se propague al body */
   overscroll-behavior: contain;
-}
-
-@media (max-width: 768px) {
-  .modal-container {
-    width: 95vw;
-    max-width: 95vw !important;
-    max-height: 95vh;
-  }
-  .modal-header,
-  .modal-body,
-  .modal-footer {
-    padding: 8px 8px;
-  }
-  .modal-header h2 {
-    font-size: 1.1rem;
-  }
-  .modal-body, .modal-footer, input, textarea, select {
-    font-size: 0.95rem;
-  }
 }
 
 /* Header */
@@ -69,8 +50,8 @@
 /* Body */
 .modal-body {
   padding: 16px 24px;
-  overflow-y: auto;
   max-height: 85vh;
+  overflow-y: auto;
   font-family: 'Urbanist', sans-serif;
   color: #333;
   line-height: 1.5;
@@ -80,10 +61,10 @@
 
 /* Footer */
 .modal-footer {
-  padding: 16px 24px;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  padding: 16px 24px;
   border-top: 1px solid #E0E0E0;
   background: $background-secondary;
 }
@@ -97,37 +78,70 @@
   font-family: 'Urbanist', sans-serif;
   font-size: 1rem;
   padding: 10px 24px;
-  border-radius: 4px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
 }
-
 .modal-footer button.loading span {
   visibility: hidden;
 }
-
 .modal-footer button .btn-spinner {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 .modal-footer button .btn-spinner circle {
   stroke: $white;
 }
-
 .modal-footer .btn-primary {
   background: #152047;
   color: $white;
 }
-
 .modal-footer .btn-secondary {
   background: transparent;
   color: #152047;
 }
-
 .modal-footer button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Tipografía dentro del modal */
+.modal-body,
+.modal-footer,
+input,
+textarea,
+select {
+  font-size: 1.3rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-container {
+    width: 85vw;
+    max-width: 85vw !important;
+    max-height: 80vh;
+  }
+
+  .modal-header,
+  .modal-footer {
+    padding: 8px 15px;
+  }
+
+  .modal-body{
+    padding: 12px 15px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .modal-body,
+  .modal-footer,
+  input,
+  textarea,
+  select {
+    font-size: 1.1rem;
+  }
 }

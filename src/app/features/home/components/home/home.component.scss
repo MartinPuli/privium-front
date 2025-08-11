@@ -45,16 +45,20 @@
       object-position: center 55%;
     }
     @media (max-width: 768px) {
-      height: 220px;
+      height: 280px; // Aumentado de 220px
       object-position: center 60%;
     }
     @media (max-width: 600px) {
-      height: 160px;
+      height: 240px; // Aumentado de 160px
       object-position: center 65%;
     }
     @media (max-width: 480px) {
-      height: 180px;
+      height: 220px; // Aumentado de 180px
       object-position: center 70%;
+    }
+    @media (max-width: 360px) {
+      height: 200px; // Nuevo breakpoint para móviles muy pequeños
+      object-position: center 75%;
     }
   }
 }
@@ -81,14 +85,18 @@ app-product-card-small {
     font-size: 1.75rem;
   }
   @media (max-width: 768px) {
-    font-size: 1.2rem;
+    font-size: 1.5rem; // Aumentado de 1.2rem
     padding: 1.5rem 0;
   }
   @media (max-width: 600px) {
-    font-size: 1.05rem;
+    font-size: 1.3rem; // Aumentado de 1.05rem
   }
   @media (max-width: 480px) {
+    font-size: 1.2rem; // Nuevo tamaño más grande
     padding: 1rem 0;
+  }
+  @media (max-width: 360px) {
+    font-size: 1.1rem; // Nuevo breakpoint
   }
 }
 
@@ -97,13 +105,47 @@ app-product-card-small {
   gap: 1.4rem;
 
   app-product-card-small {
-    width: 100%;
-    max-width: 340px;
+    width: 85%;
+  }
+
+  // De 900px hacia arriba - 3 por fila
+  // Con container 85% y gap 1.5rem, cada card puede ser ~28% del container
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.5rem;
+    
+    app-product-card-small {
+      justify-self: start;
+    }
+  }
+
+  // De 600px a 899px - 2 por fila (cada card < 1/2 del contenedor)
+  @media (max-width: 899px) and (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.2rem;
+
+    app-product-card-small {
+      width: 85%; // < 50% del ancho total (85% de 50%)
+      justify-self: start;
+    }
+
+    // Si hay un solo ítem, ocupa la primera columna dejando el hueco de la segunda
+    app-product-card-small:only-child {
+      grid-column: 1;
+    }
   }
 
   @media (max-width: 600px) {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 2.3rem !important;
+    padding: 0 5%;
+    gap: 0.4rem !important;
+    
+    // Con container 85% y gap 1.5rem, cada card puede ser ~37% del container
+    app-product-card-small {
+      width: 85%; // ~37.5% del container total (75% de 50% = 37.5%)
+      justify-self: start;
+    }
+    
   }
 }
 
@@ -133,20 +175,52 @@ app-product-card-small {
 
   app-card-product {
     width: 22% !important;
+    max-width: 1000px;
+  }
+
+  // De 900px hacia arriba - 4 por fila
+  // Con container 85% y gap 1.5rem, cada card puede ser ~19% del container
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    
+    app-product-card-small {
+      width: 90%; // ~21.25% del container total (85% de 25% = 21.25%)
+      justify-self: center;
+    }
+  }
+
+  // De 600px a 899px - 3 por fila
+  // Con container 85% y gap 1.2rem, cada card puede ser ~26% del container
+  @media (max-width: 899px) and (min-width: 600px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    
+    app-product-card-small {
+      width: 80%; // ~26.67% del container total (80% de 33.33% = 26.67%)
+      justify-self: center;
+    }
   }
 
   @media (max-width: 1400px) {
     gap: 1.4rem;
   }
 
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
   @media (max-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.7rem;
+    gap: 1.5rem;
     margin: 0 auto;
+    
+    // Con container 85% y gap 1.5rem, cada card puede ser ~37% del container
+    app-product-card-small {
+      width: 75%; // ~37.5% del container total (75% de 50% = 37.5%)
+      max-width: 160px;
+      justify-self: start;
+    }
+    
+    app-product-card-small:only-child {
+      grid-column: 1;
+    }
   }
 }
 
@@ -162,16 +236,19 @@ app-product-card-small {
     font-size: 1.6rem;
   }
   @media (max-width: 900px) {
-    font-size: 1.3rem;
+    font-size: 1.4rem; // Aumentado de 1.3rem
   }
   @media (max-width: 768px) {
-    font-size: 1.1rem;
+    font-size: 1.35rem; // Aumentado de 1.25rem
   }
   @media (max-width: 600px) {
-    font-size: 1rem;
+    font-size: 1.3rem; // Aumentado de 1.15rem
   }
   @media (max-width: 480px) {
-    font-size: 0.93rem;
+    font-size: 1.25rem; // Aumentado de 1.1rem
+  }
+  @media (max-width: 360px) {
+    font-size: 1.2rem; // Nuevo breakpoint
   }
 }
 
@@ -208,10 +285,11 @@ app-product-card-small {
   @media (max-width: 600px) {
     align-self: flex-end;
     gap: 0;
-    transform: translateY(-4.5px);
+    transform: translateY(-2px); // Cambiado de -4.5px a -2px
     button {
       width: 36px;
       height: 36px;
+      transform: translateY(2px); // Agregado 2px translate
       mat-icon {
         width: 18px;
         height: 18px;

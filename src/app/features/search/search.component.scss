@@ -8,6 +8,7 @@
   position: relative;
   // Para limitar el sticky al área del search
   overflow: visible;
+  min-height: 100vh; /* asegura alto pantalla para el drawer/backdrop */
 }
 
 .search-main {
@@ -93,6 +94,79 @@
   font-weight: 500;
 }
 
+/* Ocultar sort de cabecera por defecto en móvil */
+.sort-control-mobile {
+  display: none;
+  margin-left: auto;
+}
+
+@media (max-width: 600px) {
+  .search-title {
+    gap: 0.6rem;
+    padding: 0 0.5rem;
+    h1 {
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+    mat-icon {
+      font-size: 1.3rem;
+    }
+  }
+
+  /* ocultar el término en el título en móvil */
+  .search-title .search-term {
+    display: none;
+  }
+
+  /* categorías ocupan todo el ancho */
+  .categories-slots {
+    width: 100%;
+  }
+
+  /* mostrar sort dentro del título en móvil */
+  .sort-control-mobile {
+    display: inline-flex;
+  }
+
+  /* ocultar el sort del header de contenido en móvil */
+  .content-header > .sort-control {
+    display: none;
+  }
+}
+
+.sort-btn {
+  line-height: 1;
+  padding: 4px 10px;
+  min-height: 30px;
+  font-size: 0.9rem;
+  mat-icon {
+    font-size: 18px;
+    margin-right: 4px;
+  }
+}
+
+@media (max-width: 900px) {
+  .sort-btn {
+    padding: 3px 8px;
+    min-height: 28px;
+    font-size: 0.85rem;
+    mat-icon {
+      font-size: 17px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .sort-btn {
+    padding: 2px 8px;
+    min-height: 26px;
+    font-size: 0.82rem;
+    mat-icon {
+      font-size: 16px;
+    }
+  }
+}
+
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -129,10 +203,57 @@
 }
 
 .filters-drawer {
-  width: 300px;
+  width: 75vw; /* ocupa todo el ancho en móvil */
+  height: 100vh; /* ocupa toda la altura */
   @media (min-width: 900px) {
-    display: none;
+    display: none; /* sólo móvil con hamburguesa */
   }
+}
+
+/* Backdrop más oscuro cuando el drawer está abierto */
+@media (max-width: 900px) {
+  /* Backdrop/overlays en móvil deben cubrir toda la pantalla y estar por encima del header/footer */
+  :host ::ng-deep .mat-drawer-backdrop.mat-drawer-shown {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  /* Drawer legacy (no-MDC) */
+  :host ::ng-deep .mat-drawer.mat-drawer-over {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+    width: 75vw;
+    max-width: none;
+    z-index: 1500;
+  }
+  /* MDC variants */
+  :host ::ng-deep .mat-mdc-sidenav-scrim.mat-mdc-sidenav-opened {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  :host ::ng-deep .mat-mdc-sidenav {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 100vh;
+    width: 75vw;
+    max-width: none;
+    z-index: 1500;
+  }
+}
+
+/* Bloquea scroll del fondo cuando el drawer está abierto */
+body.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
 }
 
 .desktop-only {
@@ -148,4 +269,3 @@
     display: inline-flex;
   }
 }
-

@@ -10,6 +10,8 @@
   border-radius: 12px;
   background: $background-secondary; // mismo off-white que la maqueta
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  max-width: 90%;
+  margin: auto;
 }
 
 /* Icono (dentro de un círculo) */
@@ -122,5 +124,130 @@
     min-width: 180px;
     padding: 14px 24px;
     font-size: 1rem;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   Responsive enhancements (manteniendo estilos de la app)
+   ───────────────────────────────────────────────────────── */
+
+/* Escalado fluido base (desktop → mobile) */
+.rw-container {
+  gap: clamp(24px, 6vw, 90px);
+  padding: clamp(24px, 5vw, 60px);
+}
+
+.rw-icon {
+  width: clamp(120px, 20vw, 200px);
+  height: clamp(120px, 20vw, 200px);
+  border-width: clamp(12px, 2.2vw, 20px);
+
+  mat-icon {
+    font-size: clamp(64px, 10vw, 120px);
+    width: clamp(64px, 10vw, 120px);
+    height: clamp(64px, 10vw, 120px);
+    line-height: clamp(64px, 10vw, 120px);
+  }
+}
+
+.rw-texts {
+  width: min(100%, 820px);
+
+  .rw-title {
+    font-size: clamp(1.6rem, 2.2vw + 0.6rem, 2.5rem);
+  }
+
+  .rw-subtitle {
+    font-size: clamp(1.1rem, 1.4vw + 0.5rem, 1.7rem);
+  }
+
+  .rw-description {
+    font-size: clamp(1rem, 0.6vw + 0.75rem, 1.2rem);
+    max-width: 52ch;
+  }
+
+  .rw-btn {
+    min-width: 220px;
+    width: min(100%, 320px);
+  }
+}
+
+/* <= LG */
+@media (max-width: $breakpoint-lg) {
+  .rw-container {
+    gap: 56px;
+  }
+}
+
+/* <= MD (ya había reglas: ajustamos botón y centrado) */
+@media (max-width: $breakpoint-md) {
+  .rw-texts {
+    align-items: center;
+    text-align: center;
+
+    .rw-description {
+      max-width: none;
+    }
+
+    .rw-btn {
+      align-self: center;
+      min-width: 200px;
+      padding: 14px 24px;
+      font-size: 1rem;
+    }
+  }
+}
+
+/* <= SM */
+@media (max-width: $breakpoint-sm) {
+  .rw-container {
+    gap: 16px;
+    padding: 20px 16px;
+  }
+
+  .rw-icon {
+    width: 96px;
+    height: 96px;
+    border-width: 10px;
+
+    mat-icon {
+      font-size: 52px;
+      width: 52px;
+      height: 52px;
+      line-height: 52px;
+    }
+  }
+
+  .rw-texts {
+    gap: 12px;
+
+    .rw-title {
+      font-size: 1.5rem;
+    }
+
+    .rw-subtitle {
+      font-size: 1.125rem;
+    }
+
+    .rw-description {
+      font-size: 0.95rem;
+    }
+
+    .rw-btn {
+      width: 100%;
+      min-width: 0;
+      padding: 12px 18px;
+      font-size: 1rem;
+    }
+  }
+}
+
+/* Very small devices */
+@media (max-width: 360px) {
+  .rw-container {
+    padding: 16px 12px;
+  }
+  .rw-texts .rw-title {
+    font-size: 1.35rem;
   }
 }

@@ -65,3 +65,74 @@ $panel-h: 420px;
     }
   }
 }
+
+/* ---------- Responsive (celu/tablet más chico) ---------- */
+@media (max-width: 900px) {
+  .categories-pane,
+  .submenu {
+    width: 228px;
+    height: 380px;
+  }
+
+  .category-item {
+    padding: 0.55rem 0.75rem;
+    .label {
+      font-size: 0.95rem;
+    }
+    .expand-btn mat-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .categories-pane,
+  .submenu {
+    width: 208px;
+    height: 340px;
+  }
+
+  .scroll-body {
+    overscroll-behavior: contain;
+  }
+
+  .category-item {
+    padding: 0.5rem 0.7rem;
+    .label {
+      font-size: 0.9rem;
+    }
+    .expand-btn mat-icon {
+      font-size: 18px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-pane,
+  .submenu {
+    width: 180px;
+    height: 280px;
+  }
+
+  .category-item {
+    padding: 0.4rem 0.6rem;
+    .label {
+      font-size: 0.84rem; // ~13.5px
+    }
+    .expand-btn mat-icon { font-size: 16px; }
+  }
+}
+
+@media (max-width: 360px) {
+  .categories-pane,
+  .submenu {
+    width: 168px;
+    height: 260px;
+  }
+
+  .category-item {
+    padding: 0.35rem 0.55rem;
+    .label { font-size: 0.8rem; }
+    .expand-btn mat-icon { font-size: 15px; }
+  }
+}

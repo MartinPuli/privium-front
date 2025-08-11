@@ -3,11 +3,16 @@
 :host {
   display: block;
   font-family: "Urbanist", sans-serif;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* --------- Header --------- */
 .step-header {
   margin-bottom: 3rem;
+  text-align: left;
+  padding: 2rem 1rem 0;
 
   .step-indicator {
     display: block;
@@ -20,6 +25,45 @@
     font-weight: 750;
     color: $primary-navy;
     margin: 0;
+    line-height: 1.2;
+  }
+
+  // Responsive typography
+  @media (max-width: 768px) {
+    margin-bottom: 2rem;
+    padding: 1.5rem 0.8rem 0;
+    
+    .step-indicator {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+    .step-title {
+      font-size: 2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    margin-bottom: 1.5rem;
+    padding: 1rem 0.5rem 0;
+    
+    .step-indicator {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+    }
+    .step-title {
+      font-size: 1.8rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    padding: 1rem 0.5rem 0;
+    
+    .step-indicator {
+      font-size: 1.2rem;
+    }
+    .step-title {
+      font-size: 1.6rem;
+    }
   }
 }
 
@@ -30,15 +74,51 @@
   gap: 2rem;
   margin-top: 4rem;
   margin-bottom: 3rem;
+  padding: 0 1rem 2rem;
 
+  // Large screens (1200px+)
+  @media (max-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.8rem;
+  }
+
+  // Medium screens
   @media (max-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
   }
+
+  // Tablet screens
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding: 0 0.8rem 2rem;
+  }
+
+  // Small tablet
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 0 0.8rem 1.5rem;
   }
+
+  // Mobile screens
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 0.8rem 1.5rem;
+  }
+
+  // Small mobile
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding: 0 0.5rem 1.5rem;
   }
 }
 
@@ -55,9 +135,17 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0 0 0 / 0.08);
+  min-height: 200px;
+  justify-content: center;
 
   &:hover {
     background-color: #ababa2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0 0 0 / 0.12);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 
   .type-icon {
@@ -65,10 +153,100 @@
     width: 80px;
     height: 80px;
     color: $primary-navy;
+    transition: all 0.3s ease;
   }
+  
   .type-name {
     font-size: 1.2rem;
     font-weight: 500;
     color: $primary-navy;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 1200px) {
+    padding: 3.5rem 1rem;
+    min-height: 180px;
+    
+    .type-icon {
+      font-size: 70px;
+      width: 70px;
+      height: 70px;
+    }
+    .type-name {
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (max-width: 900px) {
+    padding: 3rem 2rem;
+    min-height: 160px;
+    
+    .type-icon {
+      font-size: 60px;
+      width: 60px;
+      height: 60px;
+    }
+    .type-name {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 2.5rem 2rem;
+    min-height: 140px;
+    gap: 0.5rem;
+    
+    .type-icon {
+      font-size: 50px;
+      width: 50px;
+      height: 50px;
+    }
+    .type-name {
+      font-size: 0.95rem;
+    }
+  }
+
+  @media (max-width: 600px) {
+    padding: 2rem 2rem;
+    min-height: 120px;
+    
+    .type-icon {
+      font-size: 45px;
+      width: 45px;
+      height: 45px;
+    }
+    .type-name {
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 2.5rem 2rem;
+    min-height: 130px;
+    
+    .type-icon {
+      font-size: 55px;
+      width: 55px;
+      height: 55px;
+    }
+    .type-name {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    padding: 2rem 0.8rem;
+    min-height: 120px;
+    
+    .type-icon {
+      font-size: 50px;
+      width: 50px;
+      height: 50px;
+    }
+    .type-name {
+      font-size: 0.9rem;
+    }
   }
 }

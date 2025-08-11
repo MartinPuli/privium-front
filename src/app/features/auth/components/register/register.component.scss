@@ -22,12 +22,8 @@
   }
 
   @media (max-width: 480px) {
-    gap: 8px !important;
+    gap: 18px !important;
   }
-}
-
-.terms{
-  font-size: 25px;
 }
 
 /* Ajustes específicos para móviles */
@@ -39,6 +35,6 @@
 
 @media (max-width: 600px) {
   .auth-form {
-    gap: 14px !important;
+    gap: 18px !important;
   }
 }
