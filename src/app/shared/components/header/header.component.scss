@@ -277,18 +277,19 @@ $container-w: 86%; // igual que el footer
 }
 
 /* Versión en 2 barras para <900px */
-.nav-container-2col {
-  width: $container-w;
-  margin: 0 auto;
-  padding: 0.8rem 1rem 0.9rem 1rem;
-  box-sizing: border-box;
-  display: none;
+  .nav-container-2col {
+    width: $container-w;
+    margin: 0 auto;
+    padding: 0.8rem 1rem 0.9rem 1rem;
+    box-sizing: border-box;
+    display: none;
 
-  @media (max-width: 900px) {
-    display: block;
-    width: 100%;
-    padding: 0.6rem 0.75rem 0.8rem 0.75rem;
-  }
+    @media (max-width: 900px) {
+      display: block;
+      width: 100%;
+      padding: 0.6rem 0.75rem 0.8rem 0.75rem;
+      overflow-x: hidden; /* avoid mobile horizontal scroll */
+    }
 
   .secondary-bar {
     display: flex;
@@ -379,8 +380,14 @@ $container-w: 86%; // igual que el footer
     flex-direction: column;
     line-height: 0.8rem;
     white-space: nowrap;
+    max-width: 38vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
-    @media (max-width: 768px) { line-height: 0.7rem; }
+    @media (max-width: 768px) { 
+      line-height: 0.7rem; 
+      max-width: 45vw;
+    }
 
     p {
       margin: 0;
@@ -396,6 +403,8 @@ $container-w: 86%; // igual que el footer
       font-size: 1.32em;
       font-weight: 600;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       @media (max-width: 1200px) { font-size: 1rem; }
       @media (max-width: 400px) { font-size: 0.8rem; }
