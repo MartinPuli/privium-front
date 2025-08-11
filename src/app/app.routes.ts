@@ -1,8 +1,5 @@
 import { Routes } from "@angular/router";
 import { AuthGuard } from "./core/guards/auth.guard";
-import { ResidenceVerificationComponent } from "./features/profile/residence-verification/residence-verification.component";
-import { ProfileInfoComponent } from "./features/profile/profile-info/profile-info.component";
-import { SearchComponent } from "./features/search/search.component";
 
 export const routes: Routes = [
   {
@@ -39,7 +36,7 @@ export const routes: Routes = [
   },
   {
     path: "search",
-    component: SearchComponent,
+    loadComponent: () => import('./features/search/search.component').then(m => m.SearchComponent),
     canActivate: [AuthGuard],
     title: "Buscar - Privium Marketplace",
     data: {
@@ -77,7 +74,7 @@ export const routes: Routes = [
   },
   {
     path: "perfil/:userId",
-    component: ProfileInfoComponent,
+    loadComponent: () => import('./features/profile/profile-info/profile-info.component').then(m => m.ProfileInfoComponent),
     canActivate: [AuthGuard],
     title: "Mi Perfil - Privium",
     data: {
@@ -87,7 +84,7 @@ export const routes: Routes = [
   },
   {
     path: "admin/residence-verifications",
-    component: ResidenceVerificationComponent,
+    loadComponent: () => import('./features/profile/residence-verification/residence-verification.component').then(m => m.ResidenceVerificationComponent),
     canActivate: [AuthGuard],
     title: "Verificaciones de Residencia - Privium",
     data: {
