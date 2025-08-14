@@ -195,8 +195,10 @@ export class HomeComponent implements OnInit {
         "Descubre productos únicos en tu barrio cerrado. Marketplace exclusivo y seguro para tu comunidad.",
       keywords:
         "marketplace, barrios cerrados, productos, compra, venta, privium, campos de alvarez",
-      url: "https://privium.com/home",
+      url: "https://privium.com",
       type: "website",
+      image: "https://privium.com/assets/images/og-image.jpg",
+      canonical: "https://privium.com",
     });
   }
 }
