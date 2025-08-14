@@ -675,22 +675,17 @@ label.mdc-label {
 .categories-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
+  gap: 0rem; // smaller gaps between chips
   align-items: flex-start;
-
-  @media (max-width: 768px) {
-    gap: 0.6rem;
-  }
-
-  @media (max-width: 480px) {
-    gap: 0.4rem;
-  }
+  justify-content: flex-start; // ensure items pack from the left
 }
 
 .cat-slot { 
   position: relative;
-  flex: 1;
+  // Do not stretch items; keep natural width so they align left
+  flex: 0 0 auto;
   min-width: 200px;
+  overflow: visible; // allow dropdown to overflow this slot
 
   @media (max-width: 768px) {
     min-width: 180px;
@@ -706,19 +701,20 @@ label.mdc-label {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
-  z-index: 20;
-  width: 280px;
+  z-index: 2000; // above surrounding cards
+  width: auto; // no fixed width cap
+  max-width: none; // allow free growth
   margin-top: 0.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 6px;
-  overflow: hidden;
+  overflow: visible; // let recursive panels overflow
 
   @media (max-width: 768px) {
-    width: 260px;
+    width: auto;
   }
 
   @media (max-width: 480px) {
-    width: 100%;
+    width: 100%; // on mobile, take full width
     left: 0;
     right: 0;
   }
@@ -737,6 +733,9 @@ label.mdc-label {
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
   min-width: 180px;
+  display: inline-flex; // center text or spinner
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background: darken(#4caf50, 5%) !important;

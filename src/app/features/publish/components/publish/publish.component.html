@@ -72,6 +72,8 @@
                 *ngIf="showList[i]"
                 class="dropdown-wrapper"
                 (click)="$event.stopPropagation()"
+                tabindex="-1"
+                (keydown)="$event.stopPropagation()"
               >
                 <!-- evita cierre -->
                 <app-list-categories
@@ -167,13 +169,13 @@
 
               <!-- prompt inicial -->
               <ng-container *ngIf="selectedImages.length === 0">
-                <div class="upload-prompt" (click)="fileInput.click()">
+                <button type="button" class="upload-prompt" (click)="fileInput.click()">
                   <div class="upload-header">
                     <mat-icon>cloud_upload</mat-icon>
                     <p>Seleccionar uno o varias fotos aquí</p>
                   </div>
                   <small>Máx 5 fotos · JPG/PNG/WEBP · ≤ 5 MB</small>
-                </div>
+                </button>
               </ng-container>
 
               <!-- grid de previews -->
@@ -185,7 +187,7 @@
                 >
                   <img
                     [src]="img.preview"
-                    [alt]="'Imagen ' + (i + 1)"
+                    [alt]="'Foto ' + (i + 1)"
                     loading="lazy"
                     appDefaultImage decoding="async" />
                   <button

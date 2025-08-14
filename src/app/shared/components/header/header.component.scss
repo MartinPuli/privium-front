@@ -311,7 +311,7 @@ $container-w: 86%; // igual que el footer
 
   .nav-links-bar {
     display: flex;
-    gap: 0.8rem;
+    gap: 0.75rem;
     align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
@@ -601,12 +601,10 @@ $container-w: 86%; // igual que el footer
   min-width: max-content;
   transition: all 0.3s ease;
   white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 
-  .label-plus { display: none; }
+  /* Default (desktop): show text, hide plus */
   .label-text { display: inline; }
+  .label-plus { display: none; }
 
   &:hover {
     background: #45a049 !important;
@@ -618,7 +616,7 @@ $container-w: 86%; // igual que el footer
     font-size: 0.85rem;
     padding: 0 1.2rem;
     height: 32px;
-    border-radius: 16px;;
+  border-radius: 16px;
   }
 
   @media (max-width: 480px) {
@@ -627,25 +625,19 @@ $container-w: 86%; // igual que el footer
     height: 28px;
     border-radius: 14px;
   }
+}
 
-  /* Mostrar "+" en lugar de "PUBLICAR" a <=468px */
-  @media (max-width: 468px) {
-    .label-text { display: none; }
-    .label-plus { display: inline; font-size: 1rem; font-weight: 800; }
-    padding: 0 0.8rem; /* más compacto para el símbolo */
-    min-width: 32px;
+/* Below 900px: show only the plus, hide the text */
+@media (max-width: 899.98px) {
+  .publish-button {
+    .label-text { display: none !important; }
+    .label-plus { display: inline !important; }
   }
 }
 
 /* ────────────────────────────────────────────
    Ajustes solicitados (sin alterar estilos base)
    ──────────────────────────────────────────── */
-
-/* 1) Más espacio entre items del category-nav (solo desktop) */
-@media (min-width: 901px) {
-  .category-nav .nav-container { gap: 2rem; }      /* location | filtros | publicar */
-  .category-nav .filter-links { gap: 2.25rem; }     /* entre los botones de filtros */
-}
 
 /* 2) Desde 1200px hacia abajo, reducir padding L/R de header y nav */
 @media (max-width: 1200px) {
