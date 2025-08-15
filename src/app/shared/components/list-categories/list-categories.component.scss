@@ -1,28 +1,19 @@
-/* list-categories.component.scss */
 @import "../../../../shared/styles/variables";
 
 $panel-w: 260px;
 $panel-h: 420px;
 
-/* ---------- Panel raíz ---------- */
 .categories-pane {
-  position: relative; // referencia para .submenu
+  position: relative;
   width: $panel-w;
   height: $panel-h;
   background: $background-secondary;
   border: 1px solid $primary-navy;
-  overflow: visible; // 👈 deja escapar al sub-panel
+  overflow: visible;
 }
 
-/* cuerpo scrolleable */
-.scroll-body {
-  width: 100%;
-  height: 100%;
-  overflow-y: auto; // el scroll vive acá
-}
+.scroll-body { width: 100%; height: 100%; overflow-y: auto; }
 
-/* si es sub-panel (tiene .has-parent) nada cambia:
-   .submenu ya es absolute → left:100% top:0; (como antes) */
 .submenu {
   position: absolute;
   top: 0;
@@ -31,107 +22,59 @@ $panel-h: 420px;
   z-index: 20;
 }
 
-.categories-pane.orientation-right .submenu {
-  left: 100%;
-  right: auto;
-}
+.categories-pane.orientation-right .submenu { left: 100%; right: auto; }
+.categories-pane.orientation-left .submenu  { right: 100%; left: auto; }
 
-.categories-pane.orientation-left .submenu {
-  right: 100%;
-  left: auto;
-}
-
-/* 3️⃣  Ítems de la lista --------------------------------*/
 .category-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.65rem 1rem;
-  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.65rem 1rem; cursor: pointer;
   border-bottom: 1px solid rgba($primary-navy, 0.25);
-
-  &:hover {
-    background: rgba($primary-navy, 0.08);
-  }
-
-  .label {
-    color: $primary-navy;
-  }
-  .expand-btn {
-    background: none;
-    border: none;
-    mat-icon {
-      font-size: 22px;
-    }
-  }
+  &:hover { background: rgba($primary-navy, 0.08); }
+  .label { color: $primary-navy; }
+  .expand-btn { background: none; border: none; mat-icon { font-size: 22px; } }
 }
 
-/* ---------- Responsive (celu/tablet más chico) ---------- */
 @media (max-width: 900px) {
-  .categories-pane,
-  .submenu {
-    width: 228px;
-    height: 380px;
-  }
-
+  .categories-pane, .submenu { width: 224px; height: 380px; }
   .category-item {
     padding: 0.55rem 0.75rem;
-    .label {
-      font-size: 0.95rem;
-    }
-    .expand-btn mat-icon {
-      font-size: 20px;
-    }
+    .label { font-size: 0.95rem; }
+    .expand-btn mat-icon { font-size: 20px; }
   }
 }
 
 @media (max-width: 768px) {
-  .categories-pane,
-  .submenu {
-    width: 208px;
-    height: 340px;
-  }
-
-  .scroll-body {
-    overscroll-behavior: contain;
-  }
-
+  .categories-pane, .submenu { width: 200px; height: 340px; }
+  .scroll-body { overscroll-behavior: contain; }
   .category-item {
     padding: 0.5rem 0.7rem;
-    .label {
-      font-size: 0.9rem;
-    }
-    .expand-btn mat-icon {
-      font-size: 18px;
-    }
+    .label { font-size: 0.9rem; }
+    .expand-btn mat-icon { font-size: 18px; }
+  }
+}
+
+@media (max-width: 600px) {
+  .categories-pane, .submenu { width: 170px; height: 310px; }
+  .category-item {
+    padding: 0.45rem 0.6rem;
+    .label { font-size: 0.86rem; }
+    .expand-btn mat-icon { font-size: 17px; }
   }
 }
 
 @media (max-width: 480px) {
-  .categories-pane,
-  .submenu {
-    width: 180px;
-    height: 280px;
-  }
-
+  .categories-pane, .submenu { width: 156px; height: 280px; }
   .category-item {
-    padding: 0.4rem 0.6rem;
-    .label {
-      font-size: 0.84rem; // ~13.5px
-    }
+    padding: 0.4rem 0.55rem;
+    .label { font-size: 0.84rem; }
     .expand-btn mat-icon { font-size: 16px; }
   }
 }
 
 @media (max-width: 360px) {
-  .categories-pane,
-  .submenu {
-    width: 168px;
-    height: 260px;
-  }
-
+  .categories-pane, .submenu { width: 144px; height: 248px; }
   .category-item {
-    padding: 0.35rem 0.55rem;
+    padding: 0.35rem 0.5rem;
     .label { font-size: 0.8rem; }
     .expand-btn mat-icon { font-size: 15px; }
   }

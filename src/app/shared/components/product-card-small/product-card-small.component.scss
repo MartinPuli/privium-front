@@ -4,6 +4,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%; /* allow card to fill grid cell so all cards have equal height */
   border: 4px solid $primary-navy;
   border-radius: 8px;
   overflow: hidden;
@@ -17,19 +18,18 @@
   }
 
   .image-wrapper {
-    position: relative;
     width: 100%;
-    padding-top: 75%;
+    aspect-ratio: 4 / 3; /* square-ish preview; keeps consistent across cards */
+    overflow: hidden;
+    padding: 6px;
+    flex: 0 0 auto;
 
     img {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
-      box-sizing: border-box;
-      padding: $spacing-sm;
-      object-fit: contain;
+      object-fit: cover;
+      object-position: center;
+      display: block;
     }
 
     .delete-btn {
@@ -63,11 +63,12 @@
   }
 
   mat-card-content {
-    display: flex;
-    background-color: $primary-navy;
-    border-radius: 0 30px 0px 0px;
-    flex-direction: column;
-    padding: 12px 30px 12px 12px;
+  display: flex;
+  background-color: $primary-navy;
+  border-radius: 0 30px 0px 0px;
+  flex-direction: column;
+  padding: 12px 30px 12px 12px;
+  flex: 1 1 auto; /* fill remaining vertical space so cards have equal heights */
 
     .price {
       margin: 0;
@@ -144,6 +145,9 @@
         font-size: 0.55rem;
         padding: 1px 4px;
       }
+    }
+    .image-wrapper img {
+      padding: $spacing-xs;
     }
     .delete-btn {
       top: 4px;

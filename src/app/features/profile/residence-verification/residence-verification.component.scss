@@ -14,13 +14,13 @@
 }
 
 .rv-container {
-  margin: auto;
-  width: 80%;
-  padding: 5rem 0;
+  margin: 0 auto; /* como product-detail */
+  width: 100%;
+  max-width: 1300px; /* como product-detail */
+  padding: 5rem 2rem 2rem; /* más padding arriba */
   display: flex;
-  height: 100%;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* no centrar verticalmente */
   gap: 24px;
 
   h2{
@@ -49,6 +49,7 @@
 /* Loader wrapper when fetching proofs */
 .rv-loader {
   align-items: center;
+  justify-content: center; /* mantener loader centrado */
 }
 
 .rv-warn {
@@ -95,13 +96,13 @@
   align-items: center;
   gap: 40px;
   padding: 25px 25px 25px 30px;
-  border-top: 1px $primary-navy solid 0.5;
+  border-top: 1px solid rgba($primary-navy, 0.5);
 }
 
 /* Columna izquierda */
 .rv-left {
   flex: 1 1 auto;
-  border: 10px $primary-navy solid 1;
+  // sin borde visible
 
   .rv-msg {
     margin: 0 0 16px 0;
@@ -139,4 +140,104 @@
     flex-direction: row;
     justify-content: flex-end;
   }
+}
+
+/* ===============================
+   Responsivo: tipografías y paddings
+   =============================== */
+@media (max-width: 1200px) {
+  .rv-container {
+  padding: 2rem 5% 1.5rem; /* más padding top */
+    gap: 22px;
+  }
+}
+
+@media (max-width: 900px) {
+  .rv-container {
+  padding: 2rem 6% 1.5rem; /* más padding top */
+    gap: 20px;
+  }
+  .rv-container h1 { font-size: 36px; }
+  .rv-container h2 { font-size: 21px; }
+  .rv-container p { font-size: 22px; }
+
+  .rv-card-header { padding: 14px 16px 14px 22px; }
+  .rv-card-header h2 { font-size: 22px; }
+  .rv-card-header h3 { font-size: 18px; }
+
+  .rv-body {
+    gap: 28px;
+    padding: 20px 20px 20px 22px;
+  }
+
+  .rv-actions button {
+    width: 130px;
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 768px) {
+  .rv-container {
+  padding: 1.75rem 6% 1.25rem; /* más padding top */
+    gap: 18px;
+  }
+  .rv-container h1 { font-size: 30px; }
+  .rv-container h2 { font-size: 20px; }
+  .rv-container p { font-size: 20px; }
+
+  .rv-card-header { padding: 12px 14px 12px 18px; }
+  .rv-card-header h2 { font-size: 20px; }
+  .rv-card-header h3 { font-size: 17px; }
+
+  .rv-body {
+    gap: 22px;
+    padding: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .rv-container {
+  padding: 1.8rem 7% 1.4rem; /* más padding top */
+    gap: 16px;
+  }
+  .rv-container h1 { font-size: 28px; }
+  .rv-container h2 { font-size: 18px; }
+  .rv-container p { font-size: 18px; }
+
+  .rv-card-header { padding: 12px 12px 10px 14px; }
+  .rv-card-header h2 { font-size: 19px; }
+  .rv-card-header h3 { font-size: 16px; }
+
+  .rv-body {
+    gap: 16px;
+    padding: 14px;
+  }
+  .rv-actions {
+    gap: 8px;
+    justify-content: space-between;
+  }
+  .rv-actions button {
+    width: 120px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rv-container {
+  padding: 1.6rem 7% 1.25rem; /* más padding top */
+    gap: 14px;
+  }
+  .rv-container h1 { font-size: 24px; }
+  .rv-container h2 { font-size: 16px; }
+  .rv-container p { font-size: 16px; }
+
+  .rv-body { padding: 12px; gap: 12px; }
+  .rv-actions { flex-direction: column; align-items: stretch; gap: 10px; }
+  .rv-actions button { width: 100%; font-size: 15px; }
+}
+
+/* Más gap en dispositivos grandes (>=781px) */
+@media (min-width: 781px) {
+  .rv-container { gap: 28px; }
+  .rv-body { gap: 48px; }
 }

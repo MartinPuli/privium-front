@@ -4,7 +4,6 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import {
   ListingResponseDto,
   ListingInfoResponseDto,
-  ListingRequestDto,
   EditPayload,
 } from "src/app/shared/models/listing.model";
 import { ListingService } from "src/app/shared/services/listing.service";
@@ -14,6 +13,7 @@ import { MatCardModule } from "@angular/material/card";
 import { EditPublicationComponent } from "../edit-publication/edit-publication.component";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatButtonModule } from "@angular/material/button";
 import {
   MatCheckboxChange,
   MatCheckboxModule,
@@ -30,6 +30,7 @@ import { DefaultImageDirective } from "src/app/shared/directives/default-image.d
     MatCardModule,
     EditPublicationComponent,
     MatIconModule,
+    MatButtonModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
     DefaultImageDirective,
@@ -41,13 +42,16 @@ export class PublicationCardComponent {
   @Input() selected = false;
   @Output() selectionChange = new EventEmitter<boolean>();
   @Output() listingModified = new EventEmitter<boolean>();
+  @Output() pause = new EventEmitter<number>();
+  @Output() reactivate = new EventEmitter<number>();
+  @Output() deleteClick = new EventEmitter<number>();
 
   editingSide: "left" | "right" | null = null; // qué modal mostrar
   fullData!: ListingInfoResponseDto; // info extra (cats + imgs)
   loadingSide: "left" | "right" | null = null;
   saving = false;
 
-  constructor(private listingSrv: ListingService, private sb: MatSnackBar) {}
+  constructor(private readonly listingSrv: ListingService, private readonly sb: MatSnackBar) {}
 
   /* ----------------------------------------------------- abrimos modal */
   openEdit(side: "left" | "right") {
@@ -69,7 +73,7 @@ export class PublicationCardComponent {
   onSave(payload: EditPayload): void {
     const { dto, mainImageFile, auxFiles } = payload;
     this.saving = true;
-    this.listingSrv.editListing(dto, mainImageFile!, auxFiles!).subscribe({
+  this.listingSrv.editListing(dto, mainImageFile, auxFiles).subscribe({
       next: () => {
         /* snackbar de éxito */
         this.sb.openFromComponent(ResultSnackbarComponent, {
@@ -99,6 +103,15 @@ export class PublicationCardComponent {
 
   onListingModified(): void {
     this.listingModified.emit(true);
+  }
+
+  /* ----------------------------------------------------- acciones mobile */
+  toggleStatus(): void {
+    if (this.listing.status === 1) {
+      this.pause.emit(this.listing.id);
+    } else {
+      this.reactivate.emit(this.listing.id);
+    }
   }
 
   /* ----------------------------------------------------- cancelar modal */

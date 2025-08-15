@@ -5,43 +5,57 @@
     (change)="onCheckboxChange($event)"
   ></mat-checkbox>
 
+  <!-- Mobile actions (<=768px): left vertical buttons -->
+  <div class="mobile-actions" aria-hidden="false">
+    <button mat-icon-button class="toggle" (click)="toggleStatus()" [attr.aria-label]="listing.status === 1 ? 'Pausar' : 'Reanudar'">
+      <mat-icon>{{ listing.status === 1 ? 'pause' : 'play_arrow' }}</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" class="delete" (click)="deleteClick.emit(listing.id)" aria-label="Eliminar">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+
   <mat-card class="left-card">
-    <img
-      class="thumbnail"
-      [src]="listing.mainImage"
-      [alt]="listing.title || 'Imagen de publicaci\u00f3n'"
-      loading="lazy"
-      appDefaultImage decoding="async" />
+  <div class="image-wrapper">
+      <img
+        class="thumbnail"
+        [src]="listing.mainImage"
+        [alt]="listing.title || 'Publicaci\u00f3n sin t\u00edtulo'"
+        loading="lazy"
+        appDefaultImage decoding="async" />
+    </div>
 
     <div class="text">
-      <div>
-        <div class="info-row">
-          <h3 class="status">
-            {{ listing.status === 1 ? "Activa" : "Pausada" }}
-          </h3>
-          <mat-icon
-            class="edit"
-            *ngIf="loadingSide !== 'left'"
-            (click)="openEdit('left')"
-            >info</mat-icon
-          >
-          <mat-spinner *ngIf="loadingSide === 'left'" diameter="20"></mat-spinner>
+      <div class="content-grid">
+        <div class="left-col">
+          <div class="info-row">
+            <h3 class="status">
+              {{ listing.status === 1 ? "Activa" : "Pausada" }}
+            </h3>
+            <button
+              mat-icon-button
+              class="edit-btn"
+              *ngIf="loadingSide !== 'left'"
+              aria-label="Información"
+              (click)="openEdit('left')"
+            >
+              <mat-icon>info</mat-icon>
+            </button>
+            <mat-spinner *ngIf="loadingSide === 'left'" diameter="20"></mat-spinner>
+          </div>
+          <p class="condition">
+            {{ listing.condition == 2 ? "Nuevo" : "Usado" }}
+          </p>
+          <div class="price">$ {{ listing.price | number }}</div>
+          <p class="desc">{{ listing.title }}</p>
         </div>
 
-        <p class="condition">
-          {{ listing.condition == 2 ? "Nuevo" : "Usado" }}
-        </p>
-        <div class="price">$ {{ listing.price | number }}</div>
-
-        <p class="desc">{{ listing.title }}</p>
-        <!-- título, sin cambios -->
-      </div>
-      <!-- información inferior -->
-      <div class="bottom-info">
-        <p class="type">{{ listing.type }}</p>
-        <p class="created">
-          Publicado el {{ listing.createdAt | date: 'dd/MM/yyyy' }}
-        </p>
+        <div class="right-col">
+          <p class="type">{{ listing.type }}</p>
+          <p class="created">
+            Publicado el {{ listing.createdAt | date: 'dd/MM/yyyy' }}
+          </p>
+        </div>
       </div>
     </div>
   </mat-card>
@@ -50,27 +64,35 @@
   <mat-card class="right-card">
     <div class="info-row">
       <h3>Información sobre el producto</h3>
-      <mat-icon
-        class="edit"
+      <button
+        mat-icon-button
+        class="edit-btn"
         *ngIf="loadingSide !== 'right'"
+        aria-label="Información"
         (click)="openEdit('right')"
-        >info</mat-icon
       >
+        <mat-icon>info</mat-icon>
+      </button>
       <mat-spinner *ngIf="loadingSide === 'right'" diameter="20"></mat-spinner>
     </div>
 
-    <p class="label">Descripción</p>
-    <p class="desc multiline">{{ listing.description }}</p>
-    <!-- ← aquí -->
+    <div class="content-layout">
+      <div class="description-section">
+        <p class="label">Descripción</p>
+        <p class="desc multiline">{{ listing.description }}</p>
+      </div>
 
-    <p class="label">Medios de pago</p>
-    <div class="chips">
-      <span class="chip cash" *ngIf="listing.acceptsCash">EFECTIVO</span>
-      <span class="chip card" *ngIf="listing.acceptsCard">TARJETA</span>
-      <span class="chip transfer" *ngIf="listing.acceptsTransfer"
-        >TRANSFERENCIA</span
-      >
-      <span class="chip barter" *ngIf="listing.acceptsBarter">TRUEQUE</span>
+      <div class="payments-section">
+        <p class="label">Medios de pago</p>
+        <div class="chips">
+          <span class="chip cash" *ngIf="listing.acceptsCash">EFECTIVO</span>
+          <span class="chip card" *ngIf="listing.acceptsCard">TARJETA</span>
+          <span class="chip transfer" *ngIf="listing.acceptsTransfer"
+            >TRANSFERENCIA</span
+          >
+          <span class="chip barter" *ngIf="listing.acceptsBarter">TRUEQUE</span>
+        </div>
+      </div>
     </div>
   </mat-card>
 </div>

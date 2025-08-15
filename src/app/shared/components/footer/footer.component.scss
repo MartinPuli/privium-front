@@ -71,25 +71,48 @@ $container-w: 86%;
   justify-content: space-around;
   padding: 5rem 7% 0 7%;
   margin-bottom: 2rem;
-
-  @media (max-width: $bp-md) {
-    flex-direction: column;
-    align-items: center;
-    gap: 3rem;
-    text-align: center;
-  }
 }
 
-.footer-logo {
-  height: 80px;
-  width: auto;
+/* ===== LOGO STYLES ===== */
+.footer-logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 2.7rem;
-  object-fit: contain;
+}
 
-  @media (max-width: $bp-md) {
-    height: 60px;
-    margin-top: 0;
-  }
+/* Logo completo - por defecto en desktop y mobile */
+.footer-logo-complete {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Logo separado - tablet únicamente */
+.footer-logo-separated {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-logo-icon {
+  height: 55px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-logo-name {
+  height: 50px;
+  margin-top: 10px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Logo horizontal - no se usa actualmente */
+.footer-logo-horizontal {
+  display: none;
 }
 
 .footer-bottom {
@@ -98,18 +121,108 @@ $container-w: 86%;
   text-align: center;
 }
 
-// Responsive design
-@media (max-width: $bp-md) {
-  .footer-container {
-    width: 100%;
-  padding: 1.25rem 1rem 1rem; // bajar top padding en mobile
-  }
+/* ===== RESPONSIVE DESIGN ===== */
 
+/* Desktop mediano (1201px - 1400px) */
+@media (max-width: 1400px) and (min-width: 1201px) {
   .footer-content {
-  gap: 3rem; // subir separación entre secciones en mobile
-  padding: 2rem 1rem 0 1rem; // bajar top padding respecto a desktop (antes 5rem)
+    padding: 4rem 5% 0 5%;
   }
+  
+  .footer-logo-complete {
+    display: none;
+  }
+  
+  .footer-logo-separated {
+    display: flex;
+  }
+}
 
+/* Tablet (769px - 1200px) - Grid 2x2 */
+@media (max-width: 1200px) and (min-width: 769px) {
+  .footer-content {
+    padding: 3.5rem 4% 0 4%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 3rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .footer-logo-container {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+    margin-top: 0;
+  }
+  
+  .footer-section:first-of-type {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+  }
+  
+  .footer-section:nth-of-type(2) {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: center;
+  }
+  
+  .footer-section:nth-of-type(3) {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: center;
+  }
+  
+  .footer-logo-complete {
+    display: none;
+  }
+  
+  .footer-logo-separated {
+    display: flex;
+  }
+}
+
+/* Ajuste de padding en tablet */
+@media (max-width: 1000px) and (min-width: 769px) {
+  .footer-content {
+    padding: 3rem 3% 0 3%;
+  }
+}
+
+/* Mobile y tablets (≤768px) - layout flex column con logo completo */
+@media (max-width: 768px) {
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    padding: 2rem 1rem 0 1rem;
+    text-align: center;
+  }
+  
+  .footer-logo-container {
+    margin-top: 0;
+    order: -1; /* Logo siempre arriba de todo */
+  }
+  
+  .footer-section {
+    order: 1; /* Todas las secciones después del logo */
+  }
+  
+  /* Mostrar logo completo horizontal */
+  .footer-logo-complete {
+    display: block;
+    height: 50px;
+  }
+  
+  .footer-logo-separated,
+  .footer-logo-horizontal {
+    display: none;
+  }
+  
   .footer-container a,
   .footer-container h3 {
     font-size: 1rem;

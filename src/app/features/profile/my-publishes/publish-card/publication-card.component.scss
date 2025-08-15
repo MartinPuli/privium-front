@@ -32,12 +32,39 @@
   flex-direction: row;
   gap: 40px;
 
+  .image-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* botón de info sobre la imagen (oculto por defecto, visible en apilado) */
+  .edit-overlay {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 3;
+    background: $primary-navy;
+    color: #fff;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+  display: none; /* overlay deshabilitado: usamos botón inline */
+    align-items: center;
+    justify-content: center;
+  }
+  .edit-overlay.loading {
+    background: transparent;
+  }
+
   .thumbnail {
-    width: 210px;
-    height: 210px;
-    object-fit: contain;
+    width: 100%;
+    max-width: 210px;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
     box-sizing: border-box;
     padding: $spacing-sm;
+    border-radius: 8px;
   }
 
   /* nueva línea para TYPE */
@@ -52,8 +79,27 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+    justify-content: flex-start;
+    min-height: 0;
+
+    .content-grid {
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px;
+    }
+    .left-col { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 8px;
+      min-width: 0;
+    }
+    .right-col { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 8px;
+      text-align: left;
+      flex-shrink: 0;
+    }
     .bottom-info {
       display: flex;
       flex-direction: column;
@@ -90,6 +136,60 @@
   }
 }
 
+/* compactar y apilar en tablets (1200px–781px) */
+@media (max-width: 1200px) and (min-width: 781px) {
+  .card-inner { padding: 22px 28px; gap: 16px; }
+  .left-card, .right-card { padding: 16px; }
+  .left-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    .thumbnail { 
+      width: 100%;
+      max-width: 160px;
+      height: auto;
+      aspect-ratio: 1;
+      object-fit: cover;
+      align-self: center;
+    }
+    .status { font-size: 1.3rem; }
+    .price { font-size: 1.2rem; }
+    .desc { font-size: 0.95rem; }
+    .text { 
+      width: 100%; 
+      display: flex;
+      flex-direction: column;
+    }
+    .text .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px 20px;
+      align-items: start;
+    }
+    .text .left-col { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 6px; 
+    }
+    .text .right-col { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 6px;
+      text-align: right;
+    }
+    /* mantener sólo el botón inline (no overlay) */
+    .edit-overlay { display: none; }
+  }
+  .right-card {
+    h3 { font-size: 1.1rem; }
+    .label { font-size: 1rem; }
+    .body { font-size: 0.78rem; }
+    .desc { font-size: 0.88rem; }
+  }
+  /* reducir tamaño del checkbox por card */
+  :host ::ng-deep mat-checkbox.inner-check .mdc-checkbox__background { transform: scale(1.2); }
+}
+
 .right-card {
   color: $primary-navy;
   flex: 1 1 45%;
@@ -123,6 +223,7 @@
   .desc.multiline {
     display: -webkit-box;
     -webkit-box-orient: vertical;
+  line-clamp: 3;
     word-break: break-all !important;
     -webkit-line-clamp: 3;
     overflow: hidden;
@@ -188,58 +289,188 @@
   color: $primary-navy;
 }
 
+.edit-btn { color: $primary-navy; transform: translate(12px, -14px);}
+
 :host ::ng-deep mat-checkbox.inner-check .mdc-checkbox__background {
   transform: scale(1.5);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 780px) {
+  :host ::ng-deep mat-checkbox.inner-check { display: none !important; }
   .card-inner {
     flex-direction: column;
-    padding: 12px 6px;
-    border-radius: 6px;
-    gap: 10px;
+    align-items: stretch;
+    padding: 12px 4px 12px 44px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: $background-secondary;
+    border-radius: 8px;
+    gap: 12px;
+    margin-bottom: 4px;
   }
+
+  /* botones verticales al lado izquierdo */
+  .mobile-actions {
+    position: absolute;
+    left: 4px;
+    top: 6px;
+    bottom: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+    z-index: 2;
+  }
+  .mobile-actions button,
+  .mobile-actions button.mat-icon-button {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+  }
+  /* icon-only, sin fondo, color primario */
+  .mobile-actions button.toggle,
+  .mobile-actions button.delete {
+    background: transparent;
+    color: $primary-navy;
+    border-radius: 8px;
+  }
+  .mobile-actions .mat-icon { font-size: 16px; color: $primary-navy; }
   .left-card,
   .right-card {
     flex: 1 1 100%;
-    padding: 10px 4px;
-    border-radius: 6px;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
   }
   .left-card {
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     gap: 8px;
+    padding: 12px;
     .thumbnail {
-      width: 80px;
-      height: 80px;
+      width: 100%;
+      max-width: 100px;
+      height: auto;
+      aspect-ratio: 1;
+      object-fit: cover;
+      align-self: center;
       padding: 2px;
+      border-radius: 6px;
     }
-    .price {
-      font-size: 1rem;
+    .status { font-size: 1.1rem; margin-bottom: 6px; }
+    .price { font-size: 0.9rem; }
+    .desc { font-size: 0.75rem; }
+    .condition { font-size: 0.65rem; }
+    .type { font-size: 0.65rem; }
+    .created { font-size: 0.65rem; }
+    .text { 
+      width: 100%;
+      display: flex;
+      flex-direction: column;
     }
-    .desc {
-      font-size: 0.8rem;
+    .text .content-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 12px;
+      align-items: start;
     }
-    .condition {
-      font-size: 0.7rem;
+    .text .left-col { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 4px;
+      min-width: 0;
     }
-    .type {
-      font-size: 0.7rem;
+    .text .right-col { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 4px;
+      text-align: right;
+      flex-shrink: 0;
     }
-    .created {
-      font-size: 0.7rem;
-    }
+    /* sin overlay, mantener inline */
+    .edit-overlay { display: none; }
   }
   .right-card {
-    margin-top: 8px;
-    h3 {
-      font-size: 0.9rem;
+    margin-top: 0;
+    padding: 12px;
+    h3 { font-size: 0.85rem; }
+    
+    .content-layout {
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      align-items: flex-start;
     }
-    .label {
-      font-size: 0.8rem;
+    
+    .description-section {
+      flex: 1;
+      min-width: 0;
     }
-    .body, .desc {
-      font-size: 0.7rem;
+    
+    .payments-section {
+      flex-shrink: 0;
+      min-width: 120px;
+    }
+    
+    .label { font-size: 0.75rem; margin-bottom: 4px; }
+    .body, .desc { font-size: 0.68rem; }
+    .chips { 
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .chips .chip { 
+      font-size: 0.6rem; 
+      padding: 2px 8px 2px 8px; 
+      padding-right: 20px; 
+    }
+    .chips .chip::after { 
+      right: 4px; 
+      width: 7px; 
+      height: 7px; 
     }
   }
+}
+
+/* Mostrar y posicionar los 2 botones desde 900px hacia abajo (manteniendo layout de tablet) */
+@media (max-width: 900px) and (min-width: 781px) {
+  /* ocultar checkbox por card cuando aparecen los 2 botones */
+  :host ::ng-deep mat-checkbox.inner-check { display: none !important; }
+
+  /* dejar espacio a la columna de acciones */
+  .card-inner { padding-left: 44px; }
+
+  .mobile-actions {
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 6px;
+    z-index: 2;
+  }
+  .mobile-actions button,
+  .mobile-actions button.mat-icon-button {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    padding: 0;
+  }
+  /* icon-only, sin fondo, color primario */
+  .mobile-actions button.toggle,
+  .mobile-actions button.delete {
+    background: transparent;
+    color: $primary-navy;
+    border-radius: 8px;
+  }
+  .mobile-actions .mat-icon { font-size: 20px; color: $primary-navy; }
+}
+
+/* en desktop ocultar contenedor de acciones móviles (se muestra solo en media query) */
+.mobile-actions { display: none; }
+@media (max-width: 900px) {
+  .mobile-actions { display: flex; }
 }

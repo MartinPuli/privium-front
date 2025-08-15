@@ -1,4 +1,4 @@
-import { Component, Input, input, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { CommonModule } from "@angular/common";
@@ -21,7 +21,7 @@ import {
 } from "src/app/shared/models/listing.model";
 import { User } from "src/app/shared/models/user.model";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { finalize, forkJoin } from "rxjs";
+import { forkJoin } from "rxjs";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ResultSnackbarComponent } from "src/app/shared/components/result-snackbar/result.snackbar.component";
 import { PublicationCardComponent } from "./publish-card/publication-card.component";
@@ -70,9 +70,9 @@ export class MyPublishesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
-    private ls: ListingService, 
-    private router: Router,
-    private snackBar: MatSnackBar) {}
+    private readonly ls: ListingService, 
+    private readonly router: Router,
+    private readonly snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.load();
@@ -262,6 +262,73 @@ export class MyPublishesComponent implements OnInit {
       error: () => {
         this.isDeleting = false;
       }
+    });
+  }
+
+  /* ------------------------- acciones por card (mobile) ------------------------- */
+  pauseOne(id: number): void {
+    const req: ListingRequestDto = { listingId: id, action: "PAUSE" };
+    this.isPausing = true;
+    this.ls.manageListingStatus(req).subscribe({
+      next: () => {
+        const upd = (l: ListingResponseDto | undefined) => {
+          if (l) l.status = 0;
+        };
+        upd(this.listings.find((l) => l.id === id));
+        upd(this.allListings.find((l) => l.id === id));
+        this.snackBar.openFromComponent(ResultSnackbarComponent, {
+          data: { message: "Publicación pausada correctamente", status: "success" },
+          duration: 5000,
+          panelClass: "success-snackbar",
+          horizontalPosition: "center",
+          verticalPosition: "bottom",
+        });
+      },
+      complete: () => (this.isPausing = false),
+      error: () => (this.isPausing = false),
+    });
+  }
+
+  reactivateOne(id: number): void {
+    const req: ListingRequestDto = { listingId: id, action: "REACTIVATE" };
+    this.isReactivating = true;
+    this.ls.manageListingStatus(req).subscribe({
+      next: () => {
+        const upd = (l: ListingResponseDto | undefined) => {
+          if (l) l.status = 1;
+        };
+        upd(this.listings.find((l) => l.id === id));
+        upd(this.allListings.find((l) => l.id === id));
+        this.snackBar.openFromComponent(ResultSnackbarComponent, {
+          data: { message: "Publicación reactivada correctamente", status: "success" },
+          duration: 5000,
+          panelClass: "success-snackbar",
+          horizontalPosition: "center",
+          verticalPosition: "bottom",
+        });
+      },
+      complete: () => (this.isReactivating = false),
+      error: () => (this.isReactivating = false),
+    });
+  }
+
+  deleteOne(id: number): void {
+    this.isDeleting = true;
+    const req: ListingRequestDto = { listingId: id, action: "DELETE" };
+    this.ls.manageListingStatus(req).subscribe({
+      next: () => {
+        this.allListings = this.allListings.filter((l) => l.id !== id);
+        this.applyFilters();
+        this.snackBar.openFromComponent(ResultSnackbarComponent, {
+          data: { message: "Publicación eliminada", status: "success" },
+          duration: 5000,
+          panelClass: "success-snackbar",
+          horizontalPosition: "center",
+          verticalPosition: "bottom",
+        });
+      },
+      complete: () => (this.isDeleting = false),
+      error: () => (this.isDeleting = false),
     });
   }
 }

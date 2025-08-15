@@ -1,12 +1,53 @@
 <footer class="footer" role="contentinfo">
   <div class="footer-container" [ngClass]="{'container-logged': !logged}">
     <div class="footer-content" *ngIf="logged">
-      <img
+      <!-- Logo responsive -->
+      <div class="footer-logo-container">
+        <!-- Logo completo para desktop grande (>1400px) y mobile (<600px) -->
+        <img
           src="assets/images/logocomplete.png"
           alt="Privium"
-          class="footer-logo"
+          class="footer-logo footer-logo-complete"
           loading="lazy"
-          appDefaultImage decoding="async" />
+          appDefaultImage 
+          decoding="async" />
+        
+        <!-- Logo separado para tablet (600px-1400px) -->
+        <div class="footer-logo-separated">
+          <img
+            src="assets/images/logo.png"
+            alt="Privium"
+            class="footer-logo-icon"
+            loading="lazy"
+            appDefaultImage 
+            decoding="async" />
+          <img
+            src="assets/images/logoname.png"
+            alt="Privium"
+            class="footer-logo-name"
+            loading="lazy"
+            appDefaultImage 
+            decoding="async" />
+        </div>
+        
+        <!-- Logo horizontal para mobile pequeño -->
+        <div class="footer-logo-horizontal">
+          <img
+            src="assets/images/logo.png"
+            alt=""
+            class="footer-logo-icon-small"
+            loading="lazy"
+            appDefaultImage 
+            decoding="async" />
+          <img
+            src="assets/images/logoname.png"
+            alt="Privium"
+            class="footer-logo-name-small"
+            loading="lazy"
+            appDefaultImage 
+            decoding="async" />
+        </div>
+      </div>
       <!-- Logo y Support -->
       <div class="footer-section">
         <div class="support-info">
@@ -20,9 +61,9 @@
         </div>
       </div>
       
-      <!-- Categorías más buscadas -->
+      <!-- Categorías -->
       <div class="footer-section">
-        <h3>CATEGORÍAS MÁS BUSCADAS</h3>
+        <h3>CATEGORÍAS</h3>
         <nav aria-label="Categorías populares">
           <ul class="footer-links">
             <li *ngFor="let c of categories">

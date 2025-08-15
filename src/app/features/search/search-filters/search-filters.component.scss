@@ -1,5 +1,6 @@
 @import "../../../../shared/styles/variables";
 
+/* ===== FORM CONTENEDOR ===== */
 .filters-form {
   position: relative;
   width: 360px;
@@ -10,16 +11,16 @@
   border: 1px solid $primary-navy;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba($primary-navy, 0.1);
+  background: $background-secondary;
 
+  /* En drawer (≤900px) ocupamos todo el ancho y quitamos borde/sombra extras */
   @media (max-width: 900px) {
     width: 100%;
-  height: 100vh; /* llena el alto del drawer */
-  max-height: 100vh;
-    border: none; /* el contenedor ya hace de panel */
+    border: none;
     border-radius: 0;
     box-shadow: none;
-  overflow-y: auto; /* scrollea el contenido dentro */
-  padding: 1rem 1rem 2rem; /* margen interior agradable */
+    padding: 1rem 1rem 2rem;
+    gap: 1.25rem;
   }
 
   .section-divider {
@@ -28,107 +29,104 @@
     margin: 0;
   }
 
-  h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.5rem;
-  }
-
-  /* Compacta los form-field solo aquí */
+  /* Compacto pero legible y consistente en mobile */
   ::ng-deep app-form-field {
     margin-bottom: 0 !important;
 
-    /* inputs e selects internos más compactos */
+    /* inputs/selects más compactos */
     ::ng-deep .form-input,
-    ::ng-deep .form-select,
-    ::ng-deep .mat-select-trigger {
-      font-size: 0.9rem !important; /* más pequeño */
-      padding: 0.45rem 0.6rem !important;
+    ::ng-deep .form-select {
+      font-size: 0.95rem !important;
+      padding: 0.55rem 0.7rem !important;
     }
 
-    /* labels un poco más grandes para visibilidad */
+    /* labels del campo (los “sectores”) */
     ::ng-deep .form-label {
       font-size: 1.05rem;
-      font-weight: 500;
-      margin-bottom: 0.25rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: $primary-navy;
+
+      /* Un toque más grande en sidebar (≤900), pero */
+      @media (max-width: 900px) {
+        font-size: 1.1rem;
+      }
+      /* más chico en celu (≤480) como pediste */
+      @media (max-width: 480px) {
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+      }
     }
-  }
 
-  /* Grid 2x2 para métodos de pago */
-  .payment-methods {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-
-    /* Override de texto de checkbox */
-    ::ng-deep mat-checkbox .mat-checkbox-label {
-      font-size: 0.8rem;
+    /* ajuste fino del prefijo $ (type=money) */
+    ::ng-deep .input-wrapper {
+      --ff-input-font-size: 1rem;
+      --ff-prefix-offset: -60%; /* levanta un poco el $ */
     }
-  }
-
-  /* Radios más pequeños */
-  ::ng-deep .radio-option span {
-    font-size: 0.95rem;
-    color: black;
-    font-weight: 350;
-  }
-
-  /* Opciones de select más pequeñas */
-  ::ng-deep .mat-mdc-select-value {
-    font-size: 0.85rem;
-  }
-
-  .price-range,
-  .date-range {
-    display: flex;
-    gap: 0.75rem;
-    @media (max-width: 600px) {
-      flex-direction: column;
-    }
-  }
-
-  .actions-bar {
-    position: sticky;
-    height: 25px;
-    bottom: 0;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    padding-top: 0.5rem;
-    background: white;
-  }
-
-  .apply-btn {
-    background-color: $primary-green;
-    color: $white;
   }
 }
 
+:host
+  ::ng-deep
+  .ff-checkbox-wrapper[_ngcontent-ng-c4107887992]
+  input[type="checkbox"][_ngcontent-ng-c4107887992] {
+  @media (max-width: 900px) {
+    height: 20px !important;
+    width: 20px !important;
+    transform: scale(1);
+  }
+}
+
+:host
+  ::ng-deep
+  .radio-option[_ngcontent-ng-c4107887992]
+  input[type="radio"][_ngcontent-ng-c4107887992] {
+  @media (max-width: 900px) {
+    transform: translateX(10px) scale(1.25);
+  }
+}
+
+/* ===== BUSCADOR + BOTONES ===== */
 .search-actions-row {
   display: flex;
   align-items: flex-end;
   gap: 16px;
   position: relative;
 
-  app-form-field{
+  app-form-field {
     width: 100%;
   }
 
   .actions-bar {
-    background-color: transparent;
     position: absolute;
     top: -0.3rem;
     right: -0.3rem;
     display: flex;
-    padding-top: 0px;
     gap: 8px;
+    background: transparent;
+    padding-top: 0;
 
+    /* Estilo base (>=900px): texto + ícono */
     button {
       min-width: 70px;
       font-size: 0.9rem;
-      height: 25px;
+      height: 28px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+
+      .btn-icon {
+        font-size: 18px;
+        line-height: 1;
+      }
+      .btn-label {
+        display: inline;
+      }
     }
-    .reset-btn{
+
+    .reset-btn {
       background-color: transparent;
       border-color: transparent !important;
     }
@@ -138,24 +136,181 @@
       font-weight: 600;
       box-shadow: 0 2px 8px rgba(67, 160, 71, 0.13);
     }
+
+    mat-icon{
+      display: none;
+    }
   }
 }
 
-@media (max-width: 600px) {
+/* <=900px: mantener ubicación arriba-derecha, pero hacer los botones “icon-only” */
+@media (max-width: 900px) {
   .search-actions-row {
-    flex-direction: column;
-    align-items: stretch;
+    gap: 12px; /* un pelín más compacto */
+  }
 
-    .actions-bar {
-      background: transparent;
-      position: static;
-      margin-top: 1.25rem ;
-      margin-bottom: 0;
-      justify-content: flex-start;
+  .search-actions-row .actions-bar {
+    position: absolute; /* NO cambiar: se mantiene en el mismo lugar */
+    top: -0.25rem;
+    right: -0.25rem;
 
-      button{
-        height: 20px;
+    button {
+      min-width: auto;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      justify-content: center;
+
+      /* solo ícono en mobile */
+      .btn-label {
+        display: none;
+      }
+      .btn-icon {
+        display: inline-flex;
+        font-size: 20px;
       }
     }
+
+    .reset-btn {
+      /* como es stroked, que no se vea “pesado” siendo icon-only */
+      border-width: 1px;
+      padding: 0;
+    }
+
+    .apply-btn {
+      /* mantiene contraste; ancho fijo para área táctil */
+      width: 36px;
+      height: 36px;
+      box-shadow: 0 2px 8px rgba(67, 160, 71, 0.14);
+    }
+
+    mat-icon{
+      margin: 0;
+      display: block;
+    }
+  }
+}
+
+/* <=480px: ícono un pelín más chico para no tapar */
+@media (max-width: 480px) {
+  .search-actions-row .actions-bar button .btn-icon {
+    font-size: 18px;
+  }
+
+  .actions-bar{
+    gap: 0px;
+  }
+}
+
+/* ===== GRIDS ===== */
+.price-range,
+.date-range {
+  display: flex;
+  gap: 0.75rem;
+
+  /* En sidebar, 1 columna para más comodidad */
+  @media (max-width: 900px) {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+}
+
+/* ===== RADIOS (estructura del app-form-field) ===== */
+::ng-deep .radio-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr; /* una sola columna en pantallas muy chicas */
+    gap: 8px 12px;
+  }
+}
+
+::ng-deep .radio-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  input[type="radio"] {
+    inline-size: 16px;
+    block-size: 16px;
+
+    @media (max-width: 480px) {
+      inline-size: 14px;
+      block-size: 14px;
+    }
+  }
+
+  span {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #000;
+
+    @media (max-width: 900px) {
+      font-size: 1.02rem; /* sutilmente mayor para legibilidad en drawer */
+    }
+    @media (max-width: 480px) {
+      font-size: 0.9rem; /* más chico en celu */
+    }
+  }
+}
+
+/* ===== CHECKBOXES (app-form-field nativo) ===== */
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 16px;
+
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr; /* 1 por fila si el ancho es muy chico */
+    gap: 10px 12px;
+  }
+
+  /* Texto del checkbox */
+  ::ng-deep app-form-field .ff-checkbox-label {
+    font-size: 0.95rem;
+    line-height: 1.2;
+
+    @media (max-width: 900px) {
+      font-size: 1rem;
+    }
+    @media (max-width: 480px) {
+      font-size: 0.85rem; /* más chico en celu */
+    }
+  }
+
+  /* Caja del checkbox (más chica en celu) */
+  ::ng-deep app-form-field .ff-checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    input[type="checkbox"] {
+      inline-size: 18px;
+      block-size: 18px;
+
+      @media (max-width: 480px) {
+        inline-size: 14px; /* más chico en celu */
+        block-size: 14px;
+      }
+    }
+  }
+}
+
+/* ===== SELECT VALUE (compacto) ===== */
+::ng-deep .mat-mdc-select-value {
+  font-size: 0.9rem;
+
+  @media (max-width: 480px) {
+    font-size: 0.88rem;
+  }
+}
+
+/* ===== Afinado general en celu ===== */
+@media (max-width: 480px) {
+  .filters-form {
+    padding: 0.85rem 0.85rem 1.25rem;
+    gap: 1rem;
   }
 }

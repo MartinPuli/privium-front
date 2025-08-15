@@ -63,19 +63,19 @@ import { Subscription, filter } from "rxjs";
   styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+  /** A dónde navega el logo (por defecto /home) */
+  @Input() logoLink: string = "/home";
+
   searchQuery = "";
   selectedCategoryLabel = "Todas";
   selectedCategoryId: string | null = null;
   categories: Category[] = [];
   showCategories = false;
-  @ViewChild("catButton", { read: ElementRef })
-  catButtonRef!: ElementRef<HTMLElement>;
-  @ViewChild("searchInput", { read: ElementRef })
-  searchInputRef!: ElementRef<HTMLInputElement>;
 
-  /** Controla la visibilidad del menú en pantallas pequeñas */
-  isMobileMenuOpen = false;
-  /** Controla la visibilidad de la 3ra barra (nav-links) en <900px */
+  @ViewChild("catButton", { read: ElementRef }) catButtonRef!: ElementRef<HTMLElement>;
+  @ViewChild("searchInput", { read: ElementRef }) searchInputRef!: ElementRef<HTMLInputElement>;
+
+  /** Control barra nav-links en <900px */
   isLinksOpen = true;
 
   @Input() logged = true;
@@ -90,24 +90,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     max: null as number | null,
     distance: null as number | null,
     countryId: null as number | null,
-    pay: {
-      efectivo: false,
-      transferencia: false,
-      tarjeta: false,
-      trueque: false,
-    } as Record<string, boolean>,
+    pay: { efectivo: false, transferencia: false, tarjeta: false, trueque: false } as Record<string, boolean>,
     from: null as Date | null,
     to: null as Date | null,
   };
   filters = { ...this.defaultFilters };
 
   get priceRangeValid(): boolean {
-    const inRange = (val: number | null) =>
-      val == null || (val >= 1 && val <= 99999999);
+    const inRange = (v: number | null) => v == null || (v >= 1 && v <= 99999999);
     const { min, max } = this.filters;
-    const rangeValid = inRange(min) && inRange(max);
-    const orderValid = min == null || max == null || min <= max;
-    return rangeValid && orderValid;
+    return inRange(min) && inRange(max) && (min == null || max == null || min <= max);
   }
 
   mediosPago = [
@@ -126,27 +118,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     public authService: AuthService,
-  private readonly categorySrv: CategoryService,
+    private readonly categorySrv: CategoryService,
     public countrySrv: CountryService,
-  private readonly router: Router,
-  private readonly filterSrv: FilterService
+    private readonly router: Router,
+    private readonly filterSrv: FilterService
   ) {}
 
   ngOnInit(): void {
-    // Load categories
     this.categories = this.categorySrv.getCached();
-    // Load countries for novelasome filters or user location
     const countries = this.countrySrv.getCached();
 
     if (this.logged) {
       this.currentUser = this.authService.getCurrentUser();
-      this.countryOptions = countries
-        ? countries.map((c) => ({ value: c.id, label: c.name }))
-        : [];
-
-      this.currentUserCountryName = this.countrySrv.getNameById(
-        this.currentUser!.countryId
-      )!;
+      this.countryOptions = countries ? countries.map(c => ({ value: c.id, label: c.name })) : [];
+      this.currentUserCountryName = this.countrySrv.getNameById(this.currentUser!.countryId)!;
     }
 
     if (this.router.url === "/home") {
@@ -176,9 +161,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.filters = { ...this.defaultFilters };
   }
 
-  onCategoryButtonClick(): void {
-    this.showCategories = !this.showCategories;
-  }
+  onCategoryButtonClick(): void { this.showCategories = !this.showCategories; }
 
   onCategorySelect(sel: { idPath: string; name: string }): void {
     this.selectedCategoryLabel = sel.name;
@@ -186,106 +169,62 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.showCategories = false;
   }
 
-  // Selección de categoría desde el menú hamburguesa (móvil)
   onMobileCategorySelect(sel: { idPath: string; name: string }): void {
     this.selectedCategoryLabel = sel.name;
     this.selectedCategoryId = sel.idPath;
-    this.applyFilters(); // aplica junto con los filtros actuales del header
+    this.applyFilters();
   }
 
   @HostListener("document:click", ["$event"])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as Node;
-    if (
-      this.showCategories &&
-      this.catButtonRef &&
-      !this.catButtonRef.nativeElement.contains(target)
-    ) {
+    if (this.showCategories && this.catButtonRef && !this.catButtonRef.nativeElement.contains(target)) {
       this.showCategories = false;
     }
   }
 
   applyFilters(): void {
-    /* 0) Partimos de cero: solo cabecera ---------------------------- */
-    const request: Partial<ListListingsRequestDto> = {
-      page: 1,
-      sortOrder: this.sortOrder,
-    };
+    const request: Partial<ListListingsRequestDto> = { page: 1, sortOrder: this.sortOrder };
 
-    /* 1) Término de búsqueda */
     const term = this.searchQuery.trim();
     if (term) request.searchTerm = term;
+    if (this.selectedCategoryId) request.categoryIds = [this.selectedCategoryId];
 
-    /* 2) Categoría elegida en el selector de cabecera */
-    if (this.selectedCategoryId)
-      request.categoryIds = [this.selectedCategoryId];
-
-    /* 3) Condición (nuevo / usado) */
     if (this.filters.condition === "nuevo") request.conditionFilter = 2;
     else if (this.filters.condition === "usado") request.conditionFilter = 1;
 
-    /* 4) Precio */
     if (this.filters.min != null) request.minPrice = this.filters.min;
     if (this.filters.max != null) request.maxPrice = this.filters.max;
+    if (this.filters.distance != null) request.maxDistanceKm = this.filters.distance;
+    if (this.filters.countryId != null) request.countryId = this.filters.countryId;
 
-    /* 5) Distancia */
-    if (this.filters.distance != null)
-      request.maxDistanceKm = this.filters.distance;
-
-    /* 6) País / barrio */
-    if (this.filters.countryId != null)
-      request.countryId = this.filters.countryId;
-
-    /* 7) Medios de pago */
     const paymentKeyMap: Record<string, keyof ListListingsRequestDto> = {
       efectivo: "acceptsCash",
       transferencia: "acceptsTransfer",
       tarjeta: "acceptsCard",
       trueque: "acceptsBarter",
     };
-    Object.entries(this.filters.pay).forEach(([method, enabled]) => {
-      if (enabled) request[paymentKeyMap[method]] = true as any;
+    Object.entries(this.filters.pay).forEach(([k, enabled]) => {
+      if (enabled) request[paymentKeyMap[k]] = true as any;
     });
 
-    /* 8) Fechas */
-    if (this.filters.from)
-      request.createdFrom = this.filters.from.toISOString();
+    if (this.filters.from) request.createdFrom = this.filters.from.toISOString();
     if (this.filters.to) request.createdTo = this.filters.to.toISOString();
 
-    /* 9) Guardar como nuevos filtros (borramos los anteriores) ------ */
     this.filterSrv.clear();
     this.filterSrv.set(request);
 
-    /* 10) Navegar / refrescar --------------------------------------- */
     if (this.router.url.startsWith("/search")) {
       this.router.navigate([], { state: { request } });
     } else {
       this.router.navigate(["/search"], { state: { request } });
     }
 
-    /* 11) Limpiar controles visibles del header --------------------- */
     this.resetHeaderFilters();
   }
 
-  capitalize(s: string): string {
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }
+  toggleLinksBar(): void { this.isLinksOpen = !this.isLinksOpen; }
 
-  logout(): void {
-    this.authService.logout();
-  }
-
-  goToPublish(): void {
-    this.router.navigate(["/publish"]);
-  }
-
-  /** Abre o cierra el menú móvil */
-  toggleMobileMenu(): void {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-  }
-
-  /** Abre/cierra la barra de nav-links (segunda barra, icono filtros) */
-  toggleLinksBar(): void {
-    this.isLinksOpen = !this.isLinksOpen;
-  }
+  logout(): void { this.authService.logout(); }
+  goToPublish(): void { this.router.navigate(["/publish"]); }
 }

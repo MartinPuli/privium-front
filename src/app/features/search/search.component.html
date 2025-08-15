@@ -1,153 +1,169 @@
-<app-header [showCategoryNav]="false"></app-header>
+<div class="search-page">
+  <app-header [showCategoryNav]="false"></app-header>
 
-<mat-sidenav-container class="search-container">
-  <!-- Drawer móvil -->
-  <mat-sidenav #drawer mode="over" class="filters-drawer" (openedChange)="onDrawerOpenedChange($event)">
-    <app-search-filters
-      #mobileFilters
-      [initialFilters]="current"
-      (apply)="onApplyFilters($event)"
-      (clear)="onClearFilters()"
-    ></app-search-filters>
-  </mat-sidenav>
+  <mat-sidenav-container class="search-container">
+    <!-- Drawer móvil -->
+    <mat-sidenav
+      #drawer
+      mode="over"
+      class="filters-drawer"
+      (openedChange)="onDrawerOpenedChange($event)"
+    >
+      <app-search-filters
+        #mobileFilters
+        [initialFilters]="current"
+        (apply)="onApplyFilters($event)"
+        (clear)="onClearFilters()"
+      ></app-search-filters>
+    </mat-sidenav>
 
-  <!-- Contenido -->
-  <mat-sidenav-content>
-    <main class="search-main">
-      <!-- Título -->
-      <div class="search-title">
-        <button
-          mat-icon-button
-          class="hamburger"
-          aria-label="Mostrar filtros"
-          (click)="openFilters()"
-        >
-          <mat-icon>menu</mat-icon>
-        </button>
-        <mat-icon>search</mat-icon>
-        <h1>
-          Búsqueda<b class="search-term" *ngIf="current.searchTerm">: "{{ current.searchTerm }}"</b>
-        </h1>
-
-        <!-- Sort móvil (<=600px) -->
-        <div class="sort-control sort-control-mobile">
+    <!-- Contenido -->
+    <mat-sidenav-content>
+      <main class="search-main">
+        <!-- Título -->
+        <div class="search-title">
           <button
-            mat-button
-            class="sort-btn"
-            (click)="setSort('DESC')"
-            *ngIf="sortOrder === 'ASC'"
+            mat-icon-button
+            class="hamburger"
+            aria-label="Mostrar filtros"
+            (click)="openFilters()"
           >
-            <mat-icon>arrow_downward</mat-icon>
-            Más reciente
+            <mat-icon>menu</mat-icon>
           </button>
-          <button
-            mat-button
-            class="sort-btn"
-            (click)="setSort('ASC')"
-            *ngIf="sortOrder === 'DESC'"
-          >
-            <mat-icon>arrow_upward</mat-icon>
-            Más antiguo
-          </button>
+          <mat-icon>search</mat-icon>
+          <h1>
+            Búsqueda<b class="search-term" *ngIf="current.searchTerm"
+              >: "{{ current.searchTerm }}"</b
+            >
+          </h1>
+
+          <!-- Sort móvil (<=600px) -->
+          <div class="sort-control sort-control-mobile">
+            <button
+              mat-button
+              class="sort-btn"
+              (click)="setSort('DESC')"
+              *ngIf="sortOrder === 'ASC'"
+            >
+              <mat-icon>arrow_downward</mat-icon>
+              Más reciente
+            </button>
+            <button
+              mat-button
+              class="sort-btn"
+              (click)="setSort('ASC')"
+              *ngIf="sortOrder === 'DESC'"
+            >
+              <mat-icon>arrow_upward</mat-icon>
+              Más antiguo
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- Spinner central -->
-      <div class="loading-overlay" *ngIf="isLoading">
-        <mat-spinner diameter="90"></mat-spinner>
-      </div>
+        <!-- Spinner central -->
+        <div class="loading-overlay" *ngIf="isLoading">
+          <mat-spinner diameter="90"></mat-spinner>
+        </div>
 
-      <div class="search-body" *ngIf="!isLoading">
-        <!-- Sidebar desktop -->
-        <aside class="filters-sidebar">
-          <app-search-filters
-            #desktopFilters
-            class="desktop-only"
-            [initialFilters]="current"
-            (apply)="onApplyFilters($event)"
-            (clear)="onClearFilters()"
-          ></app-search-filters>
-        </aside>
+        <div class="search-body" *ngIf="!isLoading">
+          <!-- Sidebar desktop -->
+          <aside class="filters-sidebar">
+            <app-search-filters
+              #desktopFilters
+              class="desktop-only"
+              [initialFilters]="current"
+              (apply)="onApplyFilters($event)"
+              (clear)="onClearFilters()"
+            ></app-search-filters>
+          </aside>
 
-        <!-- Columna de resultados -->
-        <div class="content-column" #contentCol>
-          <!-- Chips y orden -->
-          <div class="content-header">
-            <div class="categories-slots">
-              <div
-                class="cat-slot"
-                *ngFor="let slot of categoriesSlots; let i = index"
-              >
-                <app-button-categories
-                  [categoryName]="slot.name"
-                  (toggle)="toggleCategoryList(i, $event)"
-                  (clear)="clearCategory(i)"
-                ></app-button-categories>
-
+          <!-- Columna de resultados -->
+          <div class="content-column" #contentCol>
+            <!-- Chips y orden -->
+            <div class="content-header">
+              <div class="categories-slots">
                 <div
-                  *ngIf="showCategoryList[i]"
-                  class="dropdown-wrapper"
-                  (click)="$event.stopPropagation()"
-                  (keydown)="$event.stopPropagation()"
+                  class="cat-slot"
+                  *ngFor="let slot of categoriesSlots; let i = index"
                 >
-                  <app-list-categories
-                    class="list-categories"
-                    [orientation]="slotOrientations[i] || 'right'"
-                    (categorySelected)="onCategorySelected(i, $event)"
-                  ></app-list-categories>
+                  <app-button-categories
+                    [categoryName]="slot.name"
+                    (toggle)="toggleCategoryList(i, $event)"
+                    (clear)="clearCategory(i)"
+                  ></app-button-categories>
+
+                  <div
+                    *ngIf="showCategoryList[i]"
+                    class="dropdown-wrapper"
+                    (click)="$event.stopPropagation()"
+                    (keydown)="$event.stopPropagation()"
+                  >
+                    <app-list-categories
+                      class="list-categories"
+                      [orientation]="slotOrientations[i] || 'right'"
+                      (categorySelected)="onCategorySelected(i, $event)"
+                    ></app-list-categories>
+                  </div>
                 </div>
               </div>
+              <div class="sort-control">
+                <button
+                  mat-button
+                  class="sort-btn"
+                  (click)="setSort('DESC')"
+                  *ngIf="sortOrder === 'ASC'"
+                >
+                  <mat-icon>arrow_downward</mat-icon>
+                  Más reciente
+                </button>
+                <button
+                  mat-button
+                  class="sort-btn"
+                  (click)="setSort('ASC')"
+                  *ngIf="sortOrder === 'DESC'"
+                >
+                  <mat-icon>arrow_upward</mat-icon>
+                  Más antiguo
+                </button>
+              </div>
             </div>
-            <div class="sort-control">
+
+            <!-- Grid de productos -->
+            <div class="products-grid" *ngIf="products.length; else noResults">
+              <app-product-card-small
+                *ngFor="let p of products; trackBy: trackById"
+                [product]="p"
+              ></app-product-card-small>
+            </div>
+            <ng-template #noResults>
+              <p class="no-results">
+                <mat-icon>inventory_2</mat-icon> Sin resultados
+              </p>
+            </ng-template>
+
+            <!-- Paginación -->
+            <div class="pagination" *ngIf="products.length">
               <button
-                mat-button
-                class="sort-btn"
-                (click)="setSort('DESC')"
-                *ngIf="sortOrder === 'ASC'"
+                mat-stroked-button
+                (click)="prev()"
+                [disabled]="page === 1"
               >
-                <mat-icon>arrow_downward</mat-icon>
-                Más reciente
+                <mat-icon>chevron_left</mat-icon> Anterior
               </button>
+              <span class="page-indicator">Página {{ page }}</span>
               <button
-                mat-button
-                class="sort-btn"
-                (click)="setSort('ASC')"
-                *ngIf="sortOrder === 'DESC'"
+                mat-stroked-button
+                (click)="next()"
+                [disabled]="page >= totalPages"
               >
-                <mat-icon>arrow_upward</mat-icon>
-                Más antiguo
+                Siguiente <mat-icon>chevron_right</mat-icon>
               </button>
             </div>
-          </div>
-
-          <!-- Grid de productos -->
-          <div class="products-grid" *ngIf="products.length; else noResults">
-            <app-product-card-small
-              *ngFor="let p of products; trackBy: trackById"
-              [product]="p"
-            ></app-product-card-small>
-          </div>
-          <ng-template #noResults>
-            <p class="no-results">
-              <mat-icon>inventory_2</mat-icon> Sin resultados
-            </p>
-          </ng-template>
-
-          <!-- Paginación -->
-          <div class="pagination" *ngIf="products.length">
-            <button mat-stroked-button (click)="prev()" [disabled]="page === 1">
-              <mat-icon>chevron_left</mat-icon> Anterior
-            </button>
-            <span class="page-indicator">Página {{ page }}</span>
-            <button mat-stroked-button (click)="next()" [disabled]="page >= totalPages">
-              Siguiente <mat-icon>chevron_right</mat-icon>
-            </button>
           </div>
         </div>
-      </div>
-    </main>
-  </mat-sidenav-content>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 
-</mat-sidenav-container>
-
-<app-footer></app-footer>
+  <app-footer></app-footer>
+</div>

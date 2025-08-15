@@ -88,12 +88,28 @@ a {
   }
 }
 
+// Imágenes: por defecto que respeten proporción
 img {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important; /* ← encaja la imagen completa */
-  object-position: center !important; /* ← centrada */
-  display: block !important;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// Utilidades opt-in para comportamientos específicos
+.img-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.img-contain {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
 }
 
 /*/ Utility classes

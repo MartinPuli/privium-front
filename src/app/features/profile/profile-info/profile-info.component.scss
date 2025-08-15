@@ -4,7 +4,7 @@
   font-family: "Urbanist", sans-serif;
   color: $primary-navy;
 
-  p{
+  p {
     font-size: 1.2rem;
     color: $text-light;
     padding-left: 10px;
@@ -24,8 +24,8 @@
   flex-direction: column;
   min-height: 77vh;
   justify-content: center;
-  padding: 85px 15%;
-  gap: 60px;
+  padding: 100px 13%;
+  gap: 80px;
 }
 
 .section-title {
@@ -84,10 +84,16 @@
   }
 }
 
+@media (max-width: 1400px) {
+  .prof-main {
+    padding: 90px 8%;
+  }
+}
+
 @media (max-width: 768px) {
   .prof-main {
-    padding: 60px 8%;
-    gap: 40px;
+    padding: 70px 8%;
+    gap: 50px;
   }
 
   .section-title {
@@ -116,7 +122,7 @@
 
 @media (max-width: 480px) {
   .prof-main {
-    padding: 40px 5%;
+    padding: 50px 5%;
   }
 
   .section-title {

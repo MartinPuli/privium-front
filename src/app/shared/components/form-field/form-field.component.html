@@ -1,23 +1,13 @@
 <div class="form-group">
-  <label
-    *ngIf="label && type !== 'checkbox'"
-    class="form-label"
-    [for]="fieldId"
-  >
+  <!-- Label principal (no para checkbox) -->
+  <label *ngIf="label && type !== 'checkbox'" class="form-label" [for]="fieldId">
     {{ label }}<span *ngIf="required" class="required">*</span>
   </label>
 
-  <small *ngIf="subLabel" class="form-sub-label">
-    {{ subLabel }}
-  </small>
+  <small *ngIf="subLabel" class="form-sub-label">{{ subLabel }}</small>
 
   <!-- File Input -->
-  <div
-    *ngIf="type === 'file'"
-    class="file-wrapper"
-    [class.has-error]="hasError"
-    [class.has-file]="!!value"
-  >
+  <div *ngIf="type === 'file'" class="file-wrapper" [class.has-error]="hasError" [class.has-file]="!!value">
     <input
       type="file"
       [id]="fieldId"
@@ -27,6 +17,7 @@
       class="file-input"
     />
 
+    <!-- Estado vacío -->
     <ng-container *ngIf="!value">
       <label [for]="fieldId" class="file-label">
         <mat-icon>cloud_upload</mat-icon>
@@ -35,11 +26,9 @@
       <small>Subí un documento que pese hasta 10MB</small>
     </ng-container>
 
-    <!-- estado “llenado” -->
+    <!-- Estado con archivo -->
     <ng-container *ngIf="value">
       <button
-        *ngIf="value && type === 'file'"
-        class="remove-file-btn"
         type="button"
         class="remove-file-btn"
         (click)="clearFile()"
@@ -55,7 +44,7 @@
     </ng-container>
   </div>
 
-  <!-- Text, Email, Password, Tel -->
+  <!-- Inputs: text, email, password, tel, date, money -->
   <div
     *ngIf="
       type === 'text' ||
@@ -68,7 +57,12 @@
     class="input-wrapper"
     [class.has-error]="hasError"
   >
-    <mat-icon *ngIf="prefixIcon" class="prefix-icon">{{ prefixIcon }}</mat-icon>
+    <!-- Prefijo: texto para money, icono para el resto -->
+    <span *ngIf="type === 'money'" class="prefix-text">{{ currencySymbol }}</span>
+    <mat-icon *ngIf="prefixIcon && type !== 'money'" class="prefix-icon">
+      {{ prefixIcon }}
+    </mat-icon>
+
     <input
       [attr.id]="fieldId"
       [type]="getInputType()"
@@ -76,14 +70,16 @@
       [value]="value"
       [disabled]="disabled"
       [attr.maxLength]="maxLength ?? null"
-      [class.has-prefix]="prefixIcon"
-      [class.has-suffix]="
-        suffixIcon || (type === 'password' && showPasswordToggle)
-      "
+      [class.has-prefix]="prefixIcon || type === 'money'"
+      [class.has-suffix]="suffixIcon || (type === 'password' && showPasswordToggle)"
       class="form-input"
       (input)="onInput($event)"
       (blur)="onTouched()"
+      [attr.inputmode]="type === 'money' ? 'decimal' : null"
+      [attr.pattern]="type === 'money' ? '[0-9]*[.,]?[0-9]*' : null"
     />
+
+    <!-- Toggle de password -->
     <button
       *ngIf="type === 'password' && showPasswordToggle"
       type="button"
@@ -92,11 +88,14 @@
     >
       <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
     </button>
+
+    <!-- Sufijo (icono) -->
     <mat-icon
       *ngIf="suffixIcon && !(type === 'password' && showPasswordToggle)"
       class="suffix-icon"
-      >{{ suffixIcon }}</mat-icon
     >
+      {{ suffixIcon }}
+    </mat-icon>
   </div>
 
   <!-- Textarea -->
@@ -115,36 +114,22 @@
   ></textarea>
 
   <!-- Select -->
-  <div
-    *ngIf="type === 'select'"
-    class="select-wrapper"
-    [class.has-error]="hasError"
-  >
-    <!-- Select -->
-    <div
-      *ngIf="type === 'select'"
-      class="select-wrapper"
-      [class.has-error]="hasError"
+  <div *ngIf="type === 'select'" class="select-wrapper" [class.has-error]="hasError">
+    <select
+      [attr.id]="fieldId"
+      [ngModel]="value"
+      [disabled]="disabled"
+      class="form-select"
+      (ngModelChange)="onSelect($event)"
+      (blur)="onTouched()"
     >
-      <select
-        [attr.id]="fieldId"
-        [ngModel]="value"
-        [disabled]="disabled"
-        class="form-select"
-        (ngModelChange)="onSelect($event)"
-        (blur)="onTouched()"
-      >
-        <!-- placeholder como null para que no choque tipos -->
-        <option value="" disabled>{{ placeholder }}</option>
-        <option *ngFor="let o of options" [ngValue]="o.value">
-          {{ o.label }}
-        </option>
-      </select>
-    </div>
+      <option value="" disabled>{{ placeholder }}</option>
+      <option *ngFor="let o of options" [ngValue]="o.value">{{ o.label }}</option>
+    </select>
     <mat-icon class="dropdown-icon">keyboard_arrow_down</mat-icon>
   </div>
 
-  <!-- Checkbox -->
+  <!-- Checkbox (nativo) -->
   <div *ngIf="type === 'checkbox'" class="ff-checkbox-wrapper">
     <input
       type="checkbox"
@@ -159,11 +144,7 @@
     </label>
   </div>
 
-  <div *ngIf="hasError && errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
-
-  <!-- Radio buttons -->
+  <!-- Radio -->
   <div *ngIf="type === 'radio'" class="radio-wrapper">
     <ng-container *ngFor="let o of options">
       <label class="radio-option">
@@ -179,5 +160,10 @@
         <span>{{ o.label }}</span>
       </label>
     </ng-container>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="hasError && errorMessage" class="error-message">
+    {{ errorMessage }}
   </div>
 </div>

@@ -8,15 +8,21 @@
   font-weight: 500;
   width: 100%;
   max-width: 420px;
-  padding: 8px 6px;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  line-height: 1.2;
+  /* allow the wrapper to shrink on very small screens */
+  flex-shrink: 1;
 }
 
 @media (max-width: 600px) {
   .snack-wrapper {
     max-width: 80vw;
     font-size: 0.95rem;
-    gap: 6px;
-    padding: 6px 2px;
+    gap: 8px;
+    padding: 6px 8px;
+    /* allow text to wrap under the icon on very small devices */
+    flex-wrap: nowrap;
   }
 }
 
@@ -24,4 +30,53 @@
   font-size: 22px;
   width: 22px;
   height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.snack-text {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0; /* allow text to shrink inside flex */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (max-width: 420px) {
+  .snack-wrapper {
+    gap: 8px;
+    padding: 6px 8px;
+  }
+
+  .snack-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .snack-text {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .snack-wrapper {
+    flex-wrap: wrap; /* icon on top, text below if necessary */
+    justify-content: center;
+    text-align: center;
+  }
+
+  .snack-icon {
+    order: 0;
+    margin-bottom: 4px;
+  }
+
+  .snack-text {
+    order: 1;
+    width: 100%;
+    font-size: 0.85rem;
+  }
 }

@@ -1,13 +1,11 @@
-<!-- list-categories.component.html -->
 <div
   class="categories-pane"
   [ngClass]="{
     'has-parent': parentId,
-    'orientation-left': orientation === 'left',
-    'orientation-right': orientation === 'right'
+    'orientation-left': effectiveOrientation === 'left',
+    'orientation-right': effectiveOrientation === 'right'
   }"
 >
-  <!-- ① cuerpo scrolleable -->
   <div class="scroll-body">
     <ng-container *ngFor="let cat of categories">
       <div class="category-item" (click)="select(cat)">
@@ -21,25 +19,21 @@
         >
           <mat-icon>
             {{
-              expandedMap[cat.id]
-                ? orientation === 'left'
-                  ? 'chevron_right'
-                  : 'chevron_left'
-                : orientation === 'left'
-                ? 'chevron_left'
-                : 'chevron_right'
+              !expandedMap[cat.id]
+                ? (effectiveOrientation === 'left' ? 'chevron_left' : 'chevron_right')
+                : (effectiveOrientation === 'left' ? 'chevron_right' : 'chevron_left')
             }}
           </mat-icon>
         </button>
       </div>
 
-      <!-- sub-panel -->
       <ng-container *ngIf="expandedMap[cat.id]">
         <app-list-categories
           class="submenu"
           [parentId]="cat.id"
           [path]="path ? path + '>' + cat.id : cat.id"
-          [orientation]="orientation"
+          [orientation]="orientation"           
+          [autoOrientation]="!orientation && autoOrientation" 
           (categorySelected)="categorySelected.emit($event)"
         >
         </app-list-categories>

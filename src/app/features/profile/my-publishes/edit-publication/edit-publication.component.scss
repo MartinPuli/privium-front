@@ -1,15 +1,15 @@
 @import "../../../../../shared/styles/variables";
 
-/* mini layout helpers */
+/* ================== ELEMENTOS GENERALES ================== */
 .modal-label {
-  font-size: 23px;
+  font-size: 1.4rem;
   font-weight: 600;
   color: $primary-navy;
   margin-bottom: 10px;
   margin-top: 30px;
 }
 
-.price-separer{
+.price-separer {
   height: 20px;
   display: block;
   background: transparent;
@@ -22,104 +22,137 @@
   background: #fff;
 }
 
-
+/* ================== FORM L/R ================== */
 .left-form,
 .right-form {
   padding: 10px 20px !important;
+  width: 100%;
   min-width: 55vw;
-  min-height: 55vh;
+  min-height: 60vh;
+  box-sizing: border-box;
+
+  app-form-field {
+    width: 100%;
+    display: block;
+
+    ::ng-deep {
+      .form-field-wrapper,
+      .mat-mdc-form-field,
+      .mat-mdc-text-field-wrapper { width: 100%; }
+
+      input, textarea {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+  }
 }
 
+/* ================== FOTOS UNIFORMES ==================
+   Todas las celdas (botón y miniatura) comparten tamaño cuadrado
+   que se controla con --photo-size por breakpoint
+======================================================= */
 .photos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px; /* un poco más de aire */
+  --photo-size: 150px; /* desktop/tablet */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--photo-size));
+  gap: 12px;
   margin-bottom: 15px;
+  justify-content: start;
+}
 
-  /* botón gris, con trazo discontinuo */
-  .add-photo {
-    width: 150px;
-    height: 150px;
-    background: #d9d9d9; /* gris claro como en el mock-up */
-    border: 3px dashed $primary-navy;
+.photos .add-photo,
+.photos .thumb {
+  width: var(--photo-size);
+  height: var(--photo-size);
+  box-sizing: border-box;
+  border-radius: 6px;
+}
+
+/* Botón “Seleccionar” */
+.photos .add-photo {
+  background: #d9d9d9;
+  border: 3px dashed $primary-navy;
+  color: $primary-navy;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+
+  &:hover { background: #cfd0d0; }
+
+  mat-icon { font-size: 1.5rem; }
+  span     { font-size: 0.8rem; font-weight: 500; }
+}
+
+/* Miniaturas */
+.photos .thumb {
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+    padding: $spacing-sm;      /* si no querés marco, eliminá esta línea */
+    box-sizing: border-box;
+    object-fit: cover;
     border-radius: 6px;
-    color: $primary-navy;
+  }
+
+  &.is-main img {
+    border: 3px solid #54aa54;
+  }
+
+  /* Botón X */
+  button {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 0;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    font-size: 0.9rem;
-    transition: background 0.2s;
 
-    &:hover {
-      background: #cfd0d0;
-    }
+    mat-icon { font-size: 1rem; transform: translate(0, 4px);}
   }
 
-  /* miniaturas */
-  .thumb {
-    position: relative;
-    width: 150px;
-    height: 150px; /* mismo ancho que el “Seleccionar” */
-    img {
-      width: 100%;
-      height: 100%;
-      border-radius: 6px;
-      box-sizing: border-box;
-      padding: $spacing-sm;
-      object-fit: contain;
-    }
-
-    &.is-main img {
-      border: 3px solid #54aa54; /* verde */
-      box-sizing: border-box; /* incluye el borde en los 150 px */
-    }
-
-    /* X para eliminar */
-    button {
-      position: absolute;
-      top: -6px;
-      right: -6px;
-      background: #fff;
-      border: 1px solid #999;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      padding: 0;
-    }
-
-    /* cintillo “PORTADA” en la primera imagen */
-    &.is-main::after {
-      content: "PORTADA";
-      position: absolute;
-      bottom: 4px;
-      left: 4px;
-      background: $primary-navy;
-      color: #fff;
-      font-size: 0.65rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
+  /* Cintillo “PORTADA” */
+  &.is-main::after {
+    content: "PORTADA";
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    background: $primary-navy;
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
   }
 }
 
+/* ================== CATEGORÍAS / MEDIOS ================== */
 .cat-pay-row {
   margin-top: 35px;
   min-height: 200px;
   display: flex;
-  gap: 48px; /* separación horizontal */
+  flex-direction: column;
+  gap: 24px;
 
-  /* 1ª columna (categorías) ocupa lo necesario */
-  .cat-col {
-    flex: 1 1 50%;
-  }
+  .cat-col { flex: 1; }
 
-  /* 2ª columna (medios) con borde separador */
   .pay-col {
-    flex: 1 1 40%;
-    padding-left: 48px;
-    border-left: 2px solid rgba($primary-navy, 0.25);
+    flex: 1;
+    padding-top: 24px;
+    border-top: 2px solid rgba($primary-navy, 0.25);
+    padding-left: 0;
+    border-left: none;
   }
 }
 
@@ -132,7 +165,7 @@
   margin-top: 4px;
 }
 
-/* radios “Nuevo / Usado” – márgenes más amplios */
+/* Radios “Nuevo / Usado” */
 app-form-field[type="radio"] {
   display: block;
   margin-top: 4px;
@@ -143,46 +176,122 @@ app-form-field[type="radio"] {
   }
 }
 
+/* Categorías y dropdowns */
 .categories-container {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-.cat-slot {
-  position: relative;
-}
-.dropdown {
-  position: absolute;
-  left: 0;
-  top: calc(100% + 4px);
-  z-index: 1002;
-}
-.chips-edit {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 6px;
-}
-
-.cat-slot {
-  position: relative;
-  overflow: visible; // que no recorte hijos
-}
+.cat-slot { position: relative; overflow: visible; }
+.dropdown { position: absolute; left: 0; top: calc(100% + 4px); z-index: 1002; }
 
 .dropdown-wrapper {
-  position: absolute; /* sale del flujo y no empuja */
-  top: calc(100% - 150px); /* justo debajo del botón */
+  position: absolute;
+  top: calc(100% - 150px);
   left: 0;
-  z-index: 2000; /* bastante por encima */
+  z-index: 2000;
   background: $background-secondary;
   border: 1px solid $primary-navy;
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-  /* quita cualquier max-height / overflow preexistente */
   max-height: none !important;
   overflow: visible !important;
 }
 
-:host ::ng-deep .modal-body {
-  overflow: visible !important;
+/* ================== CHECKBOXES (TU ESTILO) ==================
+   Se usa exactamente tu bloque + fix de ripple
+============================================================== */
+.chips-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chips-edit mat-checkbox {
+  display: inline-block;
+  font-size: 0.95rem;
+}
+
+:host ::ng-deep .chips-edit .mat-mdc-checkbox .mdc-form-field {
+  display: inline-flex;
+  align-items: center;   /* centra verticalmente icono y texto */
+  gap: 0px;              /* espacio entre icono y label */
+  line-height: 1.1;      /* evita “saltos” de baseline */
+}
+
+/* Oculta ripple/focus para evitar “puntito” gris a la izquierda */
+:host ::ng-deep .chips-edit .mat-mdc-checkbox .mdc-checkbox__ripple,
+:host ::ng-deep .chips-edit .mat-mdc-checkbox .mat-mdc-focus-indicator {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Desktop y Tablet grande (>768px) */
+@media (min-width: 769px) {
+  .cat-pay-row {
+    flex-direction: row;
+    gap: 48px;
+
+    .cat-col { flex: 1 1 55%; }
+    .pay-col {
+      flex: 1 1 45%;
+      padding-top: 0;
+      padding-left: 48px;
+      border-top: none;
+      border-left: 2px solid rgba($primary-navy, 0.25);
+    }
+  }
+}
+
+/* Tablet (<=768px) — imágenes un poco más grandes que antes */
+@media (max-width: 768px) {
+  .left-form, .right-form {
+    padding: 5px 10px !important;
+    min-height: 50vh;
+  }
+
+  .modal-label { font-size: 1.2rem; margin-top: 20px; margin-bottom: 8px; }
+
+  .photos { --photo-size: 120px; gap: 10px; }  /* antes 100px */
+  .categories-container { gap: 6px; }
+}
+
+/* Mobile pequeño (<=480px) — imágenes un poco más grandes que antes */
+@media (max-width: 480px) {
+  .left-form, .right-form { padding: 3px 6px !important; }
+  .modal-label { font-size: 1.1rem; margin-top: 16px; margin-bottom: 6px; }
+
+  .photos { --photo-size: 120px; gap: 8px; }    /* antes 80px */
+
+  .cat-pay-row { margin-top: 20px; gap: 16px; }
+
+  .chips-edit {
+    /* tu regla: 2 columnas en pantallas chicas */
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    column-gap: 16px;
+  }
+
+  /* Ajustes de detalles visuales en miniatura */
+  .photos .thumb {
+    button { width: 20px; height: 20px; top: -3px; right: -3px; }
+    &.is-main::after {
+      font-size: 0.45rem;
+      padding: 1px 2px;
+      bottom: 2px; left: 2px;
+    }
+  }
+}
+
+/* Mantengo tu breakpoint de 780px para la grilla de checkboxes */
+@media (max-width: 780px) {
+  .chips-edit {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    column-gap: 16px;
+  }
 }

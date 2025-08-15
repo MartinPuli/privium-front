@@ -90,7 +90,7 @@ export class FooterComponent {
         req.type = 'VEHICULO';
         break;
       case 'indumentaria':
-        req.categoryIds = ['5'];
+        req.categoryIds = ['1>5'];
         break;
       default: {
         const cat = this.categorySrv

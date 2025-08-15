@@ -6,21 +6,35 @@
       label="Buscar artículos"
       placeholder="¿Qué buscas?"
       formControlName="searchTerm"
-  [maxLength]="30"
-  [hasError]="form.get('searchTerm')!.hasError('maxlength') && form.get('searchTerm')!.touched"
-  errorMessage="Máximo 30 caracteres"
+      [maxLength]="30"
+      [hasError]="
+        form.get('searchTerm')!.hasError('maxlength') &&
+        form.get('searchTerm')!.touched
+      "
+      errorMessage="Máximo 30 caracteres"
     ></app-form-field>
+
     <div class="actions-bar">
-      <button mat-stroked-button class="reset-btn" type="button" (click)="reset()">
-        Limpiar
+      <button
+        mat-stroked-button
+        class="reset-btn"
+        type="button"
+        (click)="reset()"
+        aria-label="Limpiar filtros"
+      >
+        <mat-icon class="btn-icon">close</mat-icon>
+        <span class="btn-label">Limpiar</span>
       </button>
+
       <button
         mat-flat-button
         type="button"
         class="apply-btn"
         (click)="emitFilters()"
+        aria-label="Aplicar filtros"
       >
-        Filtrar
+        <mat-icon class="btn-icon">filter_list</mat-icon>
+        <span class="btn-label">Filtrar</span>
       </button>
     </div>
   </div>
@@ -51,9 +65,10 @@
       [errorMessage]="
         form.get('minPrice')!.hasError('pattern')
           ? 'Debe ser un número'
-          : 'Entre 1 y 99 999 999'
+          : 'Entre 1 y 99 999 999'
       "
     ></app-form-field>
+
     <app-form-field
       type="money"
       label="Precio máximo"
@@ -66,7 +81,7 @@
       [errorMessage]="
         form.get('maxPrice')!.hasError('pattern')
           ? 'Debe ser un número'
-          : 'Entre 1 y 99 999 999'
+          : 'Entre 1 y 99 999 999'
       "
     ></app-form-field>
   </div>
@@ -123,15 +138,22 @@
       label="Desde"
       placeholder="dd/mm/aaaa"
       formControlName="createdFrom"
-      [hasError]="form.get('createdFrom')!.hasError('invalidDate') && form.get('createdFrom')!.touched"
+      [hasError]="
+        form.get('createdFrom')!.hasError('invalidDate') &&
+        form.get('createdFrom')!.touched
+      "
       errorMessage="Fecha inválida"
     ></app-form-field>
+
     <app-form-field
       type="date"
       label="Hasta"
       placeholder="dd/mm/aaaa"
       formControlName="createdTo"
-      [hasError]="form.get('createdTo')!.hasError('invalidDate') && form.get('createdTo')!.touched"
+      [hasError]="
+        form.get('createdTo')!.hasError('invalidDate') &&
+        form.get('createdTo')!.touched
+      "
       errorMessage="Fecha inválida"
     ></app-form-field>
   </div>
@@ -140,18 +162,18 @@
 
   <!-- Medios de pago -->
   <div class="payment-methods">
-    <app-form-field type="checkbox" formControlName="acceptsCash">
-      Efectivo
-    </app-form-field>
-    <app-form-field type="checkbox" formControlName="acceptsCard">
-      Tarjeta
-    </app-form-field>
-    <app-form-field type="checkbox" formControlName="acceptsTransfer">
-      Transferencia
-    </app-form-field>
-    <app-form-field type="checkbox" formControlName="acceptsBarter">
-      Trueque
-    </app-form-field>
+    <app-form-field type="checkbox" formControlName="acceptsCash"
+      >Efectivo</app-form-field
+    >
+    <app-form-field type="checkbox" formControlName="acceptsCard"
+      >Tarjeta</app-form-field
+    >
+    <app-form-field type="checkbox" formControlName="acceptsTransfer"
+      >Transferencia</app-form-field
+    >
+    <app-form-field type="checkbox" formControlName="acceptsBarter"
+      >Trueque</app-form-field
+    >
   </div>
 
   <hr class="section-divider" />

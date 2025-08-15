@@ -6,28 +6,27 @@
       'not-logged': !logged
     }"
   >
-    <!-- Logo y ubicación -->
+    <!-- Logo -->
     <div class="header-left">
-      <a
-        routerLink="/home"
-        class="logo-link"
-        aria-label="Ir al inicio de Privium"
-      >
-        <img
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO-3B1hX241DyVj0FoA34Z6lZidG4Ubv7.png"
-          alt="Privium - Marketplace de barrios cerrados"
-          class="logo-image"
-          loading="eager"
-          appDefaultImage
-          decoding="async"
-        />
+      <!-- NO logueado: siempre logo completo -->
+      <a routerLink="/home" aria-label="Ir al inicio" *ngIf="!logged">
+        <img src="/assets/images/logocomplete.png" class="logo-full" alt="Privium" />
       </a>
+
+      <!-- Logueado: compacto en mobile + completo en desktop -->
+      <ng-container *ngIf="logged">
+        <a routerLink="/home" aria-label="Ir al inicio" class="mobile-only">
+          <img src="/assets/images/logo.png" class="logo-compact" alt="Privium" />
+        </a>
+        <a routerLink="/home" aria-label="Ir al inicio" class="desktop-only">
+          <img src="/assets/images/logocomplete.png" class="logo-full" alt="Privium" />
+        </a>
+      </ng-container>
     </div>
 
-    <!-- Barra de búsqueda -->
+    <!-- Buscador + Categorías (unidas) -->
     <div class="search-container" *ngIf="logged && !publishing">
       <mat-form-field appearance="outline" class="search-field">
-        <mat-icon matPrefix aria-hidden="true">search</mat-icon>
         <input
           matInput
           placeholder="Buscar artículos"
@@ -36,11 +35,23 @@
           (keyup.enter)="applyFilters()"
           aria-label="Buscar productos en Privium"
         />
+
+        <!-- lupa al FINAL (suffix) -->
+        <button
+          mat-icon-button
+          type="button"
+          matSuffix
+          class="suffix-search"
+          (click)="applyFilters()"
+          aria-label="Buscar"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
       </mat-form-field>
 
-      <!-- Botón categorías: sólo desktop (se oculta <=768px) -->
+      <!-- Selector de categorías pegado al input -->
       <div
-        class="category-button hide-on-md"
+        class="category-button"
         #catButton
         (click)="$event.stopPropagation()"
         (keydown)="$event.stopPropagation()"
@@ -53,6 +64,7 @@
           {{ selectedCategoryLabel }}
           <mat-icon class="down-arrow" aria-hidden="true">expand_more</mat-icon>
         </button>
+
         <div class="categories-dropdown" *ngIf="showCategories">
           <app-list-categories
             (categorySelected)="onCategorySelect($event)"
@@ -62,7 +74,7 @@
       </div>
     </div>
 
-    <!-- Acciones del usuario -->
+    <!-- Perfil (siempre a la derecha del buscador) -->
     <div class="header-actions" *ngIf="logged">
       <button
         mat-icon-button
@@ -75,20 +87,16 @@
 
       <mat-menu #userMenu="matMenu">
         <div class="user-info" *ngIf="currentUser">
-          <span class="user-name"
-            >{{ currentUser.name }} {{ currentUser.lastName }}</span
-          >
+          <span class="user-name">{{ currentUser.name }} {{ currentUser.lastName }}</span>
           <span class="user-email">{{ currentUser.email }}</span>
         </div>
         <mat-divider></mat-divider>
-        <button
-          mat-menu-item
-          [routerLink]="['/perfil', authService.getCurrentUserId()]"
-        >
+
+        <button mat-menu-item [routerLink]="['/perfil', authService.getCurrentUserId()]">
           <mat-icon>person</mat-icon>
           <span>Ver Perfil</span>
         </button>
-        <!-- Botón VERIFICACIONES solo Admin -->
+
         <mat-divider *ngIf="currentUser?.role === 'ADMIN'"></mat-divider>
         <button
           mat-menu-item
@@ -98,6 +106,7 @@
           <mat-icon>verified_user</mat-icon>
           <span>Verificación residencia</span>
         </button>
+
         <mat-divider></mat-divider>
         <button mat-menu-item (click)="logout()">
           <mat-icon>logout</mat-icon>
@@ -108,48 +117,39 @@
   </div>
 </div>
 
-<!-- Submenú: lista de categorías (panel auto en función del contenido) -->
-<mat-menu
-  #categoriesMenu="matMenu"
-  class="categories-menu-panel"
-  [overlapTrigger]="false"
->
+<!-- Menú de categorías para móvil (usa el mismo componente) -->
+<mat-menu #categoriesMenu="matMenu" class="categories-menu-panel" [overlapTrigger]="false">
   <app-list-categories
     (categorySelected)="onMobileCategorySelect($event)"
-    [orientation]="'left'"
+    [orientation]="'right'"
   ></app-list-categories>
 </mat-menu>
 
-<!-- Navegación de categorías -->
+<!-- Barra de categorías / filtros rápidos -->
 <div
   class="category-nav"
   aria-label="Navegación de categorías"
   *ngIf="logged && !publishing && showCategoryNav"
 >
-  <!-- Desktop (>=900px): combinado como ahora -->
+  <!-- Desktop -->
   <div class="nav-container desktop-only">
-    <!-- Ubicación del usuario -->
     <div class="location-info">
       <mat-icon aria-hidden="true">location_on</mat-icon>
       <span class="location-text">
         <p>Estás en</p>
-        <h2>{{ this.currentUserCountryName }}</h2>
+        <h2>{{ currentUserCountryName }}</h2>
       </span>
     </div>
 
-    <!-- Filtros rápidos -->
     <div class="filter-links">
       <button mat-button [matMenuTriggerFor]="condMenu">Condición</button>
       <button mat-button [matMenuTriggerFor]="priceMenu">Precio</button>
       <button mat-button [matMenuTriggerFor]="distMenu">Distancia</button>
       <button mat-button [matMenuTriggerFor]="hoodMenu">Barrio</button>
       <button mat-button [matMenuTriggerFor]="payMenu">Medio de pago</button>
-      <button mat-button [matMenuTriggerFor]="dateMenu">
-        Fecha de publicación
-      </button>
+      <button mat-button [matMenuTriggerFor]="dateMenu">Fecha de publicación</button>
     </div>
 
-    <!-- Botón Publicar -->
     <button
       mat-raised-button
       color="accent"
@@ -162,275 +162,135 @@
     </button>
   </div>
 
-  <!-- Mobile/Tablet (<900px): 2da barra (ubicación + publicar) y 3ra barra con nav-links scrollables -->
+  <!-- Mobile/Tablet -->
   <div class="nav-container-2col mobile-only">
     <div class="secondary-bar">
-      <!-- Botón filtros para abrir/cerrar nav-links -->
-      <button
-        mat-icon-button
-        class="filters-toggle"
-        (click)="toggleLinksBar()"
-        [attr.aria-expanded]="isLinksOpen"
-        aria-label="Mostrar u ocultar filtros rápidos"
-      >
+      <button mat-icon-button class="filters-toggle" (click)="toggleLinksBar()"
+              [attr.aria-expanded]="isLinksOpen" aria-label="Mostrar u ocultar filtros">
         <mat-icon>tune</mat-icon>
       </button>
+
+      <!-- En esta variante ocultamos el “Estás en …” (solo mostramos el nombre) -->
       <div class="location-info">
         <mat-icon aria-hidden="true">location_on</mat-icon>
         <span class="location-text">
-          <p>Estás en</p>
-          <h2>{{ this.currentUserCountryName }}</h2>
+          <h2>{{ currentUserCountryName }}</h2>
         </span>
       </div>
-      <button
-        mat-raised-button
-        color="accent"
-        class="publish-button"
-        (click)="goToPublish()"
-        aria-label="Publicar un nuevo producto"
-      >
+
+      <button mat-raised-button color="accent" class="publish-button"
+              (click)="goToPublish()" aria-label="Publicar">
         <span class="label-text">PUBLICAR</span>
         <span class="label-plus" aria-hidden="true">+</span>
       </button>
     </div>
 
     <div class="nav-links-bar" *ngIf="!isLinksOpen">
-      <button
-        mat-button
-        style="flex-shrink: 0"
-        [matMenuTriggerFor]="categoriesMenu"
-      >
-        Categorías
-      </button>
-      <button mat-button style="flex-shrink: 0" [matMenuTriggerFor]="condMenu">
-        Condición
-      </button>
-      <button mat-button style="flex-shrink: 0" [matMenuTriggerFor]="priceMenu">
-        Precio
-      </button>
-      <button mat-button style="flex-shrink: 0" [matMenuTriggerFor]="distMenu">
-        Distancia
-      </button>
-      <button mat-button style="flex-shrink: 0" [matMenuTriggerFor]="hoodMenu">
-        Barrio
-      </button>
-      <button mat-button style="flex-shrink: 0" [matMenuTriggerFor]="payMenu">
-        Medio de pago
-      </button>
-      <button mat-button style="flex-shrink: 0" [matMenuTriggerFor]="dateMenu">
-        Fecha de publicación
-      </button>
+      <button mat-button [matMenuTriggerFor]="categoriesMenu" style="flex-shrink:0">Categorías</button>
+      <button mat-button [matMenuTriggerFor]="condMenu" style="flex-shrink:0">Condición</button>
+      <button mat-button [matMenuTriggerFor]="priceMenu" style="flex-shrink:0">Precio</button>
+      <button mat-button [matMenuTriggerFor]="distMenu" style="flex-shrink:0">Distancia</button>
+      <button mat-button [matMenuTriggerFor]="hoodMenu" style="flex-shrink:0">Barrio</button>
+      <button mat-button [matMenuTriggerFor]="payMenu" style="flex-shrink:0">Medio de pago</button>
+      <button mat-button [matMenuTriggerFor]="dateMenu" style="flex-shrink:0">Fecha</button>
     </div>
   </div>
 </div>
 
-<!-- ════════ 1. Condición ════════ -->
+<!-- Menús (igual que ya tenías) -->
+<!-- 1) Condición -->
 <mat-menu #condMenu="matMenu" class="filter-menu">
-  <div
-    class="menu-body"
-    (click)="$event.stopPropagation()"
-    (keydown)="$event.stopPropagation()"
-  >
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-radio-group [(ngModel)]="filters.condition" class="d-block">
       <mat-radio-button value="">Todas</mat-radio-button><br />
       <mat-radio-button value="nuevo">Nuevo</mat-radio-button><br />
       <mat-radio-button value="usado">Usado</mat-radio-button>
     </mat-radio-group>
-
-    <button
-      class="apply-button"
-      mat-stroked-button
-      color="primary"
-      class="w-100"
-      [disabled]="!priceRangeValid"
-      mat-menu-close
-      (click)="applyFilters()"
-    >
-      Aplicar
-    </button>
+    <button class="apply-button" mat-stroked-button color="primary" class="w-100"
+            [disabled]="!priceRangeValid" mat-menu-close (click)="applyFilters()">Aplicar</button>
   </div>
 </mat-menu>
 
-<!-- ════════ 2. Precio ════════ -->
+<!-- 2) Precio -->
 <mat-menu #priceMenu="matMenu" class="filter-menu">
-  <div
-    class="menu-body"
-    (click)="$event.stopPropagation()"
-    (keydown)="$event.stopPropagation()"
-  >
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Precio mínimo</mat-label>
-      <input
-        matInput
-        type="number"
-        in="1"
-        max="99999999"
-        step="1000"
-        [(ngModel)]="filters.min"
-      />
-      <mat-hint align="end">Entre 1 y 99 999 999</mat-hint>
+      <input matInput type="number" in="1" max="99999999" step="1000" [(ngModel)]="filters.min" />
+      <mat-hint align="end">Entre 1 y 99 999 999</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Precio máximo</mat-label>
-      <input
-        matInput
-        type="number"
-        in="1"
-        step="1000"
-        max="99999999"
-        [(ngModel)]="filters.max"
-      />
-      <mat-hint align="end">Entre 1 y 99 999 999</mat-hint>
+      <input matInput type="number" in="1" step="1000" max="99999999" [(ngModel)]="filters.max" />
+      <mat-hint align="end">Entre 1 y 99 999 999</mat-hint>
     </mat-form-field>
 
-    <button
-      class="apply-button"
-      mat-stroked-button
-      color="primary"
-      class="w-100"
-      [disabled]="!priceRangeValid"
-      mat-menu-close
-      (click)="applyFilters()"
-    >
-      Aplicar
-    </button>
+    <button class="apply-button" mat-stroked-button color="primary" class="w-100"
+            [disabled]="!priceRangeValid" mat-menu-close (click)="applyFilters()">Aplicar</button>
   </div>
 </mat-menu>
 
-<!-- ════════ 3. Distancia ════════ -->
+<!-- 3) Distancia -->
 <mat-menu #distMenu="matMenu" class="filter-menu">
-  <div
-    class="menu-body"
-    (click)="$event.stopPropagation()"
-    (keydown)="$event.stopPropagation()"
-  >
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-radio-group [(ngModel)]="filters.distance" class="d-block">
       <mat-radio-button [value]="10">Menos de 10 km</mat-radio-button><br />
       <mat-radio-button [value]="15">Menos de 15 km</mat-radio-button><br />
       <mat-radio-button [value]="30">Menos de 30 km</mat-radio-button><br />
       <mat-radio-button [value]="60">Menos de 60 km</mat-radio-button>
     </mat-radio-group>
-
-    <button
-      class="apply-button"
-      mat-stroked-button
-      color="primary"
-      class="w-100"
-      mat-menu-close
-      (click)="applyFilters()"
-    >
-      Aplicar
-    </button>
+    <button class="apply-button" mat-stroked-button color="primary" class="w-100"
+            mat-menu-close (click)="applyFilters()">Aplicar</button>
   </div>
 </mat-menu>
 
-<!-- ════════ 4. Barrio privado ════════ -->
+<!-- 4) Barrio -->
 <mat-menu #hoodMenu="matMenu" class="filter-menu">
-  <form
-    #f="ngForm"
-    class="menu-body"
-    (click)="$event.stopPropagation()"
-    (keydown)="$event.stopPropagation()"
-  >
+  <form #f="ngForm" class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Barrio privado</mat-label>
       <mat-select [(ngModel)]="filters.countryId" name="countryId">
-        <mat-option *ngFor="let opt of countryOptions" [value]="opt.value">
-          {{ opt.label }}
-        </mat-option>
+        <mat-option *ngFor="let opt of countryOptions" [value]="opt.value">{{ opt.label }}</mat-option>
       </mat-select>
     </mat-form-field>
-
-    <button
-      class="apply-button"
-      mat-stroked-button
-      color="primary"
-      class="w-100"
-      mat-menu-close
-      (click)="applyFilters()"
-    >
-      Aplicar
-    </button>
+    <button class="apply-button" mat-stroked-button color="primary" class="w-100"
+            mat-menu-close (click)="applyFilters()">Aplicar</button>
   </form>
 </mat-menu>
 
-<!-- ════════ 5. Medio de pago ════════ -->
+<!-- 5) Medios de pago -->
 <mat-menu #payMenu="matMenu" class="filter-menu">
-  <div
-    class="menu-body"
-    (click)="$event.stopPropagation()"
-    (keydown)="$event.stopPropagation()"
-  >
-    <mat-checkbox
-      *ngFor="let mp of mediosPago"
-      [(ngModel)]="filters.pay[mp.value]"
-      class="d-block"
-    >
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+    <mat-checkbox *ngFor="let mp of mediosPago" [(ngModel)]="filters.pay[mp.value]" class="d-block">
       {{ mp.label }}
     </mat-checkbox>
-
-    <button
-      class="apply-button"
-      mat-stroked-button
-      color="primary"
-      class="w-100"
-      mat-menu-close
-      (click)="applyFilters()"
-    >
-      Aplicar
-    </button>
+    <button class="apply-button" mat-stroked-button color="primary" class="w-100"
+            mat-menu-close (click)="applyFilters()">Aplicar</button>
   </div>
 </mat-menu>
 
-<!-- ════════ 6. Fecha de publicación ════════ -->
+<!-- 6) Fechas -->
 <mat-menu #dateMenu="matMenu" class="filter-menu">
-  <div
-    class="menu-body"
-    (click)="$event.stopPropagation()"
-    (keydown)="$event.stopPropagation()"
-  >
+  <div class="menu-body" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Desde</mat-label>
-      <input
-        matInput
-        [matDatepicker]="pickerFrom"
-        [(ngModel)]="filters.from"
-        #fromDate="ngModel"
-      />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="pickerFrom"
-      ></mat-datepicker-toggle>
+      <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="filters.from" #fromDate="ngModel" />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerFrom"></mat-datepicker-toggle>
       <mat-datepicker #pickerFrom></mat-datepicker>
       <mat-error *ngIf="fromDate.invalid">Fecha inválida</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-100">
       <mat-label>Hasta</mat-label>
-      <input
-        matInput
-        [matDatepicker]="pickerTo"
-        [(ngModel)]="filters.to"
-        #toDate="ngModel"
-      />
-      <mat-datepicker-toggle
-        matIconSuffix
-        [for]="pickerTo"
-      ></mat-datepicker-toggle>
+      <input matInput [matDatepicker]="pickerTo" [(ngModel)]="filters.to" #toDate="ngModel" />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerTo"></mat-datepicker-toggle>
       <mat-datepicker #pickerTo></mat-datepicker>
       <mat-error *ngIf="toDate.invalid">Fecha inválida</mat-error>
     </mat-form-field>
 
-    <button
-      class="apply-button w-100"
-      mat-stroked-button
-      color="primary"
-      [disabled]="fromDate.invalid || toDate.invalid"
-      mat-menu-close
-      (click)="applyFilters()"
-    >
-      Aplicar
-    </button>
+    <button class="apply-button w-100" mat-stroked-button color="primary"
+            [disabled]="fromDate.invalid || toDate.invalid"
+            mat-menu-close (click)="applyFilters()">Aplicar</button>
   </div>
 </mat-menu>

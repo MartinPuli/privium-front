@@ -15,12 +15,14 @@
       </button>
     </mat-form-field>
 
-    <button mat-button (click)="setSort('DESC')">
-      <mat-icon>arrow_downward</mat-icon> Más reciente
-    </button>
-    <button mat-button (click)="setSort('ASC')">
-      <mat-icon>arrow_upward</mat-icon> Más antiguo
-    </button>
+    <div class="sort-buttons">
+      <button mat-button (click)="setSort('DESC')">
+        <mat-icon>arrow_downward</mat-icon> Más reciente
+      </button>
+      <button mat-button (click)="setSort('ASC')">
+        <mat-icon>arrow_upward</mat-icon> Más antiguo
+      </button>
+    </div>
   </div>
 </div>
 
@@ -71,9 +73,12 @@
       (reload)="load()"
       [selected]="selectedIds.has(item.id)"
       (selectionChange)="onCardSelect(item.id, $event)"
+  (pause)="pauseOne($event)"
+  (reactivate)="reactivateOne($event)"
+  (deleteClick)="deleteOne($event)"
     ></app-publication-card>
 
-    <mat-card class="add-card" (click)="goToPublish()">
+  <mat-card class="add-card" tabindex="0" (click)="goToPublish()" (keydown.enter)="goToPublish()" (keydown.space)="$event.preventDefault(); goToPublish()">
       <mat-icon>add</mat-icon>
       <span>Añadir publicación</span>
     </mat-card>

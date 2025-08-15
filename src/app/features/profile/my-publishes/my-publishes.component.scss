@@ -4,7 +4,7 @@
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
@@ -12,18 +12,19 @@
   font-size: 2.5rem;
   font-weight: 700;
   color: $primary-navy;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
 
   .search-field {
-    width: 220px;
-    width: 280px;
+    width: 100%;
+    max-width: 400px;
 
     /* Estilo similar al buscador del header */
     ::ng-deep {
@@ -47,6 +48,16 @@
       }
     }
   }
+
+  .sort-buttons {
+    display: flex;
+    gap: 12px;
+    
+    button {
+      font-family: "Urbanist", sans-serif;
+      color: $primary-navy;
+    }
+  }
 }
 
 .board {
@@ -54,7 +65,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   background: #d9d9d9c0;
-  padding: 32px 60px;
+  padding: 28px 48px;
   position: relative;
   margin-top: 32px;
   margin-bottom: 32px;
@@ -62,6 +73,12 @@
 
 :host ::ng-deep mat-checkbox.master-check .mdc-checkbox__background {
   transform: scale(1.7);
+}
+
+@media (max-width: 1200px) and (min-width: 781px) {
+  :host ::ng-deep mat-checkbox.master-check .mdc-checkbox__background {
+    transform: scale(1.4);
+  }
 }
 
 .board-header {
@@ -77,7 +94,7 @@
   gap: 30px;
 
   button {
-    font-family: "Urbanist";
+    font-family: "Urbanist", sans-serif;
     font-size: 1.1rem;
     color: $primary-navy;
     padding: 0;
@@ -119,7 +136,22 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 901px) {
+  .controls {
+    flex-direction: row;
+    align-items: center;
+    
+    .search-field {
+      width: 400px;
+    }
+    
+    .sort-buttons {
+      margin-left: auto;
+    }
+  }
+}
+
+@media (max-width: 900px) {
   .publishes-header {
     align-items: flex-start;
     gap: 1rem;
@@ -133,24 +165,40 @@
     .search-field {
       width: 100%;
     }
-  }
-
-  .board {
-    padding: 24px;
-  }
-
-  .board-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .board-actions {
-    width: 100%;
-    justify-content: space-between;
-
-    button {
-      width: 100%;
+    
+    .sort-buttons {
+      justify-content: center;
     }
   }
+
+  /* Ocultar contenedor con acciones masivas en mobile/tablet <=900px */
+  .board-header { display: none; }
+  .board {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin-top: 24px;
+  }
+
+  .board-actions { display: none; }
+
+  .cards-zone { gap: 20px; }
+}
+
+/* reducir paddings graduales de 1200px a 780px */
+@media (max-width: 1200px) {
+  .board { padding: 24px 36px; }
+  .cards-zone { gap: 28px; }
+}
+@media (max-width: 1024px) {
+  .board { padding: 20px 28px; }
+  .cards-zone { gap: 24px; }
+}
+@media (max-width: 900px) {
+  .board { padding: 12px 18px; }
+  .cards-zone { gap: 20px; }
+}
+@media (max-width: 780px) {
+  .board { padding: 8px; }
+  .cards-zone { gap: 16px; }
 }
